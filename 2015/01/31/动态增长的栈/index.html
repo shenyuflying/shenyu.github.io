@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="test," />
+  <meta name="keywords" content="c,编程题," />
 
 
 
@@ -84,19 +84,25 @@
 
 
 
-<meta name="description" content="利用mathjax可以方便的输入latex格式的公式，例如输入如下文本1$$E=mc^2$$
-就会自动生成如下格式化的公式$$E=mc^2$$">
+<meta name="description" content="题目C语言实现stack数据结构能够
+
+push的时候动态增长。每次扩大一倍：2,4,8,16,32…
+pop的时候还能自动释放地址。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mathjax公式">
-<meta property="og:url" content="http://shenyu.wiki/2016/09/17/Mathjax公式/index.html">
+<meta property="og:title" content="动态增长的栈">
+<meta property="og:url" content="http://shenyu.wiki/2015/01/31/动态增长的栈/index.html">
 <meta property="og:site_name" content="我心飞翔">
-<meta property="og:description" content="利用mathjax可以方便的输入latex格式的公式，例如输入如下文本1$$E=mc^2$$
-就会自动生成如下格式化的公式$$E=mc^2$$">
-<meta property="og:updated_time" content="2016-09-17T07:33:08.163Z">
+<meta property="og:description" content="题目C语言实现stack数据结构能够
+
+push的时候动态增长。每次扩大一倍：2,4,8,16,32…
+pop的时候还能自动释放地址。">
+<meta property="og:updated_time" content="2016-09-17T09:32:37.757Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mathjax公式">
-<meta name="twitter:description" content="利用mathjax可以方便的输入latex格式的公式，例如输入如下文本1$$E=mc^2$$
-就会自动生成如下格式化的公式$$E=mc^2$$">
+<meta name="twitter:title" content="动态增长的栈">
+<meta name="twitter:description" content="题目C语言实现stack数据结构能够
+
+push的时候动态增长。每次扩大一倍：2,4,8,16,32…
+pop的时候还能自动释放地址。">
 
 
 
@@ -117,9 +123,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/2016/09/17/Mathjax公式/"/>
+  <link rel="canonical" href="http://shenyu.wiki/2015/01/31/动态增长的栈/"/>
 
-  <title> Mathjax公式 | 我心飞翔 </title>
+  <title> 动态增长的栈 | 我心飞翔 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +298,7 @@
             
             
               
-                Mathjax公式
+                动态增长的栈
               
             
           </h1>
@@ -304,8 +310,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T13:39:40+08:00" content="2016-09-17">
-              2016-09-17
+            <time itemprop="dateCreated" datetime="2015-01-31T17:30:31+08:00" content="2015-01-31">
+              2015-01-31
             </time>
           </span>
 
@@ -315,8 +321,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/17/Mathjax公式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/Mathjax公式/" itemprop="commentsCount"></span>
+                <a href="/2015/01/31/动态增长的栈/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/01/31/动态增长的栈/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -326,7 +332,7 @@
 
           
           
-             <span id="/2016/09/17/Mathjax公式/" class="leancloud_visitors" data-flag-title="Mathjax公式">
+             <span id="/2015/01/31/动态增长的栈/" class="leancloud_visitors" data-flag-title="动态增长的栈">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -348,8 +354,14 @@
       
 
       
-        <p>利用mathjax可以方便的输入latex格式的公式，例如输入如下文本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$$E=mc^2$$</div></pre></td></tr></table></figure></p>
-<p>就会自动生成如下格式化的公式<br>$$E=mc^2$$</p>
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>C语言实现stack数据结构<br>能够</p>
+<ol>
+<li>push的时候动态增长。每次扩大一倍：2,4,8,16,32…</li>
+<li>pop的时候还能自动释放地址。</li>
+</ol>
+<a id="more"></a> 
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span>  </span></div><div class="line">   </div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"linked_list_stack/my_linked_list_stack.h"</span>  </span></div><div class="line">  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>  </span></div><div class="line">&#123;  </div><div class="line">    MY_STACK  <span class="built_in">stack</span>;  </div><div class="line">    my_stack_init(&amp;<span class="built_in">stack</span>);  </div><div class="line">    my_stack_push(&amp;<span class="built_in">stack</span>,<span class="number">1</span>);  </div><div class="line">    my_stack_push(&amp;<span class="built_in">stack</span>,<span class="number">2</span>);  </div><div class="line">    my_stack_push(&amp;<span class="built_in">stack</span>,<span class="number">3</span>);  </div><div class="line">    my_stack_push(&amp;<span class="built_in">stack</span>,<span class="number">4</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%ld\n"</span>,my_stack_pop(&amp;<span class="built_in">stack</span>));  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%ld\n"</span>,my_stack_pop(&amp;<span class="built_in">stack</span>));  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%ld\n"</span>,my_stack_pop(&amp;<span class="built_in">stack</span>));  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%ld\n"</span>,my_stack_pop(&amp;<span class="built_in">stack</span>));  </div><div class="line">    </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _MY_STACK_H_  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _MY_STACK_H_  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span> <span class="comment">/*memset(void *s, int c, size_t n)*/</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _DEBUG_  </span></div><div class="line"><span class="comment">/*type for the stack T ,you can typedef your own*/</span>  </div><div class="line">  </div><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">int</span> T;  </div><div class="line"><span class="keyword">struct</span> my_block_st  </div><div class="line">&#123;  </div><div class="line">    T * ptr;<span class="comment">/*point to the allocate memory*/</span>  </div><div class="line">    <span class="keyword">struct</span> my_block_st * pre;  </div><div class="line">    <span class="keyword">int</span>  index;  </div><div class="line">    <span class="keyword">size_t</span> block_size;<span class="comment">/*size of the current block ...*/</span>  </div><div class="line">&#125;;  </div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> my_block_st MY_BLOCK;  </div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> my_block_st *  MY_STACK; <span class="comment">/*point to the last block*/</span>  </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">my_stack_init_block</span><span class="params">(MY_BLOCK **block_ptr)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="comment">/*initially the size=1, and twice the size each time*/</span>  </div><div class="line">     (*block_ptr)-&gt;block_size = (*block_ptr)-&gt;block_size*<span class="number">2</span>;  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"my_stack_init_block() size=%ld\n"</span>,((*block_ptr)-&gt;block_size));  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    (*block_ptr)-&gt;ptr =(T *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(T)* ((*block_ptr)-&gt;block_size));</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"new block add=%p\n"</span>,(*block_ptr)-&gt;ptr);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    <span class="keyword">if</span>((*block_ptr)-&gt;ptr==<span class="literal">NULL</span>)  </div><div class="line">    &#123;  </div><div class="line">        <span class="built_in">printf</span>(<span class="string">"malloc err\n"</span>);  </div><div class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);  </div><div class="line">    &#125;  </div><div class="line">    (*block_ptr)-&gt;index=<span class="number">-1</span>;  </div><div class="line">    <span class="built_in">memset</span>((*block_ptr)-&gt;ptr,<span class="number">0</span>,<span class="keyword">sizeof</span>((*block_ptr)-&gt;ptr));  </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">my_stack_init</span><span class="params">(MY_STACK * s)</span>  </span></div><div class="line">&#123;  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"my_stack_init()\n"</span>);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    *s=(MY_STACK)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(MY_BLOCK ));  </div><div class="line">    (*s)-&gt;block_size=<span class="number">1</span>;  </div><div class="line">    my_stack_init_block(&amp;(*s));  </div><div class="line">    (*s)-&gt;pre=<span class="literal">NULL</span>;  </div><div class="line">&#125;  </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">my_stack_add_block</span><span class="params">(MY_STACK *s)</span>  </span></div><div class="line">&#123;  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"my_stack_add_block()\n"</span>);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    MY_BLOCK   * ptr_block=(MY_BLOCK*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(MY_BLOCK));  </div><div class="line">    ptr_block-&gt;block_size = (*s)-&gt;block_size;<span class="comment">/*pass the current size o new block*/</span>  </div><div class="line">    my_stack_init_block(&amp;ptr_block);  </div><div class="line">    MY_BLOCK *tmp_ptr= (*s);  </div><div class="line">    *s=ptr_block;  </div><div class="line">    (*s)-&gt;pre=tmp_ptr;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">my_block_is_full</span><span class="params">(MY_BLOCK **s)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="keyword">if</span>(((*s)-&gt;index)==((*s)-&gt;block_size<span class="number">-1</span>))  </div><div class="line">    &#123;  </div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">else</span>  </div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">my_block_is_empty</span><span class="params">(MY_STACK *s)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="keyword">if</span>( (*s)-&gt;index==<span class="number">-1</span>)  </div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;  </div><div class="line">    <span class="keyword">else</span>  </div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">my_stack_is_empty</span><span class="params">(MY_STACK *s)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="keyword">if</span>( (*s)-&gt;pre==<span class="literal">NULL</span> &amp;&amp; (*s)-&gt; index==<span class="number">-1</span>)  </div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;  </div><div class="line">    <span class="keyword">else</span>  </div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;  </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">my_stack_push</span><span class="params">(MY_STACK *s, T elem)</span>  </span></div><div class="line">&#123;  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"my_stack_push(%ld)\n"</span>,elem);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    <span class="keyword">if</span>(my_block_is_full(&amp;(*s)))  </div><div class="line">    &#123;  </div><div class="line">        my_stack_add_block(&amp;(*s));  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    ( *s)-&gt;index++;  </div><div class="line">    *(( *s)-&gt;ptr+(*s)-&gt;index)=elem;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="function">T <span class="title">my_stack_pop</span><span class="params">(MY_STACK *s)</span>  </span></div><div class="line">&#123;  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"my_stack_pop()\n"</span>);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    <span class="keyword">if</span>(my_stack_is_empty(&amp;(*s)))  </div><div class="line">    &#123;  </div><div class="line">        <span class="built_in">printf</span>(<span class="string">"err: empty stack cannot pop!\n"</span>);  </div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">if</span>(my_block_is_empty(&amp;(*s)))  </div><div class="line">    &#123;  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"free %p\n "</span>,( *s)-&gt;ptr);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">        <span class="built_in">free</span>((*s)-&gt; ptr);  </div><div class="line">        *s=(*s)-&gt;pre;  </div><div class="line">    &#125;  </div><div class="line">    T tmp;  </div><div class="line">    tmp = *(( *s)-&gt;ptr+( *s)-&gt;index);  </div><div class="line">     --(( *s)-&gt;index);  </div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _DEBUG_  </span></div><div class="line">              <span class="built_in">printf</span>(<span class="string">"return %ld\n"</span>,tmp);  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span>  </span></div><div class="line">    </div><div class="line">    <span class="keyword">return</span> tmp;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/*_MY_STACK_H_*/</span></span></div></pre></td></tr></table></figure>
 
       
     </div>
@@ -372,7 +384,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/test/" rel="tag">#test</a>
+            <a href="/tags/c/" rel="tag">#c</a>
+          
+            <a href="/tags/编程题/" rel="tag">#编程题</a>
           
         </div>
       
@@ -381,16 +395,12 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/02/17/mysql大数据处理/" rel="next" title="mysql大数据处理">
-                <i class="fa fa-chevron-left"></i> mysql大数据处理
-              </a>
-            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/09/17/奥运会成绩管理系统/" rel="prev" title="奥运会成绩管理系统">
-                奥运会成绩管理系统 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/02/17/mysql大数据处理/" rel="prev" title="mysql大数据处理">
+                mysql大数据处理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -455,8 +465,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/09/17/Mathjax公式/"
-           data-title="Mathjax公式" data-url="http://shenyu.wiki/2016/09/17/Mathjax公式/">
+      <div class="ds-thread" data-thread-key="2015/01/31/动态增长的栈/"
+           data-title="动态增长的栈" data-url="http://shenyu.wiki/2015/01/31/动态增长的栈/">
       </div>
     
   </div>
@@ -540,7 +550,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码"><span class="nav-number">2.</span> <span class="nav-text">源码</span></a></li></ol></div>
             
           </div>
         </section>

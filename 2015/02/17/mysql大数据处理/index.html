@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="c,mysql," />
 
 
 
@@ -84,15 +84,38 @@
 
 
 
-<meta name="description" content="Shen Yu&apos;s blog">
-<meta property="og:type" content="website">
-<meta property="og:title" content="我心飞翔">
-<meta property="og:url" content="http://shenyu.wiki/index.html">
+<meta name="description" content="任务
+将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。
+
+ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。
+数据格式数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。
+
+数据库设计为如下12345678910create d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql大数据处理">
+<meta property="og:url" content="http://shenyu.wiki/2015/02/17/mysql大数据处理/index.html">
 <meta property="og:site_name" content="我心飞翔">
-<meta property="og:description" content="Shen Yu&apos;s blog">
+<meta property="og:description" content="任务
+将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。
+
+ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。
+数据格式数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。
+
+数据库设计为如下12345678910create d">
+<meta property="og:image" content="http://img.blog.csdn.net/20141125135942138?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20141125140008127?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20141125140019422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:updated_time" content="2016-09-17T10:12:07.510Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我心飞翔">
-<meta name="twitter:description" content="Shen Yu&apos;s blog">
+<meta name="twitter:title" content="mysql大数据处理">
+<meta name="twitter:description" content="任务
+将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。
+
+ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。
+数据格式数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。
+
+数据库设计为如下12345678910create d">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20141125135942138?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 
 
 
@@ -113,9 +136,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/"/>
+  <link rel="canonical" href="http://shenyu.wiki/2015/02/17/mysql大数据处理/"/>
 
-  <title> 我心飞翔 </title>
+  <title> mysql大数据处理 | 我心飞翔 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -146,9 +169,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -268,9 +289,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -290,716 +311,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/09/17/贪吃蛇-基于SDL/" itemprop="url">
-                  贪吃蛇-基于SDL
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T18:15:58+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/贪吃蛇-基于SDL/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/贪吃蛇-基于SDL/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/贪吃蛇-基于SDL/" class="leancloud_visitors" data-flag-title="贪吃蛇-基于SDL">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>贪吃蛇不用多说了吧，就是一条蛇吃水果，吃一个他的长度就加１。</p>
-<h2 id="无图无真相"><a href="#无图无真相" class="headerlink" title="无图无真相"></a>无图无真相</h2><p><img src="/uploads/snake.png" alt="tup"></p>
-<p>目前只是先实现了基本的功能，移动，长度加１。还没有实现碰撞检测的功能。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/17/贪吃蛇-基于SDL/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/17/c语言转汇编语言shell脚本/" itemprop="url">
-                  c语言转汇编语言shell脚本
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T17:58:57+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/c语言转汇编语言shell脚本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/c语言转汇编语言shell脚本/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/c语言转汇编语言shell脚本/" class="leancloud_visitors" data-flag-title="c语言转汇编语言shell脚本">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近在学习汇编，为了方便写了一个shell脚本，用来把c语言转换为汇编语言。很方便。</p>
-<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash  </div><div class="line">if [  &quot;$#&quot; = &quot;0&quot; ] ; then</div><div class="line">        echo &apos;help: c2asm FILENAME&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line"></div><div class="line"></div><div class="line">if [ -f &quot;$1&quot; ] ; then</div><div class="line">        echo &apos;check file ok!&apos;  </div><div class="line">else</div><div class="line">        echo &apos;c2asm: file not exist&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line">echo &apos;generating asm file...&apos;  </div><div class="line">gcc -O0 -S &quot;$1&quot;</div><div class="line">tmp=$1</div><div class="line">asmfile=$&#123;tmp%%.c&#125;.s;</div><div class="line"></div><div class="line">echo &quot;asm file generated: $asmfile&quot;  </div><div class="line">echo &apos;==================asm====================&apos;  </div><div class="line">cat &quot;$asmfile&quot; | grep -v &apos;\.&apos;</div><div class="line">echo &apos;==================c======================&apos;  </div><div class="line">cat &quot;$1&quot;</div><div class="line">echo &apos;==================END====================&apos;  </div><div class="line">echo &apos;done&apos;</div></pre></td></tr></table></figure>
-<h2 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">check file ok!</div><div class="line">generating asm file...</div><div class="line">asm file generated: main.s</div><div class="line">==================asm====================</div><div class="line">main:</div><div class="line">	pushq	%rbp</div><div class="line">	movq	%rsp, %rbp</div><div class="line">	movl	$1, -8(%rbp)</div><div class="line">	movl	$1, -4(%rbp)</div><div class="line">	movl	-8(%rbp), %edx</div><div class="line">	movl	-4(%rbp), %eax</div><div class="line">	addl	%edx, %eax</div><div class="line">	popq	%rbp</div><div class="line">	ret</div><div class="line">==================c======================</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a,b;</div><div class="line">	a = 1;</div><div class="line">	b = 1;</div><div class="line">	return a+b;</div><div class="line"></div><div class="line">&#125;</div><div class="line">==================END====================</div><div class="line">done</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/17/linux-shell聊天室/" itemprop="url">
-                  linux shell聊天室
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T17:38:43+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/linux-shell聊天室/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/linux-shell聊天室/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/linux-shell聊天室/" class="leancloud_visitors" data-flag-title="linux shell聊天室">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>里程碑0：</p>
-<p>1、基于C/S架构的聊天室，分为客户端和服务器。<br>2、客户端登陆时输入服务器IP、port、 昵称不能重复</p>
-<p>里程碑1：</p>
-<p>3、可以群发消息或指定接收人<br>4、admin账号可以踢人<br>5、新加入用户可以看到聊天历史记录</p>
-<p>里程碑2：</p>
-<p>5、可以互传文件<br>6、保存聊天信息</p>
-<p>里程碑3：</p>
-<p>7、第一次登录时，需要注册。</p>
-<h2 id="技术设计"><a href="#技术设计" class="headerlink" title="技术设计"></a>技术设计</h2><p>1、在shell下的图形库：curses<br>2、多线程：pthread<br>3、网络：socket<br>4、消息结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> msg_st  </div><div class="line">&#123;  </div><div class="line">    <span class="keyword">char</span> name[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> to[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> data[<span class="number">4096</span>];  </div><div class="line">    <span class="keyword">char</span> cmd[<span class="number">256</span>];  </div><div class="line"><span class="comment">/*</div><div class="line"> * 其中，关于cmd内容：</div><div class="line"> * login 登陆</div><div class="line"> * offline 服务器即将踢人</div><div class="line"> * user 服务发送的用户列表，数据在data里</div><div class="line"> * chat 表示这是一条消息，数据在data里</div><div class="line"> */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>5、服务器用了epoll来监听多个fd</p>
-<h2 id="登陆界面"><a href="#登陆界面" class="headerlink" title="登陆界面"></a>登陆界面</h2><p><img src="http://img.blog.csdn.net/20141228204352953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="登陆界面"></p>
-<h2 id="聊天界面"><a href="#聊天界面" class="headerlink" title="聊天界面"></a>聊天界面</h2><p><img src="http://img.blog.csdn.net/20141228193822585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="聊天界面"></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/17/linux-shell聊天室/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/17/linux-shell-切换程序/" itemprop="url">
-                  在linux shell 下切换程序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T17:14:37+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/linux-shell-切换程序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/linux-shell-切换程序/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/linux-shell-切换程序/" class="leancloud_visitors" data-flag-title="在linux shell 下切换程序">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>我们都知道，在 Windows 上我们可以轻松打开多个窗口并用Alt+TAB进行切换。但是在 Linux Shell下如何实现呢？请看下面的介绍。</p>
-<h2 id="让程序在后台执行"><a href="#让程序在后台执行" class="headerlink" title="让程序在后台执行"></a>让程序在后台执行</h2><p>命令： &amp;<br>这个用在一个命令的最后，可以把这个命令放到后台执行。<br>例如 ./program1 &amp;程序便在后台执行了，此时用户可以继续输入其他命令。</p>
-<h2 id="把程序放到后台"><a href="#把程序放到后台" class="headerlink" title="把程序放到后台"></a>把程序放到后台</h2><p>命令：ctrl + z<br>可以将一个正在前台执行的命令放到后台，并且暂停。</p>
-<h2 id="查看当前有多少在后台运行的命令"><a href="#查看当前有多少在后台运行的命令" class="headerlink" title="查看当前有多少在后台运行的命令"></a>查看当前有多少在后台运行的命令</h2><p>命令：jobs<br>查看当前有多少在后台运行的命令</p>
-<h2 id="将后台中的命令调至前台继续运行"><a href="#将后台中的命令调至前台继续运行" class="headerlink" title="将后台中的命令调至前台继续运行"></a>将后台中的命令调至前台继续运行</h2><p>命令：fg<br>如果后台中有多个命令，可以用 fg %jobnumber将选中的命令调出，%jobnumber是通过jobs命令查到的后台正在执行的命令的序号(不是pid)。</p>
-<h2 id="将一个在后台暂停的命令，变成继续执行"><a href="#将一个在后台暂停的命令，变成继续执行" class="headerlink" title="将一个在后台暂停的命令，变成继续执行"></a>将一个在后台暂停的命令，变成继续执行</h2><p>命令：bg<br>将一个在后台暂停的命令，变成继续执行<br>如果后台中有多个命令，可以用bg %jobnumber将选中的命令调出，%jobnumber是通过jobs命令查到的后台正在执行的命令的序号(不是pid)</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/17/奥运会成绩管理系统/" itemprop="url">
-                  奥运会成绩管理系统
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T15:55:08+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/奥运会成绩管理系统/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/奥运会成绩管理系统/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/奥运会成绩管理系统/" class="leancloud_visitors" data-flag-title="奥运会成绩管理系统">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>要求编程实现奥运会成绩管理系统，具有如下功能：初始化、录入成绩、取消成绩、查询奖牌榜。</p>
-<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>能够任何时候初始化，清空系统所有数据。<br>函数原型：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void init (void);</div></pre></td></tr></table></figure></p>
-<h3 id="录入成绩"><a href="#录入成绩" class="headerlink" title="录入成绩"></a>录入成绩</h3><p>录入运动员取得成绩情况。<br>函数原型：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bool enter_score(int time, int country, char * name, int sport, int medal);</div></pre></td></tr></table></figure></p>
-<p>入参：</p>
-<ul>
-<li>时间： 0-30 单位为天，录入成绩时，时间必须不变或递增</li>
-<li>国家：运动员所在的国家，有中、美、日、韩、俄、英</li>
-<li>名字：运动员的名字，10个字符以内，只有字母，区分大小写</li>
-<li>项目：比赛获奖的项目，1-11，共11个项目。 录入成绩顺序，一个项目必须先录入金牌，再录入银牌，最后录入铜牌。</li>
-<li>奖牌：金牌、银牌、铜牌</li>
-</ul>
-<h3 id="取消成绩"><a href="#取消成绩" class="headerlink" title="取消成绩"></a>取消成绩</h3><p>取消一条取得的成绩，该项目成绩取消后，其他选手的成绩自动上调。如：取消金牌，则原来的银牌变金牌，铜牌变银牌。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bool cancle_score(int time, char * name, int sport);</div><div class="line">void query_score(void);</div></pre></td></tr></table></figure></p>
-<h3 id="查询奖牌榜"><a href="#查询奖牌榜" class="headerlink" title="查询奖牌榜"></a>查询奖牌榜</h3><p>按照比赛获奖情况，生成奖牌榜，排序并显示。</p>
-<p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">____________________________________________</div><div class="line">|  COUNTRY  | GOLD | SILVER | BRONZE | RANK |</div><div class="line">|-------------------------------------------|</div><div class="line">|      CHINA|     2|       0|       0|     1|</div><div class="line">|    AMERICA|     2|       0|       0|     1|</div><div class="line">|      KOREA|     0|       2|       0|     3|</div><div class="line">|     RUSSUA|     0|       0|       3|     4|</div><div class="line">|      JAPAN|     0|       0|       0|     5|</div><div class="line">|    ENGLAND|     0|       0|       0|     5|</div><div class="line">____________________________________________</div></pre></td></tr></table></figure></p>
-<p>说明：</p>
-<ul>
-<li>排序规则：先金牌、再银牌、最后铜牌。</li>
-<li>相同奖牌情况排序相同，比如并列第一的情况。</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/17/奥运会成绩管理系统/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/17/Mathjax公式/" itemprop="url">
-                  Mathjax公式
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T13:39:40+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/Mathjax公式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/Mathjax公式/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/Mathjax公式/" class="leancloud_visitors" data-flag-title="Mathjax公式">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>利用mathjax可以方便的输入latex格式的公式，例如输入如下文本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$$E=mc^2$$</div></pre></td></tr></table></figure></p>
-<p>就会自动生成如下格式化的公式<br>$$E=mc^2$$</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/02/17/mysql大数据处理/" itemprop="url">
-                  mysql大数据处理
-                </a>
+                mysql大数据处理
               
             
           </h1>
@@ -1055,9 +367,7 @@
       
 
       
-        
-          
-            <h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><blockquote>
+        <h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><blockquote>
 <p>将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。</p>
 </blockquote>
 <p>ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。</p>
@@ -1072,152 +382,103 @@
 <p><img src="http://img.blog.csdn.net/20141125140019422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="dd"></p>
 <h2 id="附件：txt转sql源代码-C"><a href="#附件：txt转sql源代码-C" class="headerlink" title="附件：txt转sql源代码 C"></a>附件：txt转sql源代码 C</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span>  </span></div><div class="line">  </div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_LEN 2048  </span></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> sp[] = &#123; <span class="string">' '</span>, <span class="string">'\t'</span>, <span class="string">';'</span>,<span class="string">'\r'</span>,<span class="string">'\n'</span> &#125;;  </div><div class="line">  </div><div class="line">   </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error</span><span class="params">(<span class="keyword">char</span> *msg)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"ERROR:%s"</span>,msg);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    getchar();  </div><div class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">isSeperator</span><span class="params">(<span class="keyword">char</span>  ch)</span>  </span></div><div class="line">&#123;  </div><div class="line">      </div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">sizeof</span>(sp) / <span class="keyword">sizeof</span>(<span class="keyword">char</span>); i++)  </div><div class="line">    &#123;  </div><div class="line">        <span class="keyword">if</span> ( ch == sp[i])  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"=============================\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"          txt2sql\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"=============================\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"data fielname: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> filename_in[<span class="number">256</span>], filename_out[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>,filename_in);  </div><div class="line">    <span class="built_in">strcpy</span>(filename_out, filename_in);  </div><div class="line">    <span class="built_in">strcat</span>(filename_out, <span class="string">"_sql.txt"</span>);  </div><div class="line">    <span class="built_in">strcat</span>(filename_in, <span class="string">".txt"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"table name: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> table_name[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>, table_name);  </div><div class="line">  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"sensor ID: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> sensor_ID[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>, sensor_ID);  </div><div class="line">  </div><div class="line">  </div><div class="line">    FILE *fin = fopen(filename_in, <span class="string">"r"</span>);  </div><div class="line">    FILE *fout = fopen(filename_out, <span class="string">"w"</span>);  </div><div class="line">    <span class="keyword">if</span> (fin == <span class="literal">NULL</span> || fout == <span class="literal">NULL</span>)  </div><div class="line">    &#123;  </div><div class="line">        error(<span class="string">"cannot open file"</span>);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">char</span> buffer[BUFFER_LEN];  </div><div class="line">    <span class="keyword">while</span> (fgets(buffer, BUFFER_LEN, fin) != <span class="number">0</span>)  </div><div class="line">    &#123;  </div><div class="line">        <span class="comment">//除去多余的分隔符  </span></div><div class="line">        <span class="keyword">char</span> elem[BUFFER_LEN];  </div><div class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;  </div><div class="line">        <span class="built_in">memset</span>(elem, <span class="number">0</span>, <span class="keyword">sizeof</span>(elem));  </div><div class="line">  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(buffer); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (buffer[i] == <span class="string">'\n'</span> || buffer[i] == <span class="string">'\r'</span> || buffer[i]==<span class="string">'\0'</span>) buffer[i] = <span class="string">' '</span>;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(buffer); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (!isSeperator(buffer[i]))  </div><div class="line">            &#123;  </div><div class="line">                elem[k++] = buffer[i];  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">else</span>  </div><div class="line">            &#123;  </div><div class="line">                <span class="comment">//如果最后一个是分隔符则跳过  </span></div><div class="line">                <span class="keyword">if</span> (i == <span class="built_in">strlen</span>(buffer) &amp;&amp; isSeperator(buffer[i]))  </div><div class="line">                    <span class="keyword">continue</span>;  </div><div class="line">                <span class="comment">//如果下一个还是分隔符，则跳过。  </span></div><div class="line">                <span class="keyword">if</span> (i != <span class="built_in">strlen</span>(buffer) - <span class="number">1</span> &amp;&amp; isSeperator(buffer[i + <span class="number">1</span>]))  </div><div class="line">                    <span class="keyword">continue</span>;  </div><div class="line">                <span class="keyword">if</span> (i != <span class="built_in">strlen</span>(buffer) - <span class="number">1</span> &amp;&amp; !isSeperator(buffer[i + <span class="number">1</span>]))  </div><div class="line">                                elem[k++] = buffer[i];  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="comment">/*printf("\"%s\"",elem);*/</span>  </div><div class="line">        <span class="comment">//经过处理的elem只有包含一个分隔符在一起的情况，最后没有空元素  </span></div><div class="line">  </div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"INSERT INTO %s VALUES ('%s',"</span>, table_name,sensor_ID);  </div><div class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(elem); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (isSeperator(elem[i]))  </div><div class="line">            &#123;  </div><div class="line">                  </div><div class="line">                <span class="built_in">fprintf</span>(fout, <span class="string">"\'"</span>);  </div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = left; j &lt; i; j++)  </div><div class="line">                &#123;  </div><div class="line">                    <span class="built_in">fprintf</span>(fout, <span class="string">"%c"</span>, elem[j]);  </div><div class="line">                &#125;  </div><div class="line">                <span class="built_in">fprintf</span>(fout, <span class="string">"\',"</span>);  </div><div class="line">                left = i + <span class="number">1</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="comment">//the last one  </span></div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"\'"</span>);  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = left; j &lt; <span class="built_in">strlen</span>(elem); j++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="built_in">fprintf</span>(fout, <span class="string">"%c"</span>, elem[j]);  </div><div class="line">        &#125;  </div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"\');\n"</span>);  </div><div class="line">           </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">  </div><div class="line">  </div><div class="line">    fclose(fin);   </div><div class="line">    fclose(fout);  </div><div class="line">  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Done!"</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    getchar();  </div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/01/31/动态增长的栈/" itemprop="url">
-                  动态增长的栈
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-01-31T17:30:31+08:00" content="2015-01-31">
-              2015-01-31
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/c/" rel="tag">#c</a>
           
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/01/31/动态增长的栈/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/01/31/动态增长的栈/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2015/01/31/动态增长的栈/" class="leancloud_visitors" data-flag-title="动态增长的栈">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>C语言实现stack数据结构<br>能够</p>
-<ol>
-<li>push的时候动态增长。每次扩大一倍：2,4,8,16,32…</li>
-<li>pop的时候还能自动释放地址。</li>
-</ol>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/01/31/动态增长的栈/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/31/动态增长的栈/" rel="next" title="动态增长的栈">
+                <i class="fa fa-chevron-left"></i> 动态增长的栈
+              </a>
+            
           </div>
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/17/Mathjax公式/" rel="prev" title="Mathjax公式">
+                Mathjax公式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1225,6 +486,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/02/17/mysql大数据处理/"
+           data-title="mysql大数据处理" data-url="http://shenyu.wiki/2015/02/17/mysql大数据处理/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -1244,8 +513,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -1288,6 +566,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#任务"><span class="nav-number">1.</span> <span class="nav-text">任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据格式"><span class="nav-number">2.</span> <span class="nav-text">数据格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库设计为如下"><span class="nav-number">3.</span> <span class="nav-text">数据库设计为如下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#txt格式文件导入数据库"><span class="nav-number">4.</span> <span class="nav-text">txt格式文件导入数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#按指定间隔查询数据"><span class="nav-number">5.</span> <span class="nav-text">按指定间隔查询数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附件：txt转sql源代码-C"><span class="nav-number">6.</span> <span class="nav-text">附件：txt转sql源代码 C</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -1391,6 +680,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
