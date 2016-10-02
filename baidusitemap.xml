@@ -3,6 +3,48 @@
 
 
     
+  <url>
+    <loc>http://shenyu.wiki/2016/10/02/PostgreSQL-count-%E4%BC%98%E5%8C%96/</loc>
+    <lastmod>2016-10-02T04:54:40.743Z</lastmod>
+    <data>
+        <display>
+        <title>PostgreSQL count(*) 优化</title>
+        <pubTime>2016-10-02T04:50:10.000Z</pubTime>
+        
+        <tag>PostgreSQL</tag>
+         
+        <tag>count</tag>
+         
+        <tag>数据库</tag>
+         
+        <tag>优化</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://shenyu.wiki/2016/10/02/Here-Document/</loc>
+    <lastmod>2016-10-02T03:51:11.519Z</lastmod>
+    <data>
+        <display>
+        <title>Here Document</title>
+        <pubTime>2016-10-02T03:49:52.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
     
     
   <url>
@@ -13,9 +55,9 @@
         <title>贪吃蛇-基于SDL</title>
         <pubTime>2016-09-17T10:15:58.000Z</pubTime>
         
-        <tag>c</tag>
-         
         <tag>linux</tag>
+         
+        <tag>c</tag>
          
         <tag>SDL</tag>
          
@@ -53,11 +95,11 @@
         <title>c语言转汇编语言shell脚本</title>
         <pubTime>2016-09-17T09:58:57.000Z</pubTime>
         
-        <tag>c</tag>
+        <tag>linux</tag>
          
         <tag>shell</tag>
          
-        <tag>linux</tag>
+        <tag>c</tag>
          
          
            
@@ -74,9 +116,9 @@
         <title>linux shell聊天室</title>
         <pubTime>2016-09-17T09:38:43.000Z</pubTime>
         
-        <tag>c</tag>
-         
         <tag>linux</tag>
+         
+        <tag>c</tag>
          
         <tag>网络编程</tag>
          
@@ -114,9 +156,9 @@
         <title>在linux shell 下切换程序</title>
         <pubTime>2016-09-17T09:14:37.000Z</pubTime>
         
-        <tag>shell</tag>
-         
         <tag>linux</tag>
+         
+        <tag>shell</tag>
          
          
            
