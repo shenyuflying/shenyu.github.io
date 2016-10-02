@@ -361,7 +361,7 @@
 <li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
 </ol>
 <p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
-<p>$ wget \<br>     –recursive \<br>     –no-clobber \<br>     –page-requisites \<br>     –html-extension \<br>     –convert-links \<br>     –restrict-file-names=windows \<br>     –domains shenyu.wiki \<br>     –no-parent \<br>         shenyu.wiki</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
 <p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
 <p>上面用到的wget网站下载选择解释：</p>
 <pre><code>--recursive: 下载整个网站
