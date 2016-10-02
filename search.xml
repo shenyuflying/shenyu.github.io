@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title><![CDATA[wget下载网站供离线浏览]]></title>
+      <url>http://shenyu.wiki/2016/10/02/wget%E4%B8%8B%E8%BD%BD%E7%BD%91%E7%AB%99%E4%BE%9B%E7%A6%BB%E7%BA%BF%E6%B5%8F%E8%A7%88/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
+</blockquote>
+<p>看wget的man说明，可以发现wget有几个特点：</p>
+<ol>
+<li>非交互式，可以工作在后台。</li>
+<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
+<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
+</ol>
+<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
+<p>$ wget \<br>     –recursive \<br>     –no-clobber \<br>     –page-requisites \<br>     –html-extension \<br>     –convert-links \<br>     –restrict-file-names=windows \<br>     –domains shenyu.wiki \<br>     –no-parent \<br>         shenyu.wiki</p>
+<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
+<p>上面用到的wget网站下载选择解释：</p>
+<pre><code>--recursive: 下载整个网站
+--domains shenyu.wiki: 不要下载指定域名之外的网页。
+--no-parent: 仅仅下载当前目录结构下的文件。
+--page-requisites: 现在网页包括的所有内容(images, CSS and so on).
+--html-extension: 将网页保存为html文件。
+--convert-links: 将连接转换为本地连接
+--restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
+--no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
+</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[二进制文件 十六进制文件 互转]]></title>
       <url>http://shenyu.wiki/2016/10/02/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6-%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6-%E4%BA%92%E8%BD%AC/</url>
       <content type="html"><![CDATA[<blockquote>
