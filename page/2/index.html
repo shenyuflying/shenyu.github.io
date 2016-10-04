@@ -311,130 +311,6 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/17/linux-shell聊天室/" itemprop="url">
-                  linux shell聊天室
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T17:38:43+08:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/linux-shell聊天室/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/linux-shell聊天室/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/linux-shell聊天室/" class="leancloud_visitors" data-flag-title="linux shell聊天室">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>里程碑0：</p>
-<p>1、基于C/S架构的聊天室，分为客户端和服务器。<br>2、客户端登陆时输入服务器IP、port、 昵称不能重复</p>
-<p>里程碑1：</p>
-<p>3、可以群发消息或指定接收人<br>4、admin账号可以踢人<br>5、新加入用户可以看到聊天历史记录</p>
-<p>里程碑2：</p>
-<p>5、可以互传文件<br>6、保存聊天信息</p>
-<p>里程碑3：</p>
-<p>7、第一次登录时，需要注册。</p>
-<h2 id="技术设计"><a href="#技术设计" class="headerlink" title="技术设计"></a>技术设计</h2><p>1、在shell下的图形库：curses<br>2、多线程：pthread<br>3、网络：socket<br>4、消息结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> msg_st  </div><div class="line">&#123;  </div><div class="line">    <span class="keyword">char</span> name[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> to[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> data[<span class="number">4096</span>];  </div><div class="line">    <span class="keyword">char</span> cmd[<span class="number">256</span>];  </div><div class="line"><span class="comment">/*</div><div class="line"> * 其中，关于cmd内容：</div><div class="line"> * login 登陆</div><div class="line"> * offline 服务器即将踢人</div><div class="line"> * user 服务发送的用户列表，数据在data里</div><div class="line"> * chat 表示这是一条消息，数据在data里</div><div class="line"> */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>5、服务器用了epoll来监听多个fd</p>
-<h2 id="登陆界面"><a href="#登陆界面" class="headerlink" title="登陆界面"></a>登陆界面</h2><p><img src="http://img.blog.csdn.net/20141228204352953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="登陆界面"></p>
-<h2 id="聊天界面"><a href="#聊天界面" class="headerlink" title="聊天界面"></a>聊天界面</h2><p><img src="http://img.blog.csdn.net/20141228193822585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="聊天界面"></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/09/17/linux-shell聊天室/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/09/17/linux-shell-切换程序/" itemprop="url">
                   在linux shell 下切换程序
                 </a>
@@ -1146,6 +1022,142 @@
 <p><img src="http://static.zybuluo.com/shenyuflying/bnyu3xl0wxhl05pnn8y5p207/CghzfFW655SATWClAA_8fZQFgUE656.jpg" alt=""><br>$$天安门广场$$<br>天安门广场位于北京市中心，南北长880米，东西宽500米，面积达44万平方米，可容纳100万人举行盛大集会。是当今世界上最大的城中广场。</p>
 <p><img src="http://static.zybuluo.com/shenyuflying/fjim634uhf8dcj13zwk7ocqv/2016-10-04%2013-17-24%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$天安门$$<br>天安门是明清两代北京皇城的正门，始建于明朝永乐十五年（1417年）。天安门城楼长66米、宽37米。正中门洞上方悬挂着毛泽东画像，两边分别是“中华人民共和国万岁”和“世界人民大团结万岁”的大幅标语。</p>
 <p><img src="http://static.zybuluo.com/shenyuflying/9jz54rnyvcztch5gfgjvxv09/2016-10-04%2013-19-51%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$天安门城楼$$<br>天安门城楼为中国传统的重檐歇山顶建筑。城楼为木结构建筑，大殿飞檐下是排列有序的斗拱和梁枋。斗拱为中国传统木构架体系中独有，是斗形木弓形横木组成的具有翘、昂、拱特点的木制构件。梁枋又分额枋、檐枋，斗拱下面是额枋，上面彩画和金龙图案，柱子之间的构件叫檐枋，会有金龙和玺图案。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/03/08/兰州/" itemprop="url">
+                  兰州
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-08T15:54:09+08:00" content="2016-03-08">
+              2016-03-08
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/旅行/" itemprop="url" rel="index">
+                    <span itemprop="name">旅行</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/08/兰州/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/08/兰州/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/03/08/兰州/" class="leancloud_visitors" data-flag-title="兰州">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>兰州，甘肃省省会，中国西北地区重要的工业基地和综合交通枢纽，西部地区重要的中心城市之一，丝绸之路经济带的重要节点城市，也是西部战区陆军机关驻地。</p>
+</blockquote>
+<p><img src="http://static.zybuluo.com/shenyuflying/m48as8mnj56ad9tb9wj3q0jq/2016-10-04%2015-41-17%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$兰州拉面$$</p>
+<p>兰州拉面，又称兰州清汤牛肉面，是“中国十大面条”之一，是甘肃省兰州地区的风味小吃。它以“汤镜者清，肉烂者香，面细者精”的独特风味和“一清二白三红四绿五黄”，一清（汤清）、二白（萝卜白）、三红（辣椒油红）、四绿（香菜、蒜苗绿）、五黄（面条黄亮），赢得了国内乃至全世界顾客的好评。并被中国烹饪协会评为三大中式快餐之一，得到美誉“中华第一面”。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/qa18kqba37amdo3wcbdbcuke/2016-10-04%2015-38-26%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$兰州大学$$<br>兰州大学（Lanzhou University），创建于1909年,由中华人民共和国教育部直属，中央直管副部级建制，位列“211工程”、“985工程”大学行列，设有研究生院，是一所综合性全国重点大学。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/4uruja4fkccttw39t7h6nu9p/2016-10-04%2015-38-57%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$黄河兰州段$$</p>
+<p>黄河，中国北部大河，全长约5464公里，流域面积约752443平方公里。世界第六大长河，中国第二长河。黄河兰州段全长45.2公里，由于尚未流经黄土高原，水质清澈。</p>
 
           
         
