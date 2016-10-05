@@ -2,14 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://shenyu.wiki/2016/06/09/%E5%8C%97%E4%BA%AC%E5%A5%A5%E6%9E%97%E5%8C%B9%E5%85%8B%E5%85%AC%E5%9B%AD/</loc>
+    <loc>http://shenyu.wiki/2016/10/05/ssh%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E9%99%86linux%E4%B8%BB%E6%9C%BA/</loc>
     
-    <lastmod>2016-10-05T07:40:27.000Z</lastmod>
+    <lastmod>2016-10-05T10:08:19.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/2016/10/02/Here-Document/</loc>
+    <loc>http://shenyu.wiki/2016/06/09/%E5%8C%97%E4%BA%AC%E5%A5%A5%E6%9E%97%E5%8C%B9%E5%85%8B%E5%85%AC%E5%9B%AD/</loc>
     
     <lastmod>2016-10-05T07:40:27.000Z</lastmod>
     
@@ -59,6 +59,13 @@
   
   <url>
     <loc>http://shenyu.wiki/2015/02/17/mysql%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/</loc>
+    
+    <lastmod>2016-10-05T07:40:27.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2016/10/02/Here-Document/</loc>
     
     <lastmod>2016-10-05T07:40:27.000Z</lastmod>
     
