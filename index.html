@@ -311,6 +311,123 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/10/linux中的硬链接和软链接/" itemprop="url">
+                  linux中的硬链接和软链接
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-10T06:03:07+00:00" content="2016-10-10">
+              2016-10-10
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/10/linux中的硬链接和软链接/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/10/linux中的硬链接和软链接/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/10/linux中的硬链接和软链接/" class="leancloud_visitors" data-flag-title="linux中的硬链接和软链接">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="建立硬链接和软链接"><a href="#建立硬链接和软链接" class="headerlink" title="建立硬链接和软链接"></a>建立硬链接和软链接</h2><p>在linux中我们通过ln命令来建立硬链接和软链接，默认是建立硬链接，加上-s参数那么建立的就是软链接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;Hello world&quot; &gt; a</div><div class="line">$ ln a a_hard_link</div><div class="line">$ ln -s a a_soft_link</div></pre></td></tr></table></figure></p>
+<p>建立好之后，用ls命令看一下，记得加上-i这样我们就可以看到inode号了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ls -ali</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p><strong>inode</strong><br>科普一下：inode全称是index node即索引节点。可见inode中并没有存放文件的实际内容，而是存放了索引。这个索引指向的是磁盘中存放文件内容的物理位置。<br><strong>目录</strong><br>在linux中目录也有一个inode，inode指向记录目录实际内容的磁盘物理位置。</p>
+<h2 id="什么是硬链接和软链接"><a href="#什么是硬链接和软链接" class="headerlink" title="什么是硬链接和软链接"></a>什么是硬链接和软链接</h2><p>再回到我们的例子里，ls的结果第一列是该文件的inode号，可以看到硬链接的inode号和文件原来的inode号是一样的。说明指向的物理位置是一样的。<br>我们看软链接的inode号不同，说明是一个新的文件，该文件指向的是另外的一个物理位置。该物理位置里面存放着链接目标的路径。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>让我们删除连接目标文件a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ rm a</div><div class="line">$ ls -ali</div><div class="line">总用量 12</div><div class="line">19796573 drwxrwxr-x  2 yshen yshen 4096 10月 10 11:35 .</div><div class="line">58720267 drwxrwxr-x 43 yshen yshen 4096 10月 10 11:33 ..</div><div class="line">19796575 -rw-rw-r--  1 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p>硬链接和软链接现在还能访问么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cat a_hard_link </div><div class="line">Hello world</div><div class="line">$ cat a_soft_link </div><div class="line">cat: a_soft_link: 没有那个文件或目录</div></pre></td></tr></table></figure></p>
+<p>硬链接还能访问，软链接现在已经失效了！根据定义我们不难找出原因：<br>(1)硬链接指向的是物理位置和连接对象指向的物理位置一样，该物理位置有一个引用计数（ls的第三列），删除链接对象后，引用计数从原来的2变为1，所以物理上文件并没有删除，如果为0的话采用unlink删除。所以硬链接依然可以访问。<br>(2)软链接其实是一个文件，文件指向的路径已经失效了，所以会显示没有那个文件或目录。</p>
+<p>我们总结一下区别：<br>(1) 链接目标失效之后，硬链接依然可以访问。软链接不能访问。<br>(2) 硬链接只能指向和链接目标同一个分区，软链接没有限制，甚至可以指向网络地址。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/09/linux中的僵尸进程/" itemprop="url">
                   linux中的僵尸进程
                 </a>
@@ -773,124 +890,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/05/ssh免密码登陆linux主机/" itemprop="url">
-                  ssh免密码登陆linux主机
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-05T10:07:14+00:00" content="2016-10-05">
-              2016-10-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/05/ssh免密码登陆linux主机/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/05/ssh免密码登陆linux主机/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/05/ssh免密码登陆linux主机/" class="leancloud_visitors" data-flag-title="ssh免密码登陆linux主机">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>比如想登陆一台服务器但是每次都需要输密码，这时候我们可以用ssh的authorized_keys文件来记录允许登陆的主机。</p>
-</blockquote>
-<h2 id="配置hosts"><a href="#配置hosts" class="headerlink" title="配置hosts"></a>配置hosts</h2><p>比如我们有2台主机，分别是host1和host2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat /etc/hosts</div><div class="line">192.168.0.101 host1</div><div class="line">192.168.0.102 host2</div></pre></td></tr></table></figure></p>
-<h2 id="生成key"><a href="#生成key" class="headerlink" title="生成key"></a>生成key</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh-keygen -t dsa -f ~/.ssh/id_dsa -N &quot;&quot;</div><div class="line">Generating public/private dsa key pair.</div><div class="line">Your identification has been saved in /root/.ssh/id_dsa.</div><div class="line">Your public key has been saved in /root/.ssh/id_dsa.pub.</div><div class="line">The key fingerprint is:</div><div class="line">91:09:5c:82:5a:6a:50:08:4e:b2:0c:62:de:cc:74:44 root@host1.clusterlabs.org</div><div class="line">The key&apos;s randomart image is:</div><div class="line">+--[ DSA 1024]----+</div><div class="line">|==.ooEo..        |</div><div class="line">|X O + .o o       |</div><div class="line">| * A    +        |</div><div class="line">|  +      .       |</div><div class="line">| .      S        |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">+-----------------+</div></pre></td></tr></table></figure>
-<h2 id="新建authorized-keys文件"><a href="#新建authorized-keys文件" class="headerlink" title="新建authorized_keys文件"></a>新建authorized_keys文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# cp ~/.ssh/id_dsa.pub ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
-<h2 id="把authorized-keys文件部署到远程主机"><a href="#把authorized-keys文件部署到远程主机" class="headerlink" title="把authorized_keys文件部署到远程主机"></a>把authorized_keys文件部署到远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# scp -r ~/.ssh/authorized_keys host2:～/.ssh/</div></pre></td></tr></table></figure>
-<h2 id="免密码登陆远程主机"><a href="#免密码登陆远程主机" class="headerlink" title="免密码登陆远程主机"></a>免密码登陆远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh host2</div></pre></td></tr></table></figure>
-<p>其实就是把本机生成的*.pub文件内容copy到另外一台主机~/.ssh/authorized_keys文件里面就ok！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -936,7 +935,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

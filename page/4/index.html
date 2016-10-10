@@ -311,6 +311,118 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/17/c语言转汇编语言shell脚本/" itemprop="url">
+                  c语言转汇编语言shell脚本
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-17T17:58:57+00:00" content="2016-09-17">
+              2016-09-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/17/c语言转汇编语言shell脚本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/c语言转汇编语言shell脚本/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/09/17/c语言转汇编语言shell脚本/" class="leancloud_visitors" data-flag-title="c语言转汇编语言shell脚本">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近在学习汇编，为了方便写了一个shell脚本，用来把c语言转换为汇编语言。很方便。</p>
+<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash  </div><div class="line">if [  &quot;$#&quot; = &quot;0&quot; ] ; then</div><div class="line">        echo &apos;help: c2asm FILENAME&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line"></div><div class="line"></div><div class="line">if [ -f &quot;$1&quot; ] ; then</div><div class="line">        echo &apos;check file ok!&apos;  </div><div class="line">else</div><div class="line">        echo &apos;c2asm: file not exist&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line">echo &apos;generating asm file...&apos;  </div><div class="line">gcc -O0 -S &quot;$1&quot;</div><div class="line">tmp=$1</div><div class="line">asmfile=$&#123;tmp%%.c&#125;.s;</div><div class="line"></div><div class="line">echo &quot;asm file generated: $asmfile&quot;  </div><div class="line">echo &apos;==================asm====================&apos;  </div><div class="line">cat &quot;$asmfile&quot; | grep -v &apos;\.&apos;</div><div class="line">echo &apos;==================c======================&apos;  </div><div class="line">cat &quot;$1&quot;</div><div class="line">echo &apos;==================END====================&apos;  </div><div class="line">echo &apos;done&apos;</div></pre></td></tr></table></figure>
+<h2 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">check file ok!</div><div class="line">generating asm file...</div><div class="line">asm file generated: main.s</div><div class="line">==================asm====================</div><div class="line">main:</div><div class="line">	pushq	%rbp</div><div class="line">	movq	%rsp, %rbp</div><div class="line">	movl	$1, -8(%rbp)</div><div class="line">	movl	$1, -4(%rbp)</div><div class="line">	movl	-8(%rbp), %edx</div><div class="line">	movl	-4(%rbp), %eax</div><div class="line">	addl	%edx, %eax</div><div class="line">	popq	%rbp</div><div class="line">	ret</div><div class="line">==================c======================</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a,b;</div><div class="line">	a = 1;</div><div class="line">	b = 1;</div><div class="line">	return a+b;</div><div class="line"></div><div class="line">&#125;</div><div class="line">==================END====================</div><div class="line">done</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/17/linux-shell聊天室/" itemprop="url">
                   linux shell聊天室
                 </a>
@@ -770,142 +882,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/15/长城/" itemprop="url">
-                  长城 Great Wall
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-15T13:12:02+00:00" content="2016-09-15">
-              2016-09-15
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/旅行/" itemprop="url" rel="index">
-                    <span itemprop="name">旅行</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/15/长城/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/15/长城/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/15/长城/" class="leancloud_visitors" data-flag-title="长城 Great Wall">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>长城（Great Wall）又称万里长城，是中国古代的军事防御工程。长城修筑的历史可上溯到西周时期，发生在首都镐京（今陕西西安）的著名的典故“烽火戏诸侯”就源于此。春秋战国时期列国争霸，互相防守，长城修筑进入第一个高潮，但此时修筑的长度都比较短。秦灭六国统一天下后，秦始皇连接和修缮战国长城，始有万里长城之称。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/gzsbxd49ixdcm1yjk6p4kbma/2016-10-04%2013-05-31%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$八达岭长城$$</p>
-<p>八达岭长城，位于北京市延庆区军都山关沟古道北口。是中国古代伟大的防御工程万里长城的重要组成部分，是明长城的一个隘口。八达岭长城为居庸关的重要前哨，古称“居庸之险不在关而在八达岭”。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/cu9g6kwjxit08k639it2btj4/2016-10-04%2012-58-54%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$烽火台$$<br>烽火台高均五丈，周围建小城，高一丈五尺，上设悬楼垒木，下设壕堑吊桥，外设塌窖陷阱；门道上置水柜，冬日盛冰、夏日盛水；不修台阶，以绳梯上下；每台有火铳、火炮2门，有守卒10人。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/hgfm3n6odz2f1k2ilmz42gyu/2016-10-04%2012-54-09%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$城墙$$</p>
-<p>八达岭长城城墙高6～9米，平面呈梯形，底宽6.5～7.5米、顶宽4.5～5.8米。大部墙顶宽阔平坦，可以“五马并骑、十人并行”；城墙中线偏于外侧，外侧墙高，内侧墙低。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -951,7 +927,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">29</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
