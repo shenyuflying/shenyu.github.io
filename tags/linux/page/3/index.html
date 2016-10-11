@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="linux," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,34 +84,15 @@
 
 
 
-<meta name="description" content="如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。
-
-这篇文章会告诉你：
-
-僵尸进程产生原理。
-如何产生僵尸进程。
-如何回收僵尸进程。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="linux中的僵尸进程">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/09/linux中的僵尸进程/index.html">
+<meta name="description" content="Shen Yu">
+<meta property="og:type" content="website">
+<meta property="og:title" content="申宇的博客">
+<meta property="og:url" content="http://shenyu.wiki/tags/linux/page/3/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。
-
-这篇文章会告诉你：
-
-僵尸进程产生原理。
-如何产生僵尸进程。
-如何回收僵尸进程。">
-<meta property="og:updated_time" content="2016-10-09T07:13:36.000Z">
+<meta property="og:description" content="Shen Yu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux中的僵尸进程">
-<meta name="twitter:description" content="如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。
-
-这篇文章会告诉你：
-
-僵尸进程产生原理。
-如何产生僵尸进程。
-如何回收僵尸进程。">
+<meta name="twitter:title" content="申宇的博客">
+<meta name="twitter:description" content="Shen Yu">
 
 
 
@@ -132,9 +113,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/2016/10/09/linux中的僵尸进程/"/>
+  <link rel="canonical" href="http://shenyu.wiki/tags/linux/page/3/"/>
 
-  <title> linux中的僵尸进程 | 申宇的博客 </title>
+  <title> 标签: linux | 申宇的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -165,7 +146,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -306,207 +287,50 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h2 >
+        linux
+        <small>标签</small>
+      </h2>
+    </div>
 
     
-      <header class="post-header">
+      
 
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
+            <a class="post-title-link" href="/2016/09/17/linux-shell-切换程序/" itemprop="url">
               
-                linux中的僵尸进程
+                <span itemprop="name">在linux shell 下切换程序</span>
               
-            
-          </h1>
+            </a>
         
+      </h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-09T07:13:11+00:00" content="2016-10-09">
-              2016-10-09
-            </time>
-          </span>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-09-17T17:14:37+00:00"
+              content="2016-09-17" >
+          09-17
+        </time>
+      </div>
 
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/09/linux中的僵尸进程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/09/linux中的僵尸进程/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/09/linux中的僵尸进程/" class="leancloud_visitors" data-flag-title="linux中的僵尸进程">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-              &nbsp; | &nbsp;
-              <span class="page-pv"><i class="fa fa-file-o"></i>
-              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-              </span>
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <blockquote>
-<p>如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。</p>
-</blockquote>
-<p>这篇文章会告诉你：</p>
-<ol>
-<li>僵尸进程产生原理。</li>
-<li>如何产生僵尸进程。</li>
-<li>如何回收僵尸进程。</li>
-</ol>
-<a id="more"></a>
-<h2 id="产生僵尸进程"><a href="#产生僵尸进程" class="headerlink" title="产生僵尸进程"></a>产生僵尸进程</h2><p>根据僵尸进程的定义，我们不难用c语言来产生一个僵尸进程</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MB 1024*1024</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> pid;</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"new process PID=%d\n"</span>, getpid());</div><div class="line">    pid = fork();</div><div class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)</div><div class="line">    &#123;   </div><div class="line">        <span class="comment">/* child */</span></div><div class="line">        <span class="built_in">printf</span>(<span class="string">"new process PID=%d\n"</span>, getpid());</div><div class="line">        <span class="keyword">char</span> * p = <span class="built_in">malloc</span>(<span class="number">512</span>*MB);</div><div class="line">        <span class="built_in">memset</span>(p,<span class="number">0</span>,<span class="number">512</span>*MB);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">    &#125;   </div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;   </div><div class="line">        <span class="comment">/* parent */</span></div><div class="line">        sleep(<span class="number">60</span>);</div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>编译并执行该程序，然后再看该程序进程的状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">new process PID=25810</div><div class="line">new process PID=25811</div><div class="line"></div><div class="line">$ ps aux | grep main</div><div class="line">yshen    25810  0.0  0.0   4200   620 pts/31   S+   14:30   0:00 ./main</div><div class="line">yshen    25811  0.0  0.0      0     0 pts/31   Z+   14:30   0:00 [main] &lt;defunct&gt;</div></pre></td></tr></table></figure></p>
-<p>可以看到，主进程的状态为S+即休眠状态，子进程的状态为Z+即僵尸状态。此时僵尸进程等待父进程读取其退出状态。在该程序中等待父进程退出之后，子进程也将退出（因为子进程的状态在父进程退出之后已经没什么用了）。</p>
-<p>用top命令来查看内存占用情况，可以看到实僵尸进程的内存占用等于0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ top</div><div class="line">  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND </div><div class="line">25810 yshen     20   0    4200    792    712 S   0.0  0.0   0:00.00 main</div><div class="line">25811 yshen     20   0       0      0      0 Z   0.0  0.0   0:00.67 main</div></pre></td></tr></table></figure></p>
-<h2 id="处理僵尸进程"><a href="#处理僵尸进程" class="headerlink" title="处理僵尸进程"></a>处理僵尸进程</h2><p>根据以上分析，我们不难得出僵尸进程退出的2种情况：</p>
-<ol>
-<li>父进程用wait/waitpid来获取子进程的状态。</li>
-<li>父进程退出。</li>
-</ol>
-<p>子进程退出，也会给父进程发送SIGCHLD信号来通知。在实际编码中，一般应SIGCHLD信号进行处理。（如：重新fork拉起子进程或进行垃圾回收，记录日志等等）。如下例子我们注册SIGCHLD信号处理函数，等待子进程退出时由父进程调用wait来获取其退出状态。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">#include&lt;unistd.h&gt;</div><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#include&lt;signal.h&gt;</div><div class="line"></div><div class="line">void handler(int code)</div><div class="line">&#123;</div><div class="line">	int status;</div><div class="line">	pid_t pid =	wait(&amp;status);</div><div class="line">	printf(&quot;parent get SIGCHLD, child %d returned %d\n&quot;,</div><div class="line">									pid, WEXITSTATUS(status));</div><div class="line">	sleep(60); /* 加这行是因为父进程收到SIGCHLD信号打断了原来的sleep，如果不加这个父进程就会马上退出 */</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line"></div><div class="line">	int pid;</div><div class="line">	signal(SIGCHLD,handler);</div><div class="line">	</div><div class="line">	printf(&quot;new process PID=%d\n&quot;, getpid());</div><div class="line">	pid = fork();</div><div class="line"></div><div class="line">	if(pid==0)</div><div class="line">	&#123;</div><div class="line">		/* child */</div><div class="line">		printf(&quot;new process PID=%d\n&quot;, getpid());</div><div class="line">		exit(123);</div><div class="line">	&#125;</div><div class="line">	/* parent */</div><div class="line">	sleep(60);</div><div class="line">	exit(0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>编译并执行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">new process PID=26559</div><div class="line">new process PID=26560</div><div class="line">parent get SIGCHLD, child 26560 returned 123</div><div class="line"></div><div class="line">$ ps aux | grep main</div><div class="line">yshen    26604  0.0  0.0   4200   624 pts/31   S+   15:07   0:00 ./main</div></pre></td></tr></table></figure></p>
-<p>可以看到，已经没有僵尸进程了。</p>
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/linux/" rel="tag">#linux</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" rel="next" title="字符串中特殊字符转义——php中urlencode urldecode的c语言版本">
-                <i class="fa fa-chevron-left"></i> 字符串中特殊字符转义——php中urlencode urldecode的c语言版本
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/10/linux中的硬链接和软链接/" rel="prev" title="linux中的硬链接和软链接">
-                linux中的硬链接和软链接 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
-      
-        
-  <div class="bdsharebuttonbox">
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
-    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
-    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
-    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
-    <a href="#" class="bds_more" data-cmd="more"></a>
-    <a class="bds_count" data-cmd="count"></a>
+    
   </div>
-  <script>
-    window._bd_share_config = {
-      "common": {
-        "bdText": "",
-        "bdMini": "2",
-        "bdMiniList": false,
-        "bdPic": ""
-      },
-      "share": {
-        "bdSize": "16",
-        "bdStyle": "0"
-      },
-      "image": {
-        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
-        "viewText": "分享到：",
-        "viewSize": "16"
-      }
-    }
-  </script>
 
-<script>
-  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
-</script>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/tags/linux/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/tags/linux/">1</a><a class="page-number" href="/tags/linux/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
 
-      
-    </div>
-  </div>
 
 
           </div>
@@ -514,14 +338,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/10/09/linux中的僵尸进程/"
-           data-title="linux中的僵尸进程" data-url="http://shenyu.wiki/2016/10/09/linux中的僵尸进程/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -541,17 +357,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -601,17 +408,6 @@
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#产生僵尸进程"><span class="nav-number">1.</span> <span class="nav-text">产生僵尸进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理僵尸进程"><span class="nav-number">2.</span> <span class="nav-text">处理僵尸进程</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -741,10 +537,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 
