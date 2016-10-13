@@ -311,6 +311,126 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/09/linux中的僵尸进程/" itemprop="url">
+                  linux中的僵尸进程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-09T07:13:11+00:00" content="2016-10-09">
+              2016-10-09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/09/linux中的僵尸进程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/09/linux中的僵尸进程/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/09/linux中的僵尸进程/" class="leancloud_visitors" data-flag-title="linux中的僵尸进程">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。</p>
+</blockquote>
+<p>这篇文章会告诉你：</p>
+<ol>
+<li>僵尸进程产生原理。</li>
+<li>如何产生僵尸进程。</li>
+<li>如何回收僵尸进程。</li>
+</ol>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/09/linux中的僵尸进程/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" itemprop="url">
                   字符串中特殊字符转义——php中urlencode urldecode的c语言版本
                 </a>
@@ -771,124 +891,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/04/linux查找文件内容/" itemprop="url">
-                  linux查找文件内容
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-04T18:55:36+00:00" content="2016-10-04">
-              2016-10-04
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/04/linux查找文件内容/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/04/linux查找文件内容/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/04/linux查找文件内容/" class="leancloud_visitors" data-flag-title="linux查找文件内容">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>有时候我们需要在一堆文件中查找包含<code>某单词</code>的文件。比如在一堆源码文件中找出来调用一个函数的地方。</p>
-</blockquote>
-<p>可以用find，xargs，grep三个命令联合起来实现。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find ./ -type f -name *.c | xargs grep <span class="string">"word"</span></div></pre></td></tr></table></figure></p>
-<p>find找出当前目录下所有.c的普通文件<br>xargs将文件名变成参数传入到grep<br>grep打开该文件并找出文件中包含word的行</p>
-<h2 id="一个脚本"><a href="#一个脚本" class="headerlink" title="一个脚本"></a>一个脚本</h2><p>为了方便使用，避免每次都输入很长的命令，写出了下面一个脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash                                                                 </span></div><div class="line"><span class="comment">#递归查找当前目录文件中的内容</span></div><div class="line"><span class="comment">#参数1： 文件后缀，可以省略</span></div><div class="line"><span class="comment">#参数2： 要查找的字符串</span></div><div class="line"></div><div class="line">F_ARG_SUFFIX=<span class="string">""</span></div><div class="line">F_ARG_PATTEN=<span class="string">""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ] ; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"usage: f [file suffix] pattern"</span></div><div class="line">    <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 1 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$1</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 2 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_SUFFIX=<span class="string">"-name *.<span class="variable">$1</span>"</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$2</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">find ./ -type f <span class="variable">$F_ARG_NAME</span> | xargs grep <span class="variable">$F_ARG_PATTEN</span></div></pre></td></tr></table></figure></p>
-<p>保存在/bin目录下，并加上可执行权限</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>比如找出postgreSQL源码中, c语言文件使用到heap_open函数的地方：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ f c heap_open</div><div class="line">./backend/commands/tablecmds.c:         rel = heap_openrv(rv, AccessExclusiveLock);</div><div class="line">./backend/commands/tablecmds.c:                         rel = heap_open(childrelid, NoLock);</div><div class="line">...</div><div class="line"></div><div class="line">$ f c heap_open | wc <span class="_">-l</span></div><div class="line">587</div></pre></td></tr></table></figure></p>
-<p>一共使用了587次，很多啊！</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -934,7 +936,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -951,7 +953,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
