@@ -311,6 +311,138 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/02/wget下载网站供离线浏览/" itemprop="url">
+                  wget下载网站供离线浏览
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-02T16:44:45+00:00" content="2016-10-02">
+              2016-10-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/02/wget下载网站供离线浏览/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/02/wget下载网站供离线浏览/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/02/wget下载网站供离线浏览/" class="leancloud_visitors" data-flag-title="wget下载网站供离线浏览">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
+</blockquote>
+<p>看wget的man说明，可以发现wget有几个特点：</p>
+<ol>
+<li>非交互式，可以工作在后台。</li>
+<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
+<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
+</ol>
+<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
+<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
+<p>上面用到的wget网站下载选择解释：</p>
+<pre><code>--recursive: 下载整个网站
+--domains shenyu.wiki: 不要下载指定域名之外的网页。
+--no-parent: 仅仅下载当前目录结构下的文件。
+--page-requisites: 现在网页包括的所有内容(images, CSS and so on).
+--html-extension: 将网页保存为html文件。
+--convert-links: 将连接转换为本地连接
+--restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
+--no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
+</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/02/二进制文件-十六进制文件-互转/" itemprop="url">
                   二进制文件 十六进制文件 互转
                 </a>
@@ -762,118 +894,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/17/c语言转汇编语言shell脚本/" itemprop="url">
-                  c语言转汇编语言shell脚本
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-17T17:58:57+00:00" content="2016-09-17">
-              2016-09-17
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/17/c语言转汇编语言shell脚本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/17/c语言转汇编语言shell脚本/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/17/c语言转汇编语言shell脚本/" class="leancloud_visitors" data-flag-title="c语言转汇编语言shell脚本">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近在学习汇编，为了方便写了一个shell脚本，用来把c语言转换为汇编语言。很方便。</p>
-<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash  </div><div class="line">if [  &quot;$#&quot; = &quot;0&quot; ] ; then</div><div class="line">        echo &apos;help: c2asm FILENAME&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line"></div><div class="line"></div><div class="line">if [ -f &quot;$1&quot; ] ; then</div><div class="line">        echo &apos;check file ok!&apos;  </div><div class="line">else</div><div class="line">        echo &apos;c2asm: file not exist&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line">echo &apos;generating asm file...&apos;  </div><div class="line">gcc -O0 -S &quot;$1&quot;</div><div class="line">tmp=$1</div><div class="line">asmfile=$&#123;tmp%%.c&#125;.s;</div><div class="line"></div><div class="line">echo &quot;asm file generated: $asmfile&quot;  </div><div class="line">echo &apos;==================asm====================&apos;  </div><div class="line">cat &quot;$asmfile&quot; | grep -v &apos;\.&apos;</div><div class="line">echo &apos;==================c======================&apos;  </div><div class="line">cat &quot;$1&quot;</div><div class="line">echo &apos;==================END====================&apos;  </div><div class="line">echo &apos;done&apos;</div></pre></td></tr></table></figure>
-<h2 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">check file ok!</div><div class="line">generating asm file...</div><div class="line">asm file generated: main.s</div><div class="line">==================asm====================</div><div class="line">main:</div><div class="line">	pushq	%rbp</div><div class="line">	movq	%rsp, %rbp</div><div class="line">	movl	$1, -8(%rbp)</div><div class="line">	movl	$1, -4(%rbp)</div><div class="line">	movl	-8(%rbp), %edx</div><div class="line">	movl	-4(%rbp), %eax</div><div class="line">	addl	%edx, %eax</div><div class="line">	popq	%rbp</div><div class="line">	ret</div><div class="line">==================c======================</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a,b;</div><div class="line">	a = 1;</div><div class="line">	b = 1;</div><div class="line">	return a+b;</div><div class="line"></div><div class="line">&#125;</div><div class="line">==================END====================</div><div class="line">done</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -919,7 +939,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-count">35</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
