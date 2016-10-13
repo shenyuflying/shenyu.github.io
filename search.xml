@@ -6,9 +6,7 @@
     <entry>
       <title><![CDATA[PostgreSQL日志分析工具——pgBadger]]></title>
       <url>http://shenyu.wiki/2016/10/13/PostgreSQL%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%E2%80%94%E2%80%94pgBadger/</url>
-      <content type="html"><![CDATA[<h1 id="PostgreSQL日志分析工具——pgBadger"><a href="#PostgreSQL日志分析工具——pgBadger" class="headerlink" title="PostgreSQL日志分析工具——pgBadger"></a>PostgreSQL日志分析工具——pgBadger</h1><p>标签（空格分隔）： PostgreSQL</p>
-<hr>
-<blockquote>
+      <content type="html"><![CDATA[<blockquote>
 <p>面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，常用的办法就是查看服务器的日志。但是一头扎进几百M甚至几个G的日志里查看并不现实。那么如何快速回答：最慢的查询有哪些？查询相应时间分布？等等问题，并对最突出的问题着手优化呢？显然我们需要借助自动化工具来完成这个任务。</p>
 </blockquote>
 <p>pgBadger就是为分析<code>PostgreSQL全日志</code>为目的诞生的一个工具，能够分析日志并生成分析报告，<a href="/uploads/out.html">这里</a>给出了一个报告样本。怎么样，报告是不是很详细？</p>
