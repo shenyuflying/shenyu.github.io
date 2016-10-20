@@ -311,6 +311,129 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/11/数据库性能测试标准TPC/" itemprop="url">
+                  数据库性能测试标准TPC
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-11T07:31:30+00:00" content="2016-10-11">
+              2016-10-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/11/数据库性能测试标准TPC/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/11/数据库性能测试标准TPC/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/11/数据库性能测试标准TPC/" class="leancloud_visitors" data-flag-title="数据库性能测试标准TPC">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>经常有人在自己机器上跑了一个简单的查询，就发布到网上说哪个数据性能如何如何。数据库性能的好坏影响因素很多，比如业务特点、数据量、测试时间、硬件配置等等。那么有没有一个标准来度量数据库性能的好呢？</p>
+</blockquote>
+<p>有这么一个组织：TPC，即事务处理性能委员位TPC(Transaction Processing Performance Council)，成立于88年，制定了一系列用来测试数据库性能的标准，在业内广泛应用。<br>TPC成员有很多软硬件厂商组成，比如IBM，INTEL传统的硬件厂商；还有ORALCE、SAP、REDHAT等软件厂商等。国内的HUAWEI也在其中。可以说TPC组织覆盖了数据库的整个生态系统。<br>他们的官网是：<a href="http://www.tpc.org" target="_blank" rel="external">http://www.tpc.org</a></p>
+<p>TPC有很多测试标准，见下图。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/le1aa8mmq6jnh0191fscinj7/image_1aup9fil01m0qsda13k0mi51jmp9.png" alt="TPC测试标准"></p>
+<p>其中最有名的是TPC-C和TPC-H标准。TPC-C标准是TPC推出的最早的一个标准，主要用来测试交易处理的的场景。TPC-H标准主要用来测试决策支持场景。</p>
+<h2 id="TPC-C"><a href="#TPC-C" class="headerlink" title="TPC-C"></a>TPC-C</h2><p>TPC-C全称为TPC Benchmark C，主要用来测试交易处理场景下数据库的性能。该测试标准模拟了一个批发商管理订单的场景。包括了输入订单，发货，收钱，查询订单状态。性能指标有2个分别是：</p>
+<ul>
+<li>new-order txn rate (tpmC)</li>
+<li>price/performance ($/tpmC)</li>
+</ul>
+<p>根据字面意思不难理解，tmpC是每分钟处理订单的数量，$/tmpC是一个经济指标说的是每tmpC花费。</p>
+<h2 id="TPC-H"><a href="#TPC-H" class="headerlink" title="TPC-H"></a>TPC-H</h2><p>TPC-H全称The TPC Benchmark™H ，主要用来测试决策支持场景下数据库的性能。该测试标准模拟了商业环境中一些即席查询（Ad-hoc queries）和并发修改。这些场景都需要访问大量的数据，执行的查询非常复杂。是不是可以理解成为OLAP场景测试？</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/" itemprop="url">
                   好书推荐：《操作系统设计与实现》
                 </a>
@@ -773,138 +896,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/" itemprop="url">
-                  好文推荐：《Spanner: Google's Globally-Distributed Database》
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-05T11:23:57+00:00" content="2016-10-05">
-              2016-10-05
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/读书/" itemprop="url" rel="index">
-                    <span itemprop="name">读书</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/" class="leancloud_visitors" data-flag-title="好文推荐：《Spanner: Google's Globally-Distributed Database》">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Spanner是谷歌公司研发的、可扩展的、多版本、全球分布式、同步复制数据库。它是第一个把数据分布在全球范围内的系统，并且支持外部一致性的分布式事务。本文描述了Spanner的架构、特性、不同设计决策的背后机理和一个新的时间API，这个API可以暴露时钟的不确定性。这个API及其实现，对于支持外部一致性和许多强大特性而言，是非常重要的，这些强大特性包括：非阻塞的读、不采用锁机制的只读事务、原子模式变更。</p>
-</blockquote>
-<p>附上原文<a href="/uploads/spanner.pdf">Spanner: Google’s Globally-Distributed Database</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -950,7 +941,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">37</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -967,7 +958,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

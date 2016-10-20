@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="linux," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,16 +84,15 @@
 
 
 
-<meta name="description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
-<meta property="og:type" content="article">
-<meta property="og:title" content="yap--yet another program profiling tool">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/index.html">
+<meta name="description" content="Shen Yu">
+<meta property="og:type" content="website">
+<meta property="og:title" content="申宇的博客">
+<meta property="og:url" content="http://shenyu.wiki/tags/sed/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
-<meta property="og:updated_time" content="2016-10-14T08:13:55.000Z">
+<meta property="og:description" content="Shen Yu">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yap--yet another program profiling tool">
-<meta name="twitter:description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
+<meta name="twitter:title" content="申宇的博客">
+<meta name="twitter:description" content="Shen Yu">
 
 
 
@@ -114,9 +113,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/"/>
+  <link rel="canonical" href="http://shenyu.wiki/tags/sed/"/>
 
-  <title> yap--yet another program profiling tool | 申宇的博客 </title>
+  <title> 标签: sed | 申宇的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -147,7 +146,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -288,211 +287,46 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h2 >
+        sed
+        <small>标签</small>
+      </h2>
+    </div>
 
     
-      <header class="post-header">
+      
 
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
+            <a class="post-title-link" href="/2016/10/20/利用sed生成规范的c代码/" itemprop="url">
               
-                yap--yet another program profiling tool
+                <span itemprop="name">利用sed生成规范的c代码</span>
               
-            
-          </h1>
+            </a>
         
+      </h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-14T07:59:13+00:00" content="2016-10-14">
-              2016-10-14
-            </time>
-          </span>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-10-20T10:15:38+00:00"
+              content="2016-10-20" >
+          10-20
+        </time>
+      </div>
 
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/14/yap-yet-another-program-profiling-tool/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/14/yap-yet-another-program-profiling-tool/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/14/yap-yet-another-program-profiling-tool/" class="leancloud_visitors" data-flag-title="yap--yet another program profiling tool">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-              &nbsp; | &nbsp;
-              <span class="page-pv"><i class="fa fa-file-o"></i>
-              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-              </span>
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <blockquote>
-<p>Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanced techniques (such as systemtap and dtrace call level probes), it is overkill to build upon that. Poor man doesn’t have time. Poor man needs food.  –quoted from <a href="https://poormansprofiler.org/" target="_blank" rel="external">poor man’s profiler</a></p>
-</blockquote>
-<p>Just as the name implies, this is an enhenced version of poor man’s profiler with the following new features added:</p>
-<ol>
-<li>support command line argument, which make it easier to use and easier to integrate to your program.</li>
-<li>support multi process profiling, which is good for PostgreSQL profiling.</li>
-<li>user can choose how many stack level to print, which make the result set shorter and easier to read.</li>
-<li>when stack level is set to 1 , instead of the stack ranking, the function ranking is printed</li>
-<li>the result set is neater and much more pretty.</li>
-</ol>
-<h2 id="INSTALL"><a href="#INSTALL" class="headerlink" title="INSTALL"></a>INSTALL</h2><p>Download it from <code>https://github.com/shenyuflying/yap.git</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/yap.git</div></pre></td></tr></table></figure></p>
-<p>Type <code>yap -h</code> to show the help message.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># ./yap -h</div><div class="line">================================================================</div><div class="line">                          YAP    ver0.1                         </div><div class="line">================================================================</div><div class="line">  yap -- yet another profiling tool based on poor man&apos;s profiler</div><div class="line">         to generate stack rank of your program.                </div><div class="line">                                                                </div><div class="line">                             yshen 2016 see http://shenyu.wiki  </div><div class="line">================================================================</div><div class="line">                                                         </div><div class="line">usage: yap options=values</div><div class="line">        -s | --samples=n      how many samples to collect</div><div class="line">        -t | --sleeptime=n    how many time to sleep during each sample</div><div class="line">        -f | --stackframe=n   how deep the stack frame to output</div><div class="line">        -p | --pid=pid        which pid to analyze</div><div class="line">        -n | --progname=name  which program to analyze, good for multi-process profiling</div><div class="line">        -h | --help           show this help</div></pre></td></tr></table></figure></p>
-<p>if the message is shown, the yap is ready to work.</p>
-<h2 id="HOW-TO-USE"><a href="#HOW-TO-USE" class="headerlink" title="HOW TO USE"></a>HOW TO USE</h2><p>You need at least specify a progname or a pid to let yap attach to your program.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div></pre></td></tr></table></figure></p>
-<p>will be enough for the yap to run. after you have choosen a program to profile, you will be run with the default configurations, and <code>yap</code> is start working.<br>the default configurations are<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">samples=100   # take 100 samples of your program</div><div class="line">sleeptime=0   # no sleep during each iteration</div><div class="line">stackframe=5  # the stack frame depth is 5</div></pre></td></tr></table></figure></p>
-<p>it will take a while and there will be a progress indicator on the screen, so take your time.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div><div class="line">1/100 completed.</div><div class="line">2/100 completed.</div><div class="line">3/100 completed.</div><div class="line">4/100 completed.</div><div class="line">5/100 completed.</div><div class="line">...</div><div class="line">100/100 complete.</div></pre></td></tr></table></figure></p>
-<p>when done, the stack ranking is printed.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">40 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	WaitLatch</div><div class="line">10 __select_nocancel	ServerLoop	PostmasterMain	main</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	SysLoggerMain</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	PgstatCollectorMain</div><div class="line">1</div></pre></td></tr></table></figure></p>
-<p>if you want to seek the function ranking rather than stack ranking, use <code>--stackframe=1</code> and re-run yap</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">60 __epoll_wait_nocancel</div><div class="line">10 __select_nocancel</div><div class="line"> 1</div></pre></td></tr></table></figure>
-<p>the function ranking is much sorter and easier to find the slowest functions.</p>
-<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ol>
-<li>shall be run in a time duration, add -b | –begin and -e | –end and -d | –duration</li>
-<li>shall be exit when the profiling program exit</li>
-<li>…</li>
-</ol>
-<p>report bugs to shenyufly@163.com</p>
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/linux/" rel="tag">#linux</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/10/13/PostgreSQL性能分析/" rel="next" title="PostgreSQL性能分析">
-                <i class="fa fa-chevron-left"></i> PostgreSQL性能分析
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/20/利用sed生成规范的c代码/" rel="prev" title="利用sed生成规范的c代码">
-                利用sed生成规范的c代码 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
-      
-        
-  <div class="bdsharebuttonbox">
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
-    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
-    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
-    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
-    <a href="#" class="bds_more" data-cmd="more"></a>
-    <a class="bds_count" data-cmd="count"></a>
+    
   </div>
-  <script>
-    window._bd_share_config = {
-      "common": {
-        "bdText": "",
-        "bdMini": "2",
-        "bdMiniList": false,
-        "bdPic": ""
-      },
-      "share": {
-        "bdSize": "16",
-        "bdStyle": "0"
-      },
-      "image": {
-        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
-        "viewText": "分享到：",
-        "viewSize": "16"
-      }
-    }
-  </script>
 
-<script>
-  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-
-      
-    </div>
-  </div>
+  
 
 
           </div>
@@ -500,14 +334,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/10/14/yap-yet-another-program-profiling-tool/"
-           data-title="yap--yet another program profiling tool" data-url="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -527,17 +353,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -587,17 +404,6 @@
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#INSTALL"><span class="nav-number">1.</span> <span class="nav-text">INSTALL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HOW-TO-USE"><span class="nav-number">2.</span> <span class="nav-text">HOW TO USE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO"><span class="nav-number">3.</span> <span class="nav-text">TODO</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -727,10 +533,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 

@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="linux," />
+  <meta name="keywords" content="c,sed," />
 
 
 
@@ -84,16 +84,22 @@
 
 
 
-<meta name="description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
+<meta name="description" content="有时候在编码过程中很多细节不注意，造成了代码不符合规范。一行行人工来修改，太麻烦了，不如交给工具做。鼎鼎大名的sed就是用来帮助你做这些繁重工作的。
+
+我们准备了一个不规范的代码123456789101112$ cat equal.c if(a==b &amp;amp;&amp;amp; b == c)&amp;#123;	/* some blank char follow */      	if (c== d)	&amp;#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="yap--yet another program profiling tool">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/index.html">
+<meta property="og:title" content="利用sed生成规范的c代码">
+<meta property="og:url" content="http://shenyu.wiki/2016/10/20/利用sed生成规范的c代码/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
-<meta property="og:updated_time" content="2016-10-14T08:13:55.000Z">
+<meta property="og:description" content="有时候在编码过程中很多细节不注意，造成了代码不符合规范。一行行人工来修改，太麻烦了，不如交给工具做。鼎鼎大名的sed就是用来帮助你做这些繁重工作的。
+
+我们准备了一个不规范的代码123456789101112$ cat equal.c if(a==b &amp;amp;&amp;amp; b == c)&amp;#123;	/* some blank char follow */      	if (c== d)	&amp;#">
+<meta property="og:updated_time" content="2016-10-20T10:16:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yap--yet another program profiling tool">
-<meta name="twitter:description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
+<meta name="twitter:title" content="利用sed生成规范的c代码">
+<meta name="twitter:description" content="有时候在编码过程中很多细节不注意，造成了代码不符合规范。一行行人工来修改，太麻烦了，不如交给工具做。鼎鼎大名的sed就是用来帮助你做这些繁重工作的。
+
+我们准备了一个不规范的代码123456789101112$ cat equal.c if(a==b &amp;amp;&amp;amp; b == c)&amp;#123;	/* some blank char follow */      	if (c== d)	&amp;#">
 
 
 
@@ -114,9 +120,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/"/>
+  <link rel="canonical" href="http://shenyu.wiki/2016/10/20/利用sed生成规范的c代码/"/>
 
-  <title> yap--yet another program profiling tool | 申宇的博客 </title>
+  <title> 利用sed生成规范的c代码 | 申宇的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -309,7 +315,7 @@
             
             
               
-                yap--yet another program profiling tool
+                利用sed生成规范的c代码
               
             
           </h1>
@@ -321,8 +327,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-14T07:59:13+00:00" content="2016-10-14">
-              2016-10-14
+            <time itemprop="dateCreated" datetime="2016-10-20T10:15:38+00:00" content="2016-10-20">
+              2016-10-20
             </time>
           </span>
 
@@ -332,8 +338,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/14/yap-yet-another-program-profiling-tool/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/14/yap-yet-another-program-profiling-tool/" itemprop="commentsCount"></span>
+                <a href="/2016/10/20/利用sed生成规范的c代码/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/20/利用sed生成规范的c代码/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -343,7 +349,7 @@
 
           
           
-             <span id="/2016/10/14/yap-yet-another-program-profiling-tool/" class="leancloud_visitors" data-flag-title="yap--yet another program profiling tool">
+             <span id="/2016/10/20/利用sed生成规范的c代码/" class="leancloud_visitors" data-flag-title="利用sed生成规范的c代码">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -371,32 +377,21 @@
 
       
         <blockquote>
-<p>Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanced techniques (such as systemtap and dtrace call level probes), it is overkill to build upon that. Poor man doesn’t have time. Poor man needs food.  –quoted from <a href="https://poormansprofiler.org/" target="_blank" rel="external">poor man’s profiler</a></p>
+<p>有时候在编码过程中很多细节不注意，造成了代码不符合规范。一行行人工来修改，太麻烦了，不如交给工具做。鼎鼎大名的sed就是用来帮助你做这些繁重工作的。</p>
 </blockquote>
-<p>Just as the name implies, this is an enhenced version of poor man’s profiler with the following new features added:</p>
+<p>我们准备了一个不规范的代码<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ cat equal.<span class="function">c </span></div><div class="line"><span class="title">if</span><span class="params">(a==b &amp;&amp; b == c)</span></div><div class="line">&#123;</div><div class="line">	<span class="comment">/* some blank char follow */</span>      </div><div class="line">	<span class="keyword">if</span> (c== d)</div><div class="line">	&#123;</div><div class="line">		func(a,b, c)</div><div class="line">		func(d,e, f)</div><div class="line">		func(a, b, c)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中有这几种不规范的情况</p>
 <ol>
-<li>support command line argument, which make it easier to use and easier to integrate to your program.</li>
-<li>support multi process profiling, which is good for PostgreSQL profiling.</li>
-<li>user can choose how many stack level to print, which make the result set shorter and easier to read.</li>
-<li>when stack level is set to 1 , instead of the stack ranking, the function ranking is printed</li>
-<li>the result set is neater and much more pretty.</li>
+<li>if后面不加空格</li>
+<li>==前后不加空格</li>
+<li>逗号后面不加空格</li>
+<li>行尾有空白</li>
 </ol>
-<h2 id="INSTALL"><a href="#INSTALL" class="headerlink" title="INSTALL"></a>INSTALL</h2><p>Download it from <code>https://github.com/shenyuflying/yap.git</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/yap.git</div></pre></td></tr></table></figure></p>
-<p>Type <code>yap -h</code> to show the help message.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># ./yap -h</div><div class="line">================================================================</div><div class="line">                          YAP    ver0.1                         </div><div class="line">================================================================</div><div class="line">  yap -- yet another profiling tool based on poor man&apos;s profiler</div><div class="line">         to generate stack rank of your program.                </div><div class="line">                                                                </div><div class="line">                             yshen 2016 see http://shenyu.wiki  </div><div class="line">================================================================</div><div class="line">                                                         </div><div class="line">usage: yap options=values</div><div class="line">        -s | --samples=n      how many samples to collect</div><div class="line">        -t | --sleeptime=n    how many time to sleep during each sample</div><div class="line">        -f | --stackframe=n   how deep the stack frame to output</div><div class="line">        -p | --pid=pid        which pid to analyze</div><div class="line">        -n | --progname=name  which program to analyze, good for multi-process profiling</div><div class="line">        -h | --help           show this help</div></pre></td></tr></table></figure></p>
-<p>if the message is shown, the yap is ready to work.</p>
-<h2 id="HOW-TO-USE"><a href="#HOW-TO-USE" class="headerlink" title="HOW TO USE"></a>HOW TO USE</h2><p>You need at least specify a progname or a pid to let yap attach to your program.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div></pre></td></tr></table></figure></p>
-<p>will be enough for the yap to run. after you have choosen a program to profile, you will be run with the default configurations, and <code>yap</code> is start working.<br>the default configurations are<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">samples=100   # take 100 samples of your program</div><div class="line">sleeptime=0   # no sleep during each iteration</div><div class="line">stackframe=5  # the stack frame depth is 5</div></pre></td></tr></table></figure></p>
-<p>it will take a while and there will be a progress indicator on the screen, so take your time.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div><div class="line">1/100 completed.</div><div class="line">2/100 completed.</div><div class="line">3/100 completed.</div><div class="line">4/100 completed.</div><div class="line">5/100 completed.</div><div class="line">...</div><div class="line">100/100 complete.</div></pre></td></tr></table></figure></p>
-<p>when done, the stack ranking is printed.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">40 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	WaitLatch</div><div class="line">10 __select_nocancel	ServerLoop	PostmasterMain	main</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	SysLoggerMain</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	PgstatCollectorMain</div><div class="line">1</div></pre></td></tr></table></figure></p>
-<p>if you want to seek the function ranking rather than stack ranking, use <code>--stackframe=1</code> and re-run yap</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">60 __epoll_wait_nocancel</div><div class="line">10 __select_nocancel</div><div class="line"> 1</div></pre></td></tr></table></figure>
-<p>the function ranking is much sorter and easier to find the slowest functions.</p>
-<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ol>
-<li>shall be run in a time duration, add -b | –begin and -e | –end and -d | –duration</li>
-<li>shall be exit when the profiling program exit</li>
-<li>…</li>
-</ol>
-<p>report bugs to shenyufly@163.com</p>
+<p>所以看起来十分乱。</p>
+<p>废话不多说，先给出格式化脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">#!/bin/sed -f                                                               </div><div class="line"></div><div class="line"># 处理==两边加空格情况</div><div class="line"># a== b to a == b</div><div class="line">s/\([^ ]\)\(==\)/\1 \2/g</div><div class="line"># a ==b to a == b</div><div class="line">s/\(==\)\([^ ]\)/\1 \2/g</div><div class="line"></div><div class="line"># 处理&amp;&amp;两边加空格情况</div><div class="line"># a&amp;&amp; b to a &amp;&amp; b</div><div class="line">s/\([^ ]\)\(&amp;&amp;\)/\1 \2/g</div><div class="line"># a &amp;&amp;b to a &amp;&amp; b</div><div class="line">s/\(&amp;&amp;\)\([^ ]\)/\1 \2/g</div><div class="line"></div><div class="line"># 处理!=两边加空格情况</div><div class="line"># a!= b to a != b</div><div class="line">s/\([^ ]\)\(!=\)/\1 \2/g</div><div class="line"># a !=b to a != b</div><div class="line">s/\(!=\)\([^ ]\)/\1 \2/g</div><div class="line"></div><div class="line"># 处理if后面加空格情况</div><div class="line"># if(...) to if (...)</div><div class="line">s/if(/if (/g</div><div class="line"></div><div class="line"># 处理for后面加空格情况</div><div class="line"># for(...) to for (...)</div><div class="line">s/for(/for (/g</div><div class="line"></div><div class="line"># 处理逗号后面加空格情况</div><div class="line"># (a,b,c) to (a, b, c) </div><div class="line">s/\(,\)\([^ \t]\)/, \2/g</div><div class="line"></div><div class="line"># 处理行尾空格情况</div><div class="line"># remove tailing blanks</div><div class="line">s/[ \t]*$//g</div></pre></td></tr></table></figure>
+<p>用上面我们的sed脚本格式化一下，看到几个不规范的情况都修正了。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ ./ident.sed   ./equal.<span class="function">c </span></div><div class="line"><span class="title">if</span> <span class="params">(a == b &amp;&amp; b == c)</span></div><div class="line">&#123;</div><div class="line">	<span class="comment">/* some blank char follow */</span></div><div class="line">	<span class="keyword">if</span> (c == d)</div><div class="line">	&#123;</div><div class="line">		func(a, b, c)</div><div class="line">		func(d, e, f)</div><div class="line">		func(a, b, c)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后测试了一个比较大的c文件，没有发现啥bug。但是字符串里面的也会格式化，需要注意一下。</p>
 
       
     </div>
@@ -419,7 +414,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag">#linux</a>
+            <a href="/tags/c/" rel="tag">#c</a>
+          
+            <a href="/tags/sed/" rel="tag">#sed</a>
           
         </div>
       
@@ -428,17 +425,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/13/PostgreSQL性能分析/" rel="next" title="PostgreSQL性能分析">
-                <i class="fa fa-chevron-left"></i> PostgreSQL性能分析
+              <a href="/2016/10/14/yap-yet-another-program-profiling-tool/" rel="next" title="yap--yet another program profiling tool">
+                <i class="fa fa-chevron-left"></i> yap--yet another program profiling tool
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/20/利用sed生成规范的c代码/" rel="prev" title="利用sed生成规范的c代码">
-                利用sed生成规范的c代码 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -502,8 +495,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/14/yap-yet-another-program-profiling-tool/"
-           data-title="yap--yet another program profiling tool" data-url="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/">
+      <div class="ds-thread" data-thread-key="2016/10/20/利用sed生成规范的c代码/"
+           data-title="利用sed生成规范的c代码" data-url="http://shenyu.wiki/2016/10/20/利用sed生成规范的c代码/">
       </div>
     
   </div>
@@ -594,7 +587,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#INSTALL"><span class="nav-number">1.</span> <span class="nav-text">INSTALL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HOW-TO-USE"><span class="nav-number">2.</span> <span class="nav-text">HOW TO USE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO"><span class="nav-number">3.</span> <span class="nav-text">TODO</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>
