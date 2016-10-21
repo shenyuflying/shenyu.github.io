@@ -311,6 +311,137 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/11/linux监控脚本-绘图/" itemprop="url">
+                  linux性能曲线工具
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-11T13:36:18+00:00" content="2016-10-11">
+              2016-10-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/11/linux监控脚本-绘图/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/11/linux监控脚本-绘图/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/11/linux监控脚本-绘图/" class="leancloud_visitors" data-flag-title="linux性能曲线工具">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。</p>
+</blockquote>
+<p>目前脚本能够监控如下内容</p>
+<ol>
+<li>平均负载</li>
+<li>空闲内存</li>
+<li>已用内存</li>
+<li>可用内存</li>
+<li>缓存中的脏页面</li>
+<li>硬盘使用率</li>
+<li>进程占用CPU百分比</li>
+<li>等等（可以很方便的添加别的监控参数）</li>
+</ol>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$./monitor.sh  [程序名]</div></pre></td></tr></table></figure>
+<p>脚本输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">------------time---------|-load-|-m_used-|-m_aval-|-m_ditry-|-sda--|-dm-0--|-dm-1--</div><div class="line">2016-10-11_21:26:07	0.34	1223	6272	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:08	0.34	1224	6271	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:09	0.34	1227	6269	0	0.50	0.48	0.00	</div><div class="line">2</div></pre></td></tr></table></figure></p>
+<p>再用gnuplot绘图工具来绘制曲线，后期我把绘图再加到脚本中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$gnuplot</div><div class="line">set xdata time </div><div class="line">set timefmt &quot;%Y-%m-%d_%H:%M:%S&quot;</div><div class="line">plot &apos;monitor.log&apos; using 1:2 with linespoints linestyle 1</div></pre></td></tr></table></figure>
+<p>比如下图绘制了我机器3分钟时间内的load average<br><img src="http://static.zybuluo.com/shenyuflying/r2rjbiq08oop1et5wi2f6uve/image_1aupv45rv67o149rtt1cjk1io29.png" alt=""></p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/11/linux监控脚本-绘图/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/11/数据库性能测试标准TPC/" itemprop="url">
                   数据库性能测试标准TPC
                 </a>
@@ -780,122 +911,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" itemprop="url">
-                  字符串中特殊字符转义——php中urlencode urldecode的c语言版本
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-09T05:54:58+00:00" content="2016-10-09">
-              2016-10-09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" class="leancloud_visitors" data-flag-title="字符串中特殊字符转义——php中urlencode urldecode的c语言版本">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>有时候字符串中的特殊字符会影响到字符串解析，比如在某些情况中不允许字符串中有特殊字符，但是用户输入的文本中可能包含一些特殊字符。这时我们需要对特殊字符进行转义。在这里我们模仿php里面的urlencode和urldecode函数，给出其C语言实现。</p>
-</blockquote>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ./str_encode </div><div class="line"> select * from hello_world; = [+select+%2A+from+hello_world%3B]</div></pre></td></tr></table></figure>
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -941,7 +956,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">38</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

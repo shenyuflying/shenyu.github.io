@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="linux,c," />
 
 
 
@@ -84,15 +84,30 @@
 
 
 
-<meta name="description" content="Shen Yu">
-<meta property="og:type" content="website">
-<meta property="og:title" content="申宇的博客">
-<meta property="og:url" content="http://shenyu.wiki/tags/数据库/index.html">
+<meta name="description" content="有时候在编码过程中很多细节不注意，造成了代码不符合规范。如果人工来检查，比较繁琐，还容易遗漏，不如交给工具做。在之前一片文章《利用sed生成规范的c代码 》基础上集合shell+vimdiff实现了交互式代码检查。
+
+先睹为快一份不规范的代码test.c运行工具检查一下：1./indent test.c
+效果如下图所示：
+左面是例子中的那份不规范的代码，右面是提示的规范代码。不规范的代码用红色标">
+<meta property="og:type" content="article">
+<meta property="og:title" content="交互式代码格式化工具——indent">
+<meta property="og:url" content="http://shenyu.wiki/2016/10/21/交互式代码格式化工具——indent/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="Shen Yu">
+<meta property="og:description" content="有时候在编码过程中很多细节不注意，造成了代码不符合规范。如果人工来检查，比较繁琐，还容易遗漏，不如交给工具做。在之前一片文章《利用sed生成规范的c代码 》基础上集合shell+vimdiff实现了交互式代码检查。
+
+先睹为快一份不规范的代码test.c运行工具检查一下：1./indent test.c
+效果如下图所示：
+左面是例子中的那份不规范的代码，右面是提示的规范代码。不规范的代码用红色标">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/qv3omp4cp2ycm123vqscxob5/image_1avj8a4sm1fvr2s1e9dgsjrgs9.png">
+<meta property="og:updated_time" content="2016-10-21T09:25:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="申宇的博客">
-<meta name="twitter:description" content="Shen Yu">
+<meta name="twitter:title" content="交互式代码格式化工具——indent">
+<meta name="twitter:description" content="有时候在编码过程中很多细节不注意，造成了代码不符合规范。如果人工来检查，比较繁琐，还容易遗漏，不如交给工具做。在之前一片文章《利用sed生成规范的c代码 》基础上集合shell+vimdiff实现了交互式代码检查。
+
+先睹为快一份不规范的代码test.c运行工具检查一下：1./indent test.c
+效果如下图所示：
+左面是例子中的那份不规范的代码，右面是提示的规范代码。不规范的代码用红色标">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/qv3omp4cp2ycm123vqscxob5/image_1avj8a4sm1fvr2s1e9dgsjrgs9.png">
 
 
 
@@ -113,9 +128,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/tags/数据库/"/>
+  <link rel="canonical" href="http://shenyu.wiki/2016/10/21/交互式代码格式化工具——indent/"/>
 
-  <title> 标签: 数据库 | 申宇的博客 </title>
+  <title> 交互式代码格式化工具——indent | 申宇的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -146,7 +161,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -287,130 +302,190 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        数据库
-        <small>标签</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/" itemprop="url">
-              
-                <span itemprop="name">PostgreSQL日志分析工具——pgBadger</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-10-13T07:29:26+00:00"
-              content="2016-10-13" >
-          10-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/10/11/数据库性能测试标准TPC/" itemprop="url">
-              
-                <span itemprop="name">数据库性能测试标准TPC</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-10-11T07:31:30+00:00"
-              content="2016-10-11" >
-          10-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/" itemprop="url">
-              
-                <span itemprop="name">好文推荐：《Spanner: Google's Globally-Distributed Database》</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-10-05T11:23:57+00:00"
-              content="2016-10-05" >
-          10-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/10/02/PostgreSQL-count-优化/" itemprop="url">
-              
-                <span itemprop="name">PostgreSQL count(*) 优化</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-10-02T12:50:10+00:00"
-              content="2016-10-02" >
-          10-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </div>
 
   
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                交互式代码格式化工具——indent
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-21T09:20:49+00:00" content="2016-10-21">
+              2016-10-21
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/21/交互式代码格式化工具——indent/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/21/交互式代码格式化工具——indent/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/21/交互式代码格式化工具——indent/" class="leancloud_visitors" data-flag-title="交互式代码格式化工具——indent">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>有时候在编码过程中很多细节不注意，造成了代码不符合规范。如果人工来检查，比较繁琐，还容易遗漏，不如交给工具做。在之前一片文章<a href="http://shenyu.wiki/2016/10/20/%E5%88%A9%E7%94%A8sed%E7%94%9F%E6%88%90%E8%A7%84%E8%8C%83%E7%9A%84c%E4%BB%A3%E7%A0%81/">《利用sed生成规范的c代码 》</a>基础上集合shell+vimdiff实现了交互式代码检查。</p>
+</blockquote>
+<h2 id="先睹为快"><a href="#先睹为快" class="headerlink" title="先睹为快"></a>先睹为快</h2><p>一份不规范的代码test.c运行工具检查一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./indent test.c</div></pre></td></tr></table></figure></p>
+<p>效果如下图所示：<br><img src="http://static.zybuluo.com/shenyuflying/qv3omp4cp2ycm123vqscxob5/image_1avj8a4sm1fvr2s1e9dgsjrgs9.png" alt=""></p>
+<p>左面是例子中的那份不规范的代码，右面是提示的规范代码。不规范的代码用红色标出。如果接受修改，移动到红色处用do来接受修改。]c移动到下一处。</p>
+<p>修改完了之后wqa退出。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>这个小工具是用shell+sed+vimdiff写的。可以看到linux的强大之处就是可以融合多个工具来实现一个更强大的工具。<br>源码放在了github上：<a href="https://github.com/shenyuflying/indent" target="_blank" rel="external">https://github.com/shenyuflying/indent</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag">#linux</a>
+          
+            <a href="/tags/c/" rel="tag">#c</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/20/利用sed生成规范的c代码/" rel="next" title="利用sed生成规范的c代码">
+                <i class="fa fa-chevron-left"></i> 利用sed生成规范的c代码
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -418,6 +493,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/10/21/交互式代码格式化工具——indent/"
+           data-title="交互式代码格式化工具——indent" data-url="http://shenyu.wiki/2016/10/21/交互式代码格式化工具——indent/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -437,8 +520,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -488,6 +580,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#先睹为快"><span class="nav-number">1.</span> <span class="nav-text">先睹为快</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -617,6 +720,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
