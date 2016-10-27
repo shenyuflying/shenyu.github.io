@@ -311,6 +311,124 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/05/ssh免密码登陆linux主机/" itemprop="url">
+                  ssh免密码登陆linux主机
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-05T10:07:14+00:00" content="2016-10-05">
+              2016-10-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/05/ssh免密码登陆linux主机/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/05/ssh免密码登陆linux主机/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/05/ssh免密码登陆linux主机/" class="leancloud_visitors" data-flag-title="ssh免密码登陆linux主机">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>比如想登陆一台服务器但是每次都需要输密码，这时候我们可以用ssh的authorized_keys文件来记录允许登陆的主机。</p>
+</blockquote>
+<h2 id="配置hosts"><a href="#配置hosts" class="headerlink" title="配置hosts"></a>配置hosts</h2><p>比如我们有2台主机，分别是host1和host2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat /etc/hosts</div><div class="line">192.168.0.101 host1</div><div class="line">192.168.0.102 host2</div></pre></td></tr></table></figure></p>
+<h2 id="生成key"><a href="#生成key" class="headerlink" title="生成key"></a>生成key</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh-keygen -t dsa -f ~/.ssh/id_dsa -N &quot;&quot;</div><div class="line">Generating public/private dsa key pair.</div><div class="line">Your identification has been saved in /root/.ssh/id_dsa.</div><div class="line">Your public key has been saved in /root/.ssh/id_dsa.pub.</div><div class="line">The key fingerprint is:</div><div class="line">91:09:5c:82:5a:6a:50:08:4e:b2:0c:62:de:cc:74:44 root@host1.clusterlabs.org</div><div class="line">The key&apos;s randomart image is:</div><div class="line">+--[ DSA 1024]----+</div><div class="line">|==.ooEo..        |</div><div class="line">|X O + .o o       |</div><div class="line">| * A    +        |</div><div class="line">|  +      .       |</div><div class="line">| .      S        |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">+-----------------+</div></pre></td></tr></table></figure>
+<h2 id="新建authorized-keys文件"><a href="#新建authorized-keys文件" class="headerlink" title="新建authorized_keys文件"></a>新建authorized_keys文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# cp ~/.ssh/id_dsa.pub ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<h2 id="把authorized-keys文件部署到远程主机"><a href="#把authorized-keys文件部署到远程主机" class="headerlink" title="把authorized_keys文件部署到远程主机"></a>把authorized_keys文件部署到远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# scp -r ~/.ssh/authorized_keys host2:～/.ssh/</div></pre></td></tr></table></figure>
+<h2 id="免密码登陆远程主机"><a href="#免密码登陆远程主机" class="headerlink" title="免密码登陆远程主机"></a>免密码登陆远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh host2</div></pre></td></tr></table></figure>
+<p>其实就是把本机生成的*.pub文件内容copy到另外一台主机~/.ssh/authorized_keys文件里面就ok！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/04/linux查找文件内容/" itemprop="url">
                   linux查找文件内容
                 </a>
@@ -810,138 +928,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/02/wget下载网站供离线浏览/" itemprop="url">
-                  wget下载网站供离线浏览
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-02T16:44:45+00:00" content="2016-10-02">
-              2016-10-02
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/02/wget下载网站供离线浏览/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/02/wget下载网站供离线浏览/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/02/wget下载网站供离线浏览/" class="leancloud_visitors" data-flag-title="wget下载网站供离线浏览">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
-</blockquote>
-<p>看wget的man说明，可以发现wget有几个特点：</p>
-<ol>
-<li>非交互式，可以工作在后台。</li>
-<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
-<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
-</ol>
-<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
-<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
-<p>上面用到的wget网站下载选择解释：</p>
-<pre><code>--recursive: 下载整个网站
---domains shenyu.wiki: 不要下载指定域名之外的网页。
---no-parent: 仅仅下载当前目录结构下的文件。
---page-requisites: 现在网页包括的所有内容(images, CSS and so on).
---html-extension: 将网页保存为html文件。
---convert-links: 将连接转换为本地连接
---restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
---no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
-</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -987,7 +973,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
