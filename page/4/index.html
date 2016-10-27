@@ -311,6 +311,124 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/04/linux查找文件内容/" itemprop="url">
+                  linux查找文件内容
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-04T18:55:36+00:00" content="2016-10-04">
+              2016-10-04
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/04/linux查找文件内容/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/04/linux查找文件内容/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/04/linux查找文件内容/" class="leancloud_visitors" data-flag-title="linux查找文件内容">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>有时候我们需要在一堆文件中查找包含<code>某单词</code>的文件。比如在一堆源码文件中找出来调用一个函数的地方。</p>
+</blockquote>
+<p>可以用find，xargs，grep三个命令联合起来实现。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find ./ -type f -name *.c | xargs grep <span class="string">"word"</span></div></pre></td></tr></table></figure></p>
+<p>find找出当前目录下所有.c的普通文件<br>xargs将文件名变成参数传入到grep<br>grep打开该文件并找出文件中包含word的行</p>
+<h2 id="一个脚本"><a href="#一个脚本" class="headerlink" title="一个脚本"></a>一个脚本</h2><p>为了方便使用，避免每次都输入很长的命令，写出了下面一个脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash                                                                 </span></div><div class="line"><span class="comment">#递归查找当前目录文件中的内容</span></div><div class="line"><span class="comment">#参数1： 文件后缀，可以省略</span></div><div class="line"><span class="comment">#参数2： 要查找的字符串</span></div><div class="line"></div><div class="line">F_ARG_SUFFIX=<span class="string">""</span></div><div class="line">F_ARG_PATTEN=<span class="string">""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ] ; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"usage: f [file suffix] pattern"</span></div><div class="line">    <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 1 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$1</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 2 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_SUFFIX=<span class="string">"-name *.<span class="variable">$1</span>"</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$2</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">find ./ -type f <span class="variable">$F_ARG_NAME</span> | xargs grep <span class="variable">$F_ARG_PATTEN</span></div></pre></td></tr></table></figure></p>
+<p>保存在/bin目录下，并加上可执行权限</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>比如找出postgreSQL源码中, c语言文件使用到heap_open函数的地方：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ f c heap_open</div><div class="line">./backend/commands/tablecmds.c:         rel = heap_openrv(rv, AccessExclusiveLock);</div><div class="line">./backend/commands/tablecmds.c:                         rel = heap_open(childrelid, NoLock);</div><div class="line">...</div><div class="line"></div><div class="line">$ f c heap_open | wc <span class="_">-l</span></div><div class="line">587</div></pre></td></tr></table></figure></p>
+<p>一共使用了587次，很多啊！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/" itemprop="url">
                   好书推荐：《软技能-代码之外的生存指南》
                 </a>
@@ -824,121 +942,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/02/二进制文件-十六进制文件-互转/" itemprop="url">
-                  二进制文件 十六进制文件 互转
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-02T13:06:30+00:00" content="2016-10-02">
-              2016-10-02
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/02/二进制文件-十六进制文件-互转/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/02/二进制文件-十六进制文件-互转/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/02/二进制文件-十六进制文件-互转/" class="leancloud_visitors" data-flag-title="二进制文件 十六进制文件 互转">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 编译</div><div class="line">$ gcc c2bs.c -o c2bs</div><div class="line"></div><div class="line"># 帮助</div><div class="line">$ ./c2bs2</div><div class="line">convert to binary or strings.</div><div class="line">will read from stdin and write to stdout</div><div class="line">usage: ./c2bs2 [options]</div><div class="line">[options]</div><div class="line">    -b convert to binary</div><div class="line">    -s convert to string</div><div class="line"></div><div class="line"># 二进制可执行文件转16进制字符串</div><div class="line">$ cat ./c2bs | ./c2bs -c &gt; c2bs.hex </div><div class="line">$ head c2bs.hex</div><div class="line">7f454c4602010100000000000000000002003e000100000020064000000000004000000000000000a0110000000000000000000040003800090040001e001b000600000005000000400000000000000040004000000000004000400000000000f801000000000000f8010000000...</div><div class="line"></div><div class="line"># 十六进制字符串再转回到二进制</div><div class="line">$ cat ./c2bs.hex | ./c2bs -b &gt; c2bs</div></pre></td></tr></table></figure>
-<p> 源码如下，需要注意的是，都用了不带符号的unsigned char类型，这个很关键，想想为什么？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> talbe[<span class="string">'f'</span>+<span class="number">1</span>];</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in_2[<span class="number">3</span>]=&#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (argc == <span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"convert to binary or strings.\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"will read from stdin and write to stdout\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"usage: %s [options]\n"</span></div><div class="line">			<span class="string">"[options]\n"</span></div><div class="line">			<span class="string">"    -b convert to binary\n"</span></div><div class="line">			<span class="string">"    -s convert to string\n"</span>,argv[<span class="number">0</span>]);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">switch</span>(argv[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> <span class="string">'s'</span>:</div><div class="line">			<span class="keyword">while</span>( fread(&amp;in,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%02x"</span>,in);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		<span class="keyword">break</span>;</div><div class="line">		</div><div class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</div><div class="line"></div><div class="line">			talbe[<span class="string">'0'</span>]=<span class="number">0</span>;	</div><div class="line">			talbe[<span class="string">'1'</span>]=<span class="number">1</span>;	</div><div class="line">			talbe[<span class="string">'2'</span>]=<span class="number">2</span>;	</div><div class="line">			talbe[<span class="string">'3'</span>]=<span class="number">3</span>;	</div><div class="line">			talbe[<span class="string">'4'</span>]=<span class="number">4</span>;	</div><div class="line">			talbe[<span class="string">'5'</span>]=<span class="number">5</span>;	</div><div class="line">			talbe[<span class="string">'6'</span>]=<span class="number">6</span>;	</div><div class="line">			talbe[<span class="string">'7'</span>]=<span class="number">7</span>;	</div><div class="line">			talbe[<span class="string">'8'</span>]=<span class="number">8</span>;	</div><div class="line">			talbe[<span class="string">'9'</span>]=<span class="number">9</span>;	</div><div class="line">			talbe[<span class="string">'a'</span>]=<span class="number">10</span>;	</div><div class="line">			talbe[<span class="string">'b'</span>]=<span class="number">11</span>;	</div><div class="line">			talbe[<span class="string">'c'</span>]=<span class="number">12</span>;	</div><div class="line">			talbe[<span class="string">'d'</span>]=<span class="number">13</span>;	</div><div class="line">			talbe[<span class="string">'e'</span>]=<span class="number">14</span>;	</div><div class="line">			talbe[<span class="string">'f'</span>]=<span class="number">15</span>;	</div><div class="line">			<span class="keyword">while</span>( fread(in_2,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="number">2</span>,<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">unsigned</span> <span class="keyword">char</span> out;</div><div class="line">				out = <span class="number">16</span>*talbe[in_2[<span class="number">0</span>]] + talbe[in_2[<span class="number">1</span>]]; </div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%c"</span>,out);</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"unknown parameter %s"</span>,argv[<span class="number">1</span>]);</div><div class="line">		<span class="keyword">break</span>;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -984,7 +987,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">38</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
