@@ -311,6 +311,142 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/" itemprop="url">
+                  yap--yet another program profiling tool
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-14T07:59:13+00:00" content="2016-10-14">
+              2016-10-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/10/14/yap-yet-another-program-profiling-tool/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/14/yap-yet-another-program-profiling-tool/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/10/14/yap-yet-another-program-profiling-tool/" class="leancloud_visitors" data-flag-title="yap--yet another program profiling tool">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanced techniques (such as systemtap and dtrace call level probes), it is overkill to build upon that. Poor man doesn’t have time. Poor man needs food.  –quoted from <a href="https://poormansprofiler.org/" target="_blank" rel="external">poor man’s profiler</a></p>
+</blockquote>
+<p>Just as the name implies, this is an enhenced version of poor man’s profiler with the following new features added:</p>
+<ol>
+<li>support command line argument, which make it easier to use and easier to integrate to your program.</li>
+<li>support multi process profiling, which is good for PostgreSQL profiling.</li>
+<li>user can choose how many stack level to print, which make the result set shorter and easier to read.</li>
+<li>when stack level is set to 1 , instead of the stack ranking, the function ranking is printed</li>
+<li>the result set is neater and much more pretty.</li>
+</ol>
+<h2 id="INSTALL"><a href="#INSTALL" class="headerlink" title="INSTALL"></a>INSTALL</h2><p>Download it from <code>https://github.com/shenyuflying/yap.git</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/yap.git</div></pre></td></tr></table></figure></p>
+<p>Type <code>yap -h</code> to show the help message.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># ./yap -h</div><div class="line">================================================================</div><div class="line">                          YAP    ver0.1                         </div><div class="line">================================================================</div><div class="line">  yap -- yet another profiling tool based on poor man&apos;s profiler</div><div class="line">         to generate stack rank of your program.                </div><div class="line">                                                                </div><div class="line">                             yshen 2016 see http://shenyu.wiki  </div><div class="line">================================================================</div><div class="line">                                                         </div><div class="line">usage: yap options=values</div><div class="line">        -s | --samples=n      how many samples to collect</div><div class="line">        -t | --sleeptime=n    how many time to sleep during each sample</div><div class="line">        -f | --stackframe=n   how deep the stack frame to output</div><div class="line">        -p | --pid=pid        which pid to analyze</div><div class="line">        -n | --progname=name  which program to analyze, good for multi-process profiling</div><div class="line">        -h | --help           show this help</div></pre></td></tr></table></figure></p>
+<p>if the message is shown, the yap is ready to work.</p>
+<h2 id="HOW-TO-USE"><a href="#HOW-TO-USE" class="headerlink" title="HOW TO USE"></a>HOW TO USE</h2><p>You need at least specify a progname or a pid to let yap attach to your program.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div></pre></td></tr></table></figure></p>
+<p>will be enough for the yap to run. after you have choosen a program to profile, you will be run with the default configurations, and <code>yap</code> is start working.<br>the default configurations are<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">samples=100   # take 100 samples of your program</div><div class="line">sleeptime=0   # no sleep during each iteration</div><div class="line">stackframe=5  # the stack frame depth is 5</div></pre></td></tr></table></figure></p>
+<p>it will take a while and there will be a progress indicator on the screen, so take your time.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div><div class="line">1/100 completed.</div><div class="line">2/100 completed.</div><div class="line">3/100 completed.</div><div class="line">4/100 completed.</div><div class="line">5/100 completed.</div><div class="line">...</div><div class="line">100/100 complete.</div></pre></td></tr></table></figure></p>
+<p>when done, the stack ranking is printed.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">40 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	WaitLatch</div><div class="line">10 __select_nocancel	ServerLoop	PostmasterMain	main</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	SysLoggerMain</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	PgstatCollectorMain</div><div class="line">1</div></pre></td></tr></table></figure></p>
+<p>if you want to seek the function ranking rather than stack ranking, use <code>--stackframe=1</code> and re-run yap</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">60 __epoll_wait_nocancel</div><div class="line">10 __select_nocancel</div><div class="line"> 1</div></pre></td></tr></table></figure>
+<p>the function ranking is much sorter and easier to find the slowest functions.</p>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ol>
+<li>shall be run in a time duration, add -b | –begin and -e | –end and -d | –duration</li>
+<li>shall be exit when the profiling program exit</li>
+<li>…</li>
+</ol>
+<p>report bugs to shenyufly@163.com</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/13/PostgreSQL性能分析/" itemprop="url">
                   PostgreSQL性能分析
                 </a>
@@ -839,141 +975,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/" itemprop="url">
-                  好书推荐：《操作系统设计与实现》
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-10T11:54:32+00:00" content="2016-10-10">
-              2016-10-10
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/读书/" itemprop="url" rel="index">
-                    <span itemprop="name">读书</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/10/10/好书推荐：《操作系统设计与实现》/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/10/好书推荐：《操作系统设计与实现》/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/10/10/好书推荐：《操作系统设计与实现》/" class="leancloud_visitors" data-flag-title="好书推荐：《操作系统设计与实现》">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png" alt=""></p>
-<p>这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1014,7 +1020,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">40</span>
+              <span class="site-state-item-count">41</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1031,7 +1037,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
