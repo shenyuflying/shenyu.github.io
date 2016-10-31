@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/about/index.html</loc>
+    
+    <lastmod>2016-10-31T12:26:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2016/10/29/x86-64%E6%B1%87%E7%BC%96%E4%B8%8E%E8%B0%83%E8%AF%95/</loc>
     
     <lastmod>2016-10-29T07:58:23.000Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://shenyu.wiki/2016/10/27/linux%E4%B8%AD%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%8C%96/</loc>
     
     <lastmod>2016-10-27T10:05:38.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/about/index.html</loc>
-    
-    <lastmod>2016-10-21T09:32:40.000Z</lastmod>
     
   </url>
   
@@ -261,14 +261,14 @@
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/2014/10/02/%E6%B8%85%E5%8D%8E%E5%8C%97%E5%A4%A7/</loc>
+    <loc>http://shenyu.wiki/2014/10/01/%E8%A5%BF%E5%AE%89/</loc>
     
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/2014/10/01/%E8%A5%BF%E5%AE%89/</loc>
+    <loc>http://shenyu.wiki/2014/10/02/%E6%B8%85%E5%8D%8E%E5%8C%97%E5%A4%A7/</loc>
     
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     
