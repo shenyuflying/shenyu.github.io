@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="读书 操作系统 linux minix," />
+  <meta name="keywords" content="c,国际化,linux," />
 
 
 
@@ -84,18 +84,22 @@
 
 
 
-<meta name="description" content="这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。">
+<meta name="description" content="c语言程序写的时候字符串用英语，基本固定了。那么如果想让别的语言的人使用（比如中文），就得把程序里面的字符串挨个翻译，最后再重新编译一次程序维护起来特别麻烦。那么有什么办法能够让程序显示中文？GNU的gettext项目就是用来做这个的。这篇文章以c语言为例介绍了国际化的gettext。
+
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，Machin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="好书推荐：《操作系统设计与实现》">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/10/好书推荐：《操作系统设计与实现》/index.html">
+<meta property="og:title" content="C语言程序的国际化">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/02/C语言程序的国际化/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。">
-<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png">
-<meta property="og:updated_time" content="2016-10-10T11:55:24.000Z">
+<meta property="og:description" content="c语言程序写的时候字符串用英语，基本固定了。那么如果想让别的语言的人使用（比如中文），就得把程序里面的字符串挨个翻译，最后再重新编译一次程序维护起来特别麻烦。那么有什么办法能够让程序显示中文？GNU的gettext项目就是用来做这个的。这篇文章以c语言为例介绍了国际化的gettext。
+
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，Machin">
+<meta property="og:updated_time" content="2016-11-02T11:38:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="好书推荐：《操作系统设计与实现》">
-<meta name="twitter:description" content="这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。">
-<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png">
+<meta name="twitter:title" content="C语言程序的国际化">
+<meta name="twitter:description" content="c语言程序写的时候字符串用英语，基本固定了。那么如果想让别的语言的人使用（比如中文），就得把程序里面的字符串挨个翻译，最后再重新编译一次程序维护起来特别麻烦。那么有什么办法能够让程序显示中文？GNU的gettext项目就是用来做这个的。这篇文章以c语言为例介绍了国际化的gettext。
+
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，Machin">
 
 
 
@@ -116,9 +120,9 @@
 
 
 
-  <link rel="canonical" href="http://shenyu.wiki/2016/10/10/好书推荐：《操作系统设计与实现》/"/>
+  <link rel="canonical" href="http://shenyu.wiki/2016/11/02/C语言程序的国际化/"/>
 
-  <title> 好书推荐：《操作系统设计与实现》 | 申宇的博客 </title>
+  <title> C语言程序的国际化 | 申宇的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -311,7 +315,7 @@
             
             
               
-                好书推荐：《操作系统设计与实现》
+                C语言程序的国际化
               
             
           </h1>
@@ -323,38 +327,19 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-10T11:54:32+00:00" content="2016-10-10">
-              2016-10-10
+            <time itemprop="dateCreated" datetime="2016-11-02T11:37:12+00:00" content="2016-11-02">
+              2016-11-02
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/读书/" itemprop="url" rel="index">
-                    <span itemprop="name">读书</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/10/10/好书推荐：《操作系统设计与实现》/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/10/10/好书推荐：《操作系统设计与实现》/" itemprop="commentsCount"></span>
+                <a href="/2016/11/02/C语言程序的国际化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/02/C语言程序的国际化/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -364,7 +349,7 @@
 
           
           
-             <span id="/2016/10/10/好书推荐：《操作系统设计与实现》/" class="leancloud_visitors" data-flag-title="好书推荐：《操作系统设计与实现》">
+             <span id="/2016/11/02/C语言程序的国际化/" class="leancloud_visitors" data-flag-title="C语言程序的国际化">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -391,8 +376,24 @@
       
 
       
-        <p><img src="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png" alt=""></p>
-<p>这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。</p>
+        <blockquote>
+<p>c语言程序写的时候字符串用英语，基本固定了。那么如果想让别的语言的人使用（比如中文），就得把程序里面的字符串挨个翻译，最后再重新编译一次程序维护起来特别麻烦。那么有什么办法能够让程序显示中文？GNU的gettext项目就是用来做这个的。这篇文章以c语言为例介绍了国际化的gettext。</p>
+</blockquote>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>.po文件： po，Portable Object，里面记录了翻译内容。<br>.mo文件： mo，Machine Object，其实是一个二进制文件，用来提供给程序使用。<br>xgettext：一个工具，根据c文件生成po文件<br>msgfmt： 一个工具，根据po文件生成mo文件<br>msgmerge：更新po文件</p>
+<h2 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">        xgettext              翻译        msgfmt          INSTALL</div><div class="line">.c文件-----------&gt;.pot文件----------&gt;.po----------&gt;.mo------------&gt;./bin/po/zh/LC_MESSAGES/.mo</div><div class="line"></div><div class="line">         gcc                              INSTALL</div><div class="line">.c文件-----------&gt;可执行文件--------------------------------------&gt;./bin</div></pre></td></tr></table></figure>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>在程序中添加这么几行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#include &lt;libintl.h&gt;</div><div class="line">#include&lt;locale.h&gt;</div><div class="line">#define _(String) gettext (String)</div><div class="line">#define gettext_noop(String) String</div><div class="line">#define N_(String) gettext_noop (String)</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">...</div><div class="line">    setlocale (LC_ALL, &quot;&quot;);</div><div class="line">    bindtextdomain (PACKAGE, LOCALEDIR);</div><div class="line">    textdomain (PACKAGE);</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在需要翻译的字符串使用<code>_()</code>包括进来。比如如下的一个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;                                                               </div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#include&lt;locale.h&gt;</div><div class="line">#include &lt;libintl.h&gt;</div><div class="line">#define _(String) gettext (String)</div><div class="line">#define gettext_noop(String) String</div><div class="line">#define N_(String) gettext_noop (String)</div><div class="line"></div><div class="line">#define PACKAGE &quot;main&quot;</div><div class="line">#define LOCALEDIR &quot;po&quot;</div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    setlocale (LC_ALL, &quot;&quot;);</div><div class="line">    bindtextdomain (PACKAGE, LOCALEDIR);</div><div class="line">    textdomain (PACKAGE);</div><div class="line">    printf(_(&quot;Hello world!\n&quot;));</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>用xgettext程序来从.c文件中找到所有可以翻译的字符串并生成.pot模板文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">xgettext -k_ -o main.pot main.c </div><div class="line">cp main.pot main.po</div></pre></td></tr></table></figure></p>
+<p>翻译po文件中的字符串，po文件的格式详见<a href="http://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files" target="_blank" rel="external">http://www.gnu.org/software/gettext/manual/html_node/PO-Files.html#PO-Files</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"># SOME DESCRIPTIVE TITLE.                                                       </div><div class="line"># Copyright (C) YEAR THE PACKAGE&apos;S COPYRIGHT HOLDER</div><div class="line"># This file is distributed under the same license as the PACKAGE package.</div><div class="line"># FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</div><div class="line">#</div><div class="line">#, fuzzy</div><div class="line">msgid &quot;&quot;</div><div class="line">msgstr &quot;&quot;</div><div class="line">&quot;Project-Id-Version: PACKAGE VERSION\n&quot;</div><div class="line">&quot;Report-Msgid-Bugs-To: \n&quot;</div><div class="line">&quot;POT-Creation-Date: 2016-11-02 17:31+0800\n&quot;</div><div class="line">&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&quot;</div><div class="line">&quot;Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;\n&quot;</div><div class="line">&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;\n&quot;</div><div class="line">&quot;Language: \n&quot;</div><div class="line">&quot;MIME-Version: 1.0\n&quot;</div><div class="line">&quot;Content-Type: text/plain; charset=UTF-8\n&quot;</div><div class="line">&quot;Content-Transfer-Encoding: 8bit\n&quot;</div><div class="line"></div><div class="line">#: main.c:18</div><div class="line">#, c-format</div><div class="line">msgid &quot;Hello world!\n&quot;</div><div class="line">msgstr &quot;你好世界！\n&quot;</div></pre></td></tr></table></figure></p>
+<p>用msgfmt从po文件生成mo文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ msgfmt ./main.po -o main.mo</div></pre></td></tr></table></figure>
+<p>把mo文件放到正确的地方，注意这里的<code>po</code>文件夹是main.c里面<code>PACKAGE</code>对应的文件夹。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkdir -p po/zh_CN/LC_MESSAGES/</div><div class="line">$ cp ./main.mo  ./po/zh_CN/LC_MESSAGES/main.mo</div></pre></td></tr></table></figure></p>
+<p>接下来要gcc编译这个程序。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc main.c -o main</div></pre></td></tr></table></figure></p>
+<p>最后是这样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── main</div><div class="line">├── main.c</div><div class="line">├── main.mo</div><div class="line">├── main.po</div><div class="line">├── main.pot</div><div class="line">└── po</div><div class="line">    └── zh_CN</div><div class="line">        └── LC_MESSAGES</div><div class="line">            └── main.mo</div><div class="line"></div><div class="line">3 directories, 6 files</div></pre></td></tr></table></figure></p>
+<p>运行一下，看到已经是翻译成中文了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">你好世界！</div></pre></td></tr></table></figure></p>
+<h2 id="维护"><a href="#维护" class="headerlink" title="维护"></a>维护</h2><p>如果以后修改了.c文件，比如新加了一行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">    printf(_(&quot;Hello world!\n&quot;));</div><div class="line">    printf(_(&quot;Hello again!\n&quot;));</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>那么用msgmerge就可以更新原来的po文件，不需要再从头来过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">$ xgettext --add-comments --keyword=_ main.c -o main.pot --from-code=UTF-8</div><div class="line">$ mv main.pot main.po</div><div class="line">$ msgmerge main.po.old main.po</div><div class="line">main.po: 警告： 字符集“CHARSET”不是可移植的编码名称。</div><div class="line">                将消息转换为用户字符集可能不工作。</div><div class="line">.... 完成。</div><div class="line"># SOME DESCRIPTIVE TITLE.</div><div class="line"># Copyright (C) YEAR THE PACKAGE&apos;S COPYRIGHT HOLDER</div><div class="line"># This file is distributed under the same license as the PACKAGE package.</div><div class="line"># FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</div><div class="line">#</div><div class="line">#, fuzzy</div><div class="line">msgid &quot;&quot;</div><div class="line">msgstr &quot;&quot;</div><div class="line">&quot;Project-Id-Version: PACKAGE VERSION\n&quot;</div><div class="line">&quot;Report-Msgid-Bugs-To: \n&quot;</div><div class="line">&quot;POT-Creation-Date: 2016-11-02 18:30+0800\n&quot;</div><div class="line">&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&quot;</div><div class="line">&quot;Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;\n&quot;</div><div class="line">&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;\n&quot;</div><div class="line">&quot;Language: \n&quot;</div><div class="line">&quot;MIME-Version: 1.0\n&quot;</div><div class="line">&quot;Content-Type: text/plain; charset=UTF-8\n&quot;</div><div class="line">&quot;Content-Transfer-Encoding: 8bit\n&quot;</div><div class="line"></div><div class="line">#: main.c:18</div><div class="line">#, c-format</div><div class="line">msgid &quot;Hello world!\n&quot;</div><div class="line">msgstr &quot;你好世界！\n&quot;</div><div class="line"></div><div class="line">#: main.c:19</div><div class="line">#, fuzzy, c-format</div><div class="line">msgid &quot;Hello again!\n&quot;</div><div class="line">msgstr &quot;你好世界！\n&quot;</div></pre></td></tr></table></figure></p>
+<p>可以看到Hello again被翻译成了你好世界，上面注释有fuzzy是标示这个翻译是模糊匹配的，需要人工再翻译一下。翻译过后去掉fuzzy即可。弄完之后用msgfmt再生成mo文件并拷贝到指定目录即可。当然这些都可以用Makefile来维护。稍后再写一篇PostgreSQL国际化的内容。</p>
 
       
     </div>
@@ -415,7 +416,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/读书-操作系统-linux-minix/" rel="tag">#读书 操作系统 linux minix</a>
+            <a href="/tags/c/" rel="tag">#c</a>
+          
+            <a href="/tags/国际化/" rel="tag">#国际化</a>
+          
+            <a href="/tags/linux/" rel="tag">#linux</a>
           
         </div>
       
@@ -424,17 +429,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/10/linux中的硬链接和软链接/" rel="next" title="linux中的硬链接和软链接">
-                <i class="fa fa-chevron-left"></i> linux中的硬链接和软链接
+              <a href="/2016/10/29/x86-64汇编与调试/" rel="next" title="x86_64汇编与调试">
+                <i class="fa fa-chevron-left"></i> x86_64汇编与调试
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/11/数据库性能测试标准TPC/" rel="prev" title="数据库性能测试标准TPC">
-                数据库性能测试标准TPC <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -498,8 +499,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/10/10/好书推荐：《操作系统设计与实现》/"
-           data-title="好书推荐：《操作系统设计与实现》" data-url="http://shenyu.wiki/2016/10/10/好书推荐：《操作系统设计与实现》/">
+      <div class="ds-thread" data-thread-key="2016/11/02/C语言程序的国际化/"
+           data-title="C语言程序的国际化" data-url="http://shenyu.wiki/2016/11/02/C语言程序的国际化/">
       </div>
     
   </div>
@@ -590,7 +591,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#术语"><span class="nav-number">1.</span> <span class="nav-text">术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本过程"><span class="nav-number">2.</span> <span class="nav-text">基本过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">3.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#维护"><span class="nav-number">4.</span> <span class="nav-text">维护</span></a></li></ol></div>
             
           </div>
         </section>
