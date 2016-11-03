@@ -269,11 +269,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-linux查找文件内容" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-清华北大" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/04/linux查找文件内容/" class="article-date">
-      <time datetime="2016-10-04T18:55:36.000Z" itemprop="datePublished">2016-10-04</time>
+      <a href="/2014/10/02/清华北大/" class="article-date">
+      <time datetime="2014-10-02T12:57:41.000Z" itemprop="datePublished">2014-10-02</time>
 </a>
 
 
@@ -288,7 +288,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a>
+      <a class="article-title" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a>
     </h1>
   
 
@@ -299,152 +299,10 @@
       
           
         <blockquote>
-<p>有时候我们需要在一堆文件中查找包含<code>某单词</code>的文件。比如在一堆源码文件中找出来调用一个函数的地方。</p>
+<p>清华大学、北京大学是中国乃至亚洲最著名的高等学府之一。</p>
 </blockquote>
-<p>可以用find，xargs，grep三个命令联合起来实现。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find ./ -type f -name *.c | xargs grep <span class="string">"word"</span></div></pre></td></tr></table></figure></p>
-<p>find找出当前目录下所有.c的普通文件<br>xargs将文件名变成参数传入到grep<br>grep打开该文件并找出文件中包含word的行</p>
-<h2 id="一个脚本"><a href="#一个脚本" class="headerlink" title="一个脚本"></a>一个脚本</h2><p>为了方便使用，避免每次都输入很长的命令，写出了下面一个脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash                                                                 </span></div><div class="line"><span class="comment">#递归查找当前目录文件中的内容</span></div><div class="line"><span class="comment">#参数1： 文件后缀，可以省略</span></div><div class="line"><span class="comment">#参数2： 要查找的字符串</span></div><div class="line"></div><div class="line">F_ARG_SUFFIX=<span class="string">""</span></div><div class="line">F_ARG_PATTEN=<span class="string">""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ] ; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"usage: f [file suffix] pattern"</span></div><div class="line">    <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 1 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$1</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 2 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_SUFFIX=<span class="string">"-name *.<span class="variable">$1</span>"</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$2</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">find ./ -type f <span class="variable">$F_ARG_NAME</span> | xargs grep <span class="variable">$F_ARG_PATTEN</span></div></pre></td></tr></table></figure></p>
-<p>保存在/bin目录下，并加上可执行权限</p>
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>比如找出postgreSQL源码中, c语言文件使用到heap_open函数的地方：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ f c heap_open</div><div class="line">./backend/commands/tablecmds.c:         rel = heap_openrv(rv, AccessExclusiveLock);</div><div class="line">./backend/commands/tablecmds.c:                         rel = heap_open(childrelid, NoLock);</div><div class="line">...</div><div class="line"></div><div class="line">$ f c heap_open | wc <span class="_">-l</span></div><div class="line">587</div></pre></td></tr></table></figure></p>
-<p>一共使用了587次，很多啊！</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-shell/">linux shell</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-好书推荐：《软技能-代码之外的生存指南》" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/" class="article-date">
-      <time datetime="2016-10-04T17:50:42.000Z" itemprop="datePublished">2016-10-04</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p><img src="http://static.zybuluo.com/shenyuflying/phjbqy6j0tco0bvbtc3h3q45/2016-10-04%2017-26-44%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>是在知乎上看到大家说这本书非常值得一读，在当当上买到这本书一个月有余，平时工作比较忙，陆陆续续的读了一部分，今天才利用国庆假期读完。</p>
-<p>正如书名所说，这本书涵盖了除如何编程以外的各个方面，从职业规划，自我营销，如何学习，提高效率到理财、健身、心态等等。相比于一些励志、心理学方面的书籍，更加贴近于程序员的生活，因为作者本身就是一个非常成功的程序员。</p>
-<p>在读这本书关于自我营销这一章的过程中，对我的直接影响就是我开始写博客了。我注册了<a href="http://www.shenyu.wiki" target="_blank" rel="external">域名</a>，快速学习并掌握了一个博客框架hexo，学习了markdown标记语言和cmdmarkdown跨平台markdown编辑器，在github上架设了我的第一个个人博客。当然其中走了一段弯路，想用树莓派+wordpress+花生棒搭建本地的博客，但是由于运营商限制80端口以及网速原因放弃了。你能想象这都是在一个月中利用业余时间完成的么？</p>
-<p>在读这本书关于健身这一章的过程中，我体重一个月内下降了3斤。</p>
-<p>该书的别的章节，比如职业规划，如何学习，健身，理财等等，对于程序员来说也非常重要。</p>
-<p>这本书值得反复读，把其中有价值的思想和方法应用到自己的学习、工作生活之中。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/读书/">读书</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书/">读书</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-颐和园" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/04/颐和园/" class="article-date">
-      <time datetime="2016-10-04T12:47:20.000Z" itemprop="datePublished">2016-10-04</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>颐和园，中国清朝时期皇家园林，前身为清漪园，坐落在北京西郊，距城区十五公里，占地约二百九十公顷，与圆明园毗邻。它是以昆明湖、万寿山为基址，以杭州西湖为蓝本，汲取江南园林的设计手法而建成的一座大型山水园林，也是保存最完整的一座皇家行宫御苑，被誉为“皇家园林博物馆”，也是国家重点旅游景点。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/y5a04va003m6b4cwu9agky5v/2016-10-04%2012-37-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="昆明湖"><br>$$昆明湖$$</p>
-<p>昆明湖是颐和园的主要湖泊，占全园面积的四分之三，约220公顷。南部的前湖区碧波荡漾，西望起伏、北望楼阁成群；湖中有一道西堤，堤上桃柳成行；</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/98ubpp8932fg35oovjeuz5e5/2016-10-04%2012-35-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$十七孔桥$$<br>十七孔桥横卧湖上，湖中3岛上也有形式各异的古典建筑。昆明湖是清代皇家诸园中最大的湖泊，湖中一道长堤──西堤，自西北逶迤向南。西堤及其支堤把湖面划分为三个大小不等的水域，每个水域各有一个湖心岛。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/r17fgepk5zbfc0cd5oyly2xy/2016-10-04%2012-38-18%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$万寿山$$</p>
-<p>万寿山属燕山余脉，高58.59米。建筑群依山而筑，万寿山前山，以八面三层四重檐的佛香阁为中心，组成巨大的主体建筑群。</p>
-<p>2016-10-3</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/sgb8x1x819sneyf4hi8ao1kd/2016-10-04%2016-52-22%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$清华大学$$</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/v6m1ki0ntl2s1k0hfmtfm8bi/2016-10-04%2016-38-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$北京大学$$</p>
 
       
     </div>
@@ -479,11 +337,11 @@
 
 
   
-    <article id="post-hexo静态博客修改侧边栏" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-西安" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/04/hexo静态博客修改侧边栏/" class="article-date">
-      <time datetime="2016-10-04T11:53:33.000Z" itemprop="datePublished">2016-10-04</time>
+      <a href="/2014/10/01/西安/" class="article-date">
+      <time datetime="2014-10-01T16:48:26.000Z" itemprop="datePublished">2014-10-01</time>
 </a>
 
 
@@ -498,7 +356,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a>
+      <a class="article-title" href="/2014/10/01/西安/">西安 Xi&#39;an</a>
     </h1>
   
 
@@ -509,26 +367,15 @@
       
           
         <blockquote>
-<p>hexo主题默认的侧边栏只有<code>首页</code>、<code>归档</code>、<code>标签</code>这几项。调研了几个比较优秀的博客之后发现，还需要添加<code>关于</code>、<code>搜索</code>、<code>阅读</code>、<code>旅行</code>等等几个侧边栏项目，那么如何在博客里面添加新的侧边栏项目呢？</p>
+<p>西安，古称“长安”、“镐京”，是陕西省省会，地处关中平原中部，北濒渭河，南依秦岭，八水润长安。长安自古帝王都，其先后有西周、秦、西汉、新莽、西晋、前赵、前秦、后秦、西魏、北周、隋、唐13个王朝在西安地区建都（积年为1077年）。是中华文明和中华民族重要发祥地之一，丝绸之路的起点。丰镐都城、秦咸阳宫、兵马俑，汉未央宫、长乐宫，隋大兴城，唐大明宫、兴庆宫等勾勒出“长安情结”。</p>
 </blockquote>
-<h2 id="添加关于、留言项目"><a href="#添加关于、留言项目" class="headerlink" title="添加关于、留言项目"></a>添加关于、留言项目</h2><p>关于、留言这两个项目实际上是利用了hexo的page页面功能。</p>
-<h3 id="Step1-新建关于页面"><a href="#Step1-新建关于页面" class="headerlink" title="Step1 新建关于页面"></a>Step1 新建关于页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo new page about</div><div class="line">INFO  Created: ~/blog/source/about/index.md</div></pre></td></tr></table></figure>
-<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: about</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: false   添加这行关闭评论</div><div class="line">---</div><div class="line">here is something about me</div></pre></td></tr></table></figure></p>
-<h3 id="Step2-新建留言页面"><a href="#Step2-新建留言页面" class="headerlink" title="Step2 新建留言页面"></a>Step2 新建留言页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page message</div></pre></td></tr></table></figure>
-<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: message</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: true   打开评论</div><div class="line">---</div><div class="line">有事请留言</div></pre></td></tr></table></figure></p>
-<h3 id="Step3-把关于、留言添加到侧边栏中"><a href="#Step3-把关于、留言添加到侧边栏中" class="headerlink" title="Step3 把关于、留言添加到侧边栏中"></a>Step3 把关于、留言添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message #添加这一行</div><div class="line">  about: /about     #添加这一行</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user     #添加这一行</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment #添加这一行</div></pre></td></tr></table></figure></p>
-<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
-<h3 id="Step4-生成"><a href="#Step4-生成" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
-<p>我们看到，生成了关于、评论的页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/public/about/index.html</div><div class="line">/public/message/index.html</div></pre></td></tr></table></figure></p>
-<h2 id="添加阅读、旅行项目"><a href="#添加阅读、旅行项目" class="headerlink" title="添加阅读、旅行项目"></a>添加阅读、旅行项目</h2><p>阅读、旅行这两个项目实际上是利用了hexo主题的categories分类功能。</p>
-<h3 id="Step1-模板添加分类categories"><a href="#Step1-模板添加分类categories" class="headerlink" title="Step1  模板添加分类categories"></a>Step1  模板添加分类categories</h3><p>打开<code>./scaffolds/post.md</code>添加一行<code>categories:</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: &#123;&#123; title &#125;&#125;</div><div class="line">date: &#123;&#123; date &#125;&#125;</div><div class="line">tags:</div><div class="line">categories:</div><div class="line">comments: true</div><div class="line">---</div></pre></td></tr></table></figure></p>
-<h3 id="Step2-把分类添加到侧边栏中"><a href="#Step2-把分类添加到侧边栏中" class="headerlink" title="Step2 把分类添加到侧边栏中"></a>Step2 把分类添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message</div><div class="line">  about: /about</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment</div></pre></td></tr></table></figure></p>
-<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
-<h3 id="Step3-新建文章"><a href="#Step3-新建文章" class="headerlink" title="Step3 新建文章"></a>Step3 新建文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo new &quot;我推荐的编程书籍&quot;</div><div class="line">INFO  Created: ~/blog/source/_posts/我推荐的编程书籍.md</div><div class="line">$ vim ./source/_posts/我推荐的编程书籍.md</div></pre></td></tr></table></figure>
-<p>新建的文章自动添加了categories标签。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 我推荐的编程书籍</div><div class="line">comments: true</div><div class="line">date: 2016-10-04 11:19:10</div><div class="line">tags: 阅读</div><div class="line">categories:</div><div class="line">---</div><div class="line">## 《代码大全》 Code Complete</div><div class="line">。。。该书籍的介绍。。。</div></pre></td></tr></table></figure></p>
-<h3 id="Step4-生成-1"><a href="#Step4-生成-1" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
-<p>我们看到，生成了书籍分类的页面index.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/yshen/blog/public/categories/书籍/index.html</div></pre></td></tr></table></figure></p>
-<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p>最后，看一下最终效果：<br><img src="http://static.zybuluo.com/shenyuflying/nsteo6fk5y9ss50gz1z22gny/side_bar.png" alt="效果图"></p>
+<p><img src="http://static.zybuluo.com/shenyuflying/jt4bnct6ra6e1gprd91pcadu/2016-10-04%2016-36-36%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<p>$$长安夜景$$</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/3o4u8r5dmaza9i5ygvnos37j/2016-10-04%2016-34-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$西安电子科技大学$$<br>西安电子科技大学（Xidian University）简称“西电”或“西军电”，国家首批“211工程”、“985工程优势学科创新平台”、“2011计划”（牵头建设信息感知技术协同创新中心）。我国最早的2所国防工业重点军校之一（哈军工、西军电并称），中国电子信息领域科学研究和人才培养的核心基地，中国雷达、信息论、密码学、电子对抗、微波天线等学科的发源地。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/sxa81se0j9uwh5aae85s9t3t/2016-10-04%2016-35-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$西北大学$$<br>西北大学（NorthwestUniversity），简称“西大”，始建于1902年，由清末光绪皇帝御笔朱批设立，坐落于古都西安，是国家教育部与陕西省人民政府共建的综合性全国重点大学，“211工程”、“中西部高校基础能力建设工程大学，是中国西北地区历史最为悠久的高等学府。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/gct910y0hvzghqcx544a95nw/2016-10-04%2016-35-40%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$古城墙$$</p>
+<p>西安明城墙位于陕西省西安市中心区，是中国现存规模最大、保存最完整的古代城垣。墙高18米，顶宽12—14米，底宽15—18米，轮廓呈封闭的长方形，周长13.74公里。城墙内人们习惯称为古城区，面积11.32平方公里，著名的西安钟鼓楼就位于古城区中心。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/dypgy8xjth7olt40z9k73hj7/2016-10-04%2016-37-15%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$回民街$$<br>西安回民街是西安著名的美食文化街区，是西安特色小吃最集中的街区，也是来西安必去的地方。其历史悠久，距今已有上千年历史。其深厚的文化底蕴，街道两旁大量的美食店铺，近300种特色风味小吃，让人流连忘返，欲罢不能的魅力所在！</p>
 
       
     </div>
@@ -536,10 +383,14 @@
     <div class="article-info article-info-index">
       
       
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/旅行/">旅行</a>
+    </div>
+
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/博客/">博客</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
     </div>
 
       
@@ -559,11 +410,11 @@
 
 
   
-    <article id="post-wget下载网站供离线浏览" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-岳麓书院" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/02/wget下载网站供离线浏览/" class="article-date">
-      <time datetime="2016-10-02T16:44:45.000Z" itemprop="datePublished">2016-10-02</time>
+      <a href="/2014/02/04/岳麓书院/" class="article-date">
+      <time datetime="2014-02-04T16:29:01.000Z" itemprop="datePublished">2014-02-04</time>
 </a>
 
 
@@ -578,7 +429,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a>
+      <a class="article-title" href="/2014/02/04/岳麓书院/">岳麓书院</a>
     </h1>
   
 
@@ -589,28 +440,12 @@
       
           
         <blockquote>
-<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
+<p>岳麓书院是古代汉族书院建筑，属于中国历史上著名的四大书院之一。位于湖南省长沙市湘江西岸的岳麓山风景区岳麓山东面山下。</p>
 </blockquote>
-<p>看wget的man说明，可以发现wget有几个特点：</p>
-<ol>
-<li>非交互式，可以工作在后台。</li>
-<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
-<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
-</ol>
-<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
-<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
-<p>上面用到的wget网站下载选择解释：</p>
-<pre><code>--recursive: 下载整个网站
---domains shenyu.wiki: 不要下载指定域名之外的网页。
---no-parent: 仅仅下载当前目录结构下的文件。
---page-requisites: 现在网页包括的所有内容(images, CSS and so on).
---html-extension: 将网页保存为html文件。
---convert-links: 将连接转换为本地连接
---restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
---no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
-</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
+<p><img src="http://static.zybuluo.com/shenyuflying/4f2hd5u2hssbwjt1ahumriu2/2016-10-04%2016-24-46%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$岳麓书院正门$$</p>
+<p>北宋开宝九年（976年），潭州太守朱洞在僧人办学的基础上，由官府捐资兴建，正式创立岳麓书院。嗣后，历经宋、元、明、清各代，至清末光绪二十九年（1903年）改为湖南高等学堂。祥符八年（公元1015年），宋真宗召见山长周式，并赐书“岳麓书院”四字门额。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/2ywjg4gtgiatat48s0hvsa55/2016-10-04%2016-05-20%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$文物保护单位$$</p>
+<p>1988年，岳麓书院建筑群被国务院批准为第三批全国重点文物保护单位。</p>
 
       
     </div>
@@ -618,10 +453,83 @@
     <div class="article-info article-info-index">
       
       
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/旅行/">旅行</a>
+    </div>
+
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-凤凰古城" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2014/02/04/凤凰古城/" class="article-date">
+      <time datetime="2014-02-04T16:21:57.000Z" itemprop="datePublished">2014-02-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>凤凰古城，位于湖南省湘西土家族苗族自治州的西南部，土地总面积约10平方千米, 建于清康熙四十三年〔1704年〕。2001年被授予国家历史文化名城称号，湖南十大文化遗产之一。</p>
+</blockquote>
+<p><img src="http://static.zybuluo.com/shenyuflying/bo7tstohjhne8ixrbirr4chc/2016-10-04%2016-13-46%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$凤凰夜景$$</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/kzge3c4f2hk51njclauyc0h2/2016-10-04%2016-04-51%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$凤凰夜景$$<br>左上角那个是一座宝塔，在夜晚仿佛是悬在半空中。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/t5f3ik73nhlhh8awf4jl4yah/2016-10-04%2016-04-21%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$凤凰城$$<br>2001年4月8日下午,国家总理朱镕基亲临此楼,激动之情露于言表,并在此欣然挥毫,留下“朱镕基 辛巳春 凤凰城”珍贵墨宝。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/旅行/">旅行</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
     </div>
 
       
@@ -643,7 +551,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
     </nav>
   
 </div>

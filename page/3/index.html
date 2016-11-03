@@ -269,11 +269,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-PostgreSQL日志分析工具——pgBadger" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-linux查找文件内容" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/" class="article-date">
-      <time datetime="2016-10-13T07:29:26.000Z" itemprop="datePublished">2016-10-13</time>
+      <a href="/2016/10/04/linux查找文件内容/" class="article-date">
+      <time datetime="2016-10-04T18:55:36.000Z" itemprop="datePublished">2016-10-04</time>
 </a>
 
 
@@ -288,7 +288,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a>
+      <a class="article-title" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a>
     </h1>
   
 
@@ -299,61 +299,14 @@
       
           
         <blockquote>
-<p>面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，常用的办法就是查看服务器的日志。但是一头扎进几百M甚至几个G的日志里查看并不现实。那么如何快速回答：最慢的查询有哪些？查询相应时间分布？等等问题，并对最突出的问题着手优化呢？显然我们需要借助自动化工具来完成这个任务。</p>
+<p>有时候我们需要在一堆文件中查找包含<code>某单词</code>的文件。比如在一堆源码文件中找出来调用一个函数的地方。</p>
 </blockquote>
-<p>pgBadger就是为分析<code>PostgreSQL全日志</code>为目的诞生的一个工具，能够分析日志并生成分析报告，<a href="/uploads/out.html">这里</a>给出了一个报告样本。怎么样，报告是不是很详细？</p>
-<h2 id="pdBadger安装"><a href="#pdBadger安装" class="headerlink" title="pdBadger安装"></a>pdBadger安装</h2><p>pgBadger代码托管在github上，可以到<a href="https://github.com/dalibo/pgbadger/releases" target="_blank" rel="external">这里</a>进行下载，最新的版本是<a href="https://github.com/dalibo/pgbadger/archive/v9.0.tar.gz" target="_blank" rel="external">v9.0</a><br>安装步骤页十分简单：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">wget https://github.com/dalibo/pgbadger/archive/v9.0.tar.gz</div><div class="line">tar xzf pgbadger-9.0.tar.gz</div><div class="line">cd pgbadger-9.x/</div><div class="line">perl Makefile.PL</div><div class="line">make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
-<p>安装完后，在终端执行<code>pgbadger --version</code>显示版本信息后，表明安装成功。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ pgbadger --version</div><div class="line">pgBadger version 9.0</div></pre></td></tr></table></figure></p>
-<h2 id="收集PostgreSQL日志"><a href="#收集PostgreSQL日志" class="headerlink" title="收集PostgreSQL日志"></a>收集PostgreSQL日志</h2><p>要利用pgbadger来分析日志，那么我们首先要打开PostgreSQL记录日志的参数，如下是一个典型的配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">log_min_duration_statement = 0 </div><div class="line">log_checkpoints = on</div><div class="line">log_connections = on</div><div class="line">log_disconnections = on</div><div class="line">log_lock_waits = on</div><div class="line">log_temp_files = 0 </div><div class="line">log_autovacuum_min_duration = 0 </div><div class="line">log_line_prefix = &apos;%t [%p]: [%l-1] db=%d,user=%u,app=%a,client=%h&apos;</div><div class="line">log_destination = &apos;stderr&apos;  </div><div class="line">logging_collector = on    </div><div class="line">log_directory = &apos;pg_log&apos;</div><div class="line">log_filename = &apos;postgresql-%Y-%m-%d_%H%M%S.log&apos;</div><div class="line">log_file_mode = 0600</div><div class="line">log_rotation_age = 1d</div><div class="line">log_rotation_size = 1000MB</div><div class="line">lc_messages=&apos;C&apos;</div></pre></td></tr></table></figure></p>
-<p>接着打开数据库，如果数据库正在运行那么需要发送一个SIGHUP信号来让数据库重新读取配置。过段时间，我们就能够在<code>pg_log</code>文件夹下看到日志产生了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">postgresql-2016-10-13_113844.log</div></pre></td></tr></table></figure></p>
-<h2 id="生成分析报告"><a href="#生成分析报告" class="headerlink" title="生成分析报告"></a>生成分析报告</h2><p>生成分析报告非常简单只需要一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ pgbadger ./postgresql-2016-10-13_113844.log</div><div class="line">[========================&gt;] Parsed 5642240 bytes of 5642240 (100.00%), queries: 19436, events: 3002</div><div class="line">LOG: Ok, generating html report...</div></pre></td></tr></table></figure></p>
-<p>稍等片刻就会输出分析报告<a href="/uploads/out.html">out.html</a></p>
-<p>当然了，pgbadger还有一些高端玩法，比如</p>
-<ul>
-<li><p>分析压缩文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgbadger /var/log/postgres.log.1.tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>分析多个文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgbadger /var/log/postgresql/postgresql-2012-05-*</div></pre></td></tr></table></figure>
-</li>
-<li><p>排除某些类型查询</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgbadger --exclude-query=&quot;^(COPY|COMMIT)&quot; /var/log/postgresql.log</div></pre></td></tr></table></figure>
-</li>
-<li><p>指定起始时间</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pgbadger -b &quot;2012-06-25 10:56:11&quot; -e &quot;2012-06-25 10:59:11&quot; </div><div class="line">                       /var/log/postgresql.log</div></pre></td></tr></table></figure>
-</li>
-<li><p>从管道读取</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /var/log/postgres.log | pgbadger -</div></pre></td></tr></table></figure>
-</li>
-<li><p>开启多进程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">perl pgbadger -j 8 /pglog/postgresql-9.1-main.log</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>也可以把pgbadger加入crontab计划中，来实现生成每周报告等等。</p>
-<h2 id="报告分析"><a href="#报告分析" class="headerlink" title="报告分析"></a>报告分析</h2><p>报告包括了很多方面的内容：</p>
-<p>总体信息</p>
-<ul>
-<li>服务器traffic信息，比如select、update、insert情况</li>
-<li>连接情况信息，比如每个库、用户连接情况</li>
-<li>会话信息，比如会话时长</li>
-<li>checkpoint检查点信息</li>
-<li>临时文件信息</li>
-<li>vacuum信息，比如做vacuum时间分布，做vacuum表情况，删除元组、页面信息</li>
-<li>等待锁的信息</li>
-<li>查询信息，insert/update/delete比例分布</li>
-<li>慢查询排名，查询耗时分布</li>
-<li>报错信息</li>
-</ul>
-<p>下面介绍一下主要的几个内容</p>
-<h3 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h3><p><img src="http://static.zybuluo.com/shenyuflying/f65eqmftm1egi0k8vkm68ub4/image_1auubla73147a1j8r1sf53a11ejq9.png" alt="image_1auubla73147a1j8r1sf53a11ejq9.png-27.5kB"></p>
-<h3 id="QPS"><a href="#QPS" class="headerlink" title="QPS"></a>QPS</h3><p><img src="http://static.zybuluo.com/shenyuflying/qtlgqigexi461t1ixoppuxkd/image_1auubnceb1ah08qorkt1hct1tf3m.png" alt="image_1auubnceb1ah08qorkt1hct1tf3m.png-46.6kB"></p>
-<p>这里可以看到有关服务器压力的信息。</p>
-<h3 id="查询时间分布-Histogram-of-query-times"><a href="#查询时间分布-Histogram-of-query-times" class="headerlink" title="查询时间分布 Histogram of query times"></a>查询时间分布 Histogram of query times</h3><p><img src="http://static.zybuluo.com/shenyuflying/n5eyqk5866jo00x082uubo63/image_1auubrt19117m130akqdhgbcd513.png" alt="image_1auubrt19117m130akqdhgbcd513.png-38.5kB"></p>
-<p>这里可以看到查询时间分布的信息。</p>
-<h3 id="慢查询排名-Slowest-individual-queries"><a href="#慢查询排名-Slowest-individual-queries" class="headerlink" title="慢查询排名 Slowest individual queries"></a>慢查询排名 Slowest individual queries</h3><p><img src="http://static.zybuluo.com/shenyuflying/b608kg30v8brh5m4mfupw7xt/image_1auubtkfr1kvfuke1dqiknii6p1g.png" alt="image_1auubtkfr1kvfuke1dqiknii6p1g.png-161.8kB"><br>这里可以看到慢查询信息。<br>另外还有<br>Time Consuming queries (N) —— 最耗时的查询<br>Most frequent queries (N) ——　最频繁的查询<br>Normalized slowest queries　——　归一化后最慢的查询</p>
-<p>PS：这里的归一化，就是排除参数不同的干扰。</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>另外报告中还有关于报错信息的统计和详细情况。有助于发现服务器的故障。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过pgbadger可以快速分析几百M甚至几个G的服务器日志。掌握服务器运行情况并快速回答：最慢的查询有哪些？查询相应时间分布？等等问题。有助于对最突出的问题着手优化。从而快速解决客户的抱怨。</p>
+<p>可以用find，xargs，grep三个命令联合起来实现。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find ./ -type f -name *.c | xargs grep <span class="string">"word"</span></div></pre></td></tr></table></figure></p>
+<p>find找出当前目录下所有.c的普通文件<br>xargs将文件名变成参数传入到grep<br>grep打开该文件并找出文件中包含word的行</p>
+<h2 id="一个脚本"><a href="#一个脚本" class="headerlink" title="一个脚本"></a>一个脚本</h2><p>为了方便使用，避免每次都输入很长的命令，写出了下面一个脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash                                                                 </span></div><div class="line"><span class="comment">#递归查找当前目录文件中的内容</span></div><div class="line"><span class="comment">#参数1： 文件后缀，可以省略</span></div><div class="line"><span class="comment">#参数2： 要查找的字符串</span></div><div class="line"></div><div class="line">F_ARG_SUFFIX=<span class="string">""</span></div><div class="line">F_ARG_PATTEN=<span class="string">""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ] ; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"usage: f [file suffix] pattern"</span></div><div class="line">    <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 1 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$1</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 2 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_SUFFIX=<span class="string">"-name *.<span class="variable">$1</span>"</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$2</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">find ./ -type f <span class="variable">$F_ARG_NAME</span> | xargs grep <span class="variable">$F_ARG_PATTEN</span></div></pre></td></tr></table></figure></p>
+<p>保存在/bin目录下，并加上可执行权限</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>比如找出postgreSQL源码中, c语言文件使用到heap_open函数的地方：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ f c heap_open</div><div class="line">./backend/commands/tablecmds.c:         rel = heap_openrv(rv, AccessExclusiveLock);</div><div class="line">./backend/commands/tablecmds.c:                         rel = heap_open(childrelid, NoLock);</div><div class="line">...</div><div class="line"></div><div class="line">$ f c heap_open | wc <span class="_">-l</span></div><div class="line">587</div></pre></td></tr></table></figure></p>
+<p>一共使用了587次，很多啊！</p>
 
       
     </div>
@@ -364,7 +317,7 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/database/">database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-shell/">linux shell</a></li></ul>
     </div>
 
       
@@ -384,11 +337,11 @@
 
 
   
-    <article id="post-linux监控脚本-绘图" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-好书推荐：《软技能-代码之外的生存指南》" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/11/linux监控脚本-绘图/" class="article-date">
-      <time datetime="2016-10-11T13:36:18.000Z" itemprop="datePublished">2016-10-11</time>
+      <a href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/" class="article-date">
+      <time datetime="2016-10-04T17:50:42.000Z" itemprop="datePublished">2016-10-04</time>
 </a>
 
 
@@ -403,7 +356,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a>
+      <a class="article-title" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a>
     </h1>
   
 
@@ -413,27 +366,252 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <blockquote>
-<p>linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。</p>
-</blockquote>
-<p>目前脚本能够监控如下内容</p>
-<ol>
-<li>平均负载</li>
-<li>空闲内存</li>
-<li>已用内存</li>
-<li>可用内存</li>
-<li>缓存中的脏页面</li>
-<li>硬盘使用率</li>
-<li>进程占用CPU百分比</li>
-<li>等等（可以很方便的添加别的监控参数）</li>
-</ol>
-<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$./monitor.sh  [程序名]</div></pre></td></tr></table></figure>
-<p>脚本输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">------------time---------|-load-|-m_used-|-m_aval-|-m_ditry-|-sda--|-dm-0--|-dm-1--</div><div class="line">2016-10-11_21:26:07	0.34	1223	6272	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:08	0.34	1224	6271	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:09	0.34	1227	6269	0	0.50	0.48	0.00	</div><div class="line">2</div></pre></td></tr></table></figure></p>
-<p>再用gnuplot绘图工具来绘制曲线，后期我把绘图再加到脚本中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$gnuplot</div><div class="line">set xdata time </div><div class="line">set timefmt &quot;%Y-%m-%d_%H:%M:%S&quot;</div><div class="line">plot &apos;monitor.log&apos; using 1:2 with linespoints linestyle 1</div></pre></td></tr></table></figure>
-<p>比如下图绘制了我机器3分钟时间内的load average<br><img src="http://static.zybuluo.com/shenyuflying/r2rjbiq08oop1et5wi2f6uve/image_1aupv45rv67o149rtt1cjk1io29.png" alt=""></p>
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2>
+        <p><img src="http://static.zybuluo.com/shenyuflying/phjbqy6j0tco0bvbtc3h3q45/2016-10-04%2017-26-44%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<p>是在知乎上看到大家说这本书非常值得一读，在当当上买到这本书一个月有余，平时工作比较忙，陆陆续续的读了一部分，今天才利用国庆假期读完。</p>
+<p>正如书名所说，这本书涵盖了除如何编程以外的各个方面，从职业规划，自我营销，如何学习，提高效率到理财、健身、心态等等。相比于一些励志、心理学方面的书籍，更加贴近于程序员的生活，因为作者本身就是一个非常成功的程序员。</p>
+<p>在读这本书关于自我营销这一章的过程中，对我的直接影响就是我开始写博客了。我注册了<a href="http://www.shenyu.wiki" target="_blank" rel="external">域名</a>，快速学习并掌握了一个博客框架hexo，学习了markdown标记语言和cmdmarkdown跨平台markdown编辑器，在github上架设了我的第一个个人博客。当然其中走了一段弯路，想用树莓派+wordpress+花生棒搭建本地的博客，但是由于运营商限制80端口以及网速原因放弃了。你能想象这都是在一个月中利用业余时间完成的么？</p>
+<p>在读这本书关于健身这一章的过程中，我体重一个月内下降了3斤。</p>
+<p>该书的别的章节，比如职业规划，如何学习，健身，理财等等，对于程序员来说也非常重要。</p>
+<p>这本书值得反复读，把其中有价值的思想和方法应用到自己的学习、工作生活之中。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/读书/">读书</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书/">读书</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-颐和园" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/04/颐和园/" class="article-date">
+      <time datetime="2016-10-04T12:47:20.000Z" itemprop="datePublished">2016-10-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
           
+        <blockquote>
+<p>颐和园，中国清朝时期皇家园林，前身为清漪园，坐落在北京西郊，距城区十五公里，占地约二百九十公顷，与圆明园毗邻。它是以昆明湖、万寿山为基址，以杭州西湖为蓝本，汲取江南园林的设计手法而建成的一座大型山水园林，也是保存最完整的一座皇家行宫御苑，被誉为“皇家园林博物馆”，也是国家重点旅游景点。</p>
+</blockquote>
+<p><img src="http://static.zybuluo.com/shenyuflying/y5a04va003m6b4cwu9agky5v/2016-10-04%2012-37-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="昆明湖"><br>$$昆明湖$$</p>
+<p>昆明湖是颐和园的主要湖泊，占全园面积的四分之三，约220公顷。南部的前湖区碧波荡漾，西望起伏、北望楼阁成群；湖中有一道西堤，堤上桃柳成行；</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/98ubpp8932fg35oovjeuz5e5/2016-10-04%2012-35-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$十七孔桥$$<br>十七孔桥横卧湖上，湖中3岛上也有形式各异的古典建筑。昆明湖是清代皇家诸园中最大的湖泊，湖中一道长堤──西堤，自西北逶迤向南。西堤及其支堤把湖面划分为三个大小不等的水域，每个水域各有一个湖心岛。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/r17fgepk5zbfc0cd5oyly2xy/2016-10-04%2012-38-18%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$万寿山$$</p>
+<p>万寿山属燕山余脉，高58.59米。建筑群依山而筑，万寿山前山，以八面三层四重檐的佛香阁为中心，组成巨大的主体建筑群。</p>
+<p>2016-10-3</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/旅行/">旅行</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-hexo静态博客修改侧边栏" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/04/hexo静态博客修改侧边栏/" class="article-date">
+      <time datetime="2016-10-04T11:53:33.000Z" itemprop="datePublished">2016-10-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>hexo主题默认的侧边栏只有<code>首页</code>、<code>归档</code>、<code>标签</code>这几项。调研了几个比较优秀的博客之后发现，还需要添加<code>关于</code>、<code>搜索</code>、<code>阅读</code>、<code>旅行</code>等等几个侧边栏项目，那么如何在博客里面添加新的侧边栏项目呢？</p>
+</blockquote>
+<h2 id="添加关于、留言项目"><a href="#添加关于、留言项目" class="headerlink" title="添加关于、留言项目"></a>添加关于、留言项目</h2><p>关于、留言这两个项目实际上是利用了hexo的page页面功能。</p>
+<h3 id="Step1-新建关于页面"><a href="#Step1-新建关于页面" class="headerlink" title="Step1 新建关于页面"></a>Step1 新建关于页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo new page about</div><div class="line">INFO  Created: ~/blog/source/about/index.md</div></pre></td></tr></table></figure>
+<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: about</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: false   添加这行关闭评论</div><div class="line">---</div><div class="line">here is something about me</div></pre></td></tr></table></figure></p>
+<h3 id="Step2-新建留言页面"><a href="#Step2-新建留言页面" class="headerlink" title="Step2 新建留言页面"></a>Step2 新建留言页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page message</div></pre></td></tr></table></figure>
+<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: message</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: true   打开评论</div><div class="line">---</div><div class="line">有事请留言</div></pre></td></tr></table></figure></p>
+<h3 id="Step3-把关于、留言添加到侧边栏中"><a href="#Step3-把关于、留言添加到侧边栏中" class="headerlink" title="Step3 把关于、留言添加到侧边栏中"></a>Step3 把关于、留言添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message #添加这一行</div><div class="line">  about: /about     #添加这一行</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user     #添加这一行</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment #添加这一行</div></pre></td></tr></table></figure></p>
+<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
+<h3 id="Step4-生成"><a href="#Step4-生成" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
+<p>我们看到，生成了关于、评论的页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/public/about/index.html</div><div class="line">/public/message/index.html</div></pre></td></tr></table></figure></p>
+<h2 id="添加阅读、旅行项目"><a href="#添加阅读、旅行项目" class="headerlink" title="添加阅读、旅行项目"></a>添加阅读、旅行项目</h2><p>阅读、旅行这两个项目实际上是利用了hexo主题的categories分类功能。</p>
+<h3 id="Step1-模板添加分类categories"><a href="#Step1-模板添加分类categories" class="headerlink" title="Step1  模板添加分类categories"></a>Step1  模板添加分类categories</h3><p>打开<code>./scaffolds/post.md</code>添加一行<code>categories:</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: &#123;&#123; title &#125;&#125;</div><div class="line">date: &#123;&#123; date &#125;&#125;</div><div class="line">tags:</div><div class="line">categories:</div><div class="line">comments: true</div><div class="line">---</div></pre></td></tr></table></figure></p>
+<h3 id="Step2-把分类添加到侧边栏中"><a href="#Step2-把分类添加到侧边栏中" class="headerlink" title="Step2 把分类添加到侧边栏中"></a>Step2 把分类添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message</div><div class="line">  about: /about</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment</div></pre></td></tr></table></figure></p>
+<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
+<h3 id="Step3-新建文章"><a href="#Step3-新建文章" class="headerlink" title="Step3 新建文章"></a>Step3 新建文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo new &quot;我推荐的编程书籍&quot;</div><div class="line">INFO  Created: ~/blog/source/_posts/我推荐的编程书籍.md</div><div class="line">$ vim ./source/_posts/我推荐的编程书籍.md</div></pre></td></tr></table></figure>
+<p>新建的文章自动添加了categories标签。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 我推荐的编程书籍</div><div class="line">comments: true</div><div class="line">date: 2016-10-04 11:19:10</div><div class="line">tags: 阅读</div><div class="line">categories:</div><div class="line">---</div><div class="line">## 《代码大全》 Code Complete</div><div class="line">。。。该书籍的介绍。。。</div></pre></td></tr></table></figure></p>
+<h3 id="Step4-生成-1"><a href="#Step4-生成-1" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
+<p>我们看到，生成了书籍分类的页面index.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/yshen/blog/public/categories/书籍/index.html</div></pre></td></tr></table></figure></p>
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p>最后，看一下最终效果：<br><img src="http://static.zybuluo.com/shenyuflying/nsteo6fk5y9ss50gz1z22gny/side_bar.png" alt="效果图"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/博客/">博客</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-wget下载网站供离线浏览" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/wget下载网站供离线浏览/" class="article-date">
+      <time datetime="2016-10-02T16:44:45.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
+</blockquote>
+<p>看wget的man说明，可以发现wget有几个特点：</p>
+<ol>
+<li>非交互式，可以工作在后台。</li>
+<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
+<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
+</ol>
+<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
+<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
+<p>上面用到的wget网站下载选择解释：</p>
+<pre><code>--recursive: 下载整个网站
+--domains shenyu.wiki: 不要下载指定域名之外的网页。
+--no-parent: 仅仅下载当前目录结构下的文件。
+--page-requisites: 现在网页包括的所有内容(images, CSS and so on).
+--html-extension: 将网页保存为html文件。
+--convert-links: 将连接转换为本地连接
+--restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
+--no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
+</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -447,8 +625,278 @@
     </div>
 
       
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-二进制文件-十六进制文件-互转" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/二进制文件-十六进制文件-互转/" class="article-date">
+      <time datetime="2016-10-02T13:06:30.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 编译</div><div class="line">$ gcc c2bs.c -o c2bs</div><div class="line"></div><div class="line"># 帮助</div><div class="line">$ ./c2bs2</div><div class="line">convert to binary or strings.</div><div class="line">will read from stdin and write to stdout</div><div class="line">usage: ./c2bs2 [options]</div><div class="line">[options]</div><div class="line">    -b convert to binary</div><div class="line">    -s convert to string</div><div class="line"></div><div class="line"># 二进制可执行文件转16进制字符串</div><div class="line">$ cat ./c2bs | ./c2bs -c &gt; c2bs.hex </div><div class="line">$ head c2bs.hex</div><div class="line">7f454c4602010100000000000000000002003e000100000020064000000000004000000000000000a0110000000000000000000040003800090040001e001b000600000005000000400000000000000040004000000000004000400000000000f801000000000000f8010000000...</div><div class="line"></div><div class="line"># 十六进制字符串再转回到二进制</div><div class="line">$ cat ./c2bs.hex | ./c2bs -b &gt; c2bs</div></pre></td></tr></table></figure>
+<p> 源码如下，需要注意的是，都用了不带符号的unsigned char类型，这个很关键，想想为什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> talbe[<span class="string">'f'</span>+<span class="number">1</span>];</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in_2[<span class="number">3</span>]=&#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (argc == <span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"convert to binary or strings.\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"will read from stdin and write to stdout\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"usage: %s [options]\n"</span></div><div class="line">			<span class="string">"[options]\n"</span></div><div class="line">			<span class="string">"    -b convert to binary\n"</span></div><div class="line">			<span class="string">"    -s convert to string\n"</span>,argv[<span class="number">0</span>]);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">switch</span>(argv[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> <span class="string">'s'</span>:</div><div class="line">			<span class="keyword">while</span>( fread(&amp;in,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%02x"</span>,in);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		<span class="keyword">break</span>;</div><div class="line">		</div><div class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</div><div class="line"></div><div class="line">			talbe[<span class="string">'0'</span>]=<span class="number">0</span>;	</div><div class="line">			talbe[<span class="string">'1'</span>]=<span class="number">1</span>;	</div><div class="line">			talbe[<span class="string">'2'</span>]=<span class="number">2</span>;	</div><div class="line">			talbe[<span class="string">'3'</span>]=<span class="number">3</span>;	</div><div class="line">			talbe[<span class="string">'4'</span>]=<span class="number">4</span>;	</div><div class="line">			talbe[<span class="string">'5'</span>]=<span class="number">5</span>;	</div><div class="line">			talbe[<span class="string">'6'</span>]=<span class="number">6</span>;	</div><div class="line">			talbe[<span class="string">'7'</span>]=<span class="number">7</span>;	</div><div class="line">			talbe[<span class="string">'8'</span>]=<span class="number">8</span>;	</div><div class="line">			talbe[<span class="string">'9'</span>]=<span class="number">9</span>;	</div><div class="line">			talbe[<span class="string">'a'</span>]=<span class="number">10</span>;	</div><div class="line">			talbe[<span class="string">'b'</span>]=<span class="number">11</span>;	</div><div class="line">			talbe[<span class="string">'c'</span>]=<span class="number">12</span>;	</div><div class="line">			talbe[<span class="string">'d'</span>]=<span class="number">13</span>;	</div><div class="line">			talbe[<span class="string">'e'</span>]=<span class="number">14</span>;	</div><div class="line">			talbe[<span class="string">'f'</span>]=<span class="number">15</span>;	</div><div class="line">			<span class="keyword">while</span>( fread(in_2,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="number">2</span>,<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">unsigned</span> <span class="keyword">char</span> out;</div><div class="line">				out = <span class="number">16</span>*talbe[in_2[<span class="number">0</span>]] + talbe[in_2[<span class="number">1</span>]]; </div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%c"</span>,out);</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"unknown parameter %s"</span>,argv[<span class="number">1</span>]);</div><div class="line">		<span class="keyword">break</span>;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程题/">编程题</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-PostgreSQL-count-优化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/PostgreSQL-count-优化/" class="article-date">
+      <time datetime="2016-10-02T12:50:10.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>在PostgreSQL数据库中，count(<em>)默认是全表扫描，那么对于数据量很大的表，因为需要把表的所有页面读入到内存，需要较多IO，耗费的时间很长。在很多应用中，需要频繁的count(</em>)来统计行数，那么在此类应用中如何优化count(*)的效率呢？</p>
+<h2 id="建立一个表"><a href="#建立一个表" class="headerlink" title="建立一个表"></a>建立一个表</h2><p>我们先建立一个100万行的表，来做实验。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">postgres=# create table tb ( a int, b text);</div><div class="line">CREATE TABLE</div><div class="line">postgres=# insert into tb values ( generate_series(1,1000000), 'xxxxxx');</div><div class="line">INSERT 0 1000000</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line">Time: 652.431 ms</div></pre></td></tr></table></figure>
+<p>实际执行下来，花费时间是652ms<br>下面我们来看一下执行计划</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">postgres=# explain select count(*) from tb;</div><div class="line">                            QUERY PLAN                            </div><div class="line">------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=17906.00..17906.01 rows=1 width=0)</div><div class="line">   -&gt;  Seq Scan on tb  (cost=0.00..15406.00 rows=1000000 width=0)</div><div class="line">(2 rows)</div></pre></td></tr></table></figure>
+<p>可以看到，count(*)是采用顺序扫描的执行计划。</p>
+<h2 id="analyze会不会有改善？"><a href="#analyze会不会有改善？" class="headerlink" title="analyze会不会有改善？"></a>analyze会不会有改善？</h2><p>那么analyze会不会起作用呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">postgres=# analyze tb;</div><div class="line">ANALYZE</div><div class="line">Time: 201.853 ms</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line">Time: 649.252 ms</div></pre></td></tr></table></figure>
+<p>可以看到analyze基本没什么作用。</p>
+<h2 id="主键会不会有改善？"><a href="#主键会不会有改善？" class="headerlink" title="主键会不会有改善？"></a>主键会不会有改善？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">postgres=# alter table tb add  primary key(a);</div><div class="line">ALTER TABLE</div><div class="line">Time: 2353.671 ms</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 654.886 ms</div><div class="line">postgres=# alter table tb add  primary key(a);</div><div class="line">ERROR:  multiple primary keys for table &quot;tb&quot; are not allowed</div><div class="line">Time: 1.603 ms</div><div class="line">postgres=# explain select count(*) from tb;</div><div class="line">                            QUERY PLAN                            </div><div class="line">------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=17906.00..17906.01 rows=1 width=0)</div><div class="line">   -&gt;  Seq Scan on tb  (cost=0.00..15406.00 rows=1000000 width=0)</div><div class="line">(2 rows)</div><div class="line"></div><div class="line">Time: 1.246 ms</div></pre></td></tr></table></figure>
+<p>可以看到，加了索引之后还是在走顺序扫描，时间没有什么改善。</p>
+<h2 id="索引会不会有改善？"><a href="#索引会不会有改善？" class="headerlink" title="索引会不会有改善？"></a>索引会不会有改善？</h2><p>那么建立一个索引有没有作用？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">postgres=# create index tb_idx on tb(a);</div><div class="line">CREATE INDEX</div><div class="line">Time: 2009.193 ms</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 654.997 ms</div><div class="line">postgres=# explain select count(*) from tb;</div><div class="line">                            QUERY PLAN                            </div><div class="line">------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=17906.00..17906.01 rows=1 width=0)</div><div class="line">   -&gt;  Seq Scan on tb  (cost=0.00..15406.00 rows=1000000 width=0)</div><div class="line">(2 rows)</div></pre></td></tr></table></figure>
+<p>可以看到，建立了索引之后，时间依然没有明显改善，查看执行计划，可以看到依然是走的顺序扫描。<br>为什么不走索引呢？我们把顺序扫描关闭之后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">postgres=# set enable_seqscan = off;</div><div class="line">SET</div><div class="line">postgres=# explain (analyze,buffers) select count(*) from tb;</div><div class="line">                              QUERY PLAN                     </div><div class="line">                                           </div><div class="line">----------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=33889.43..33889.44 rows=1 width=0) (actual time=1968.386..1968.387 rows=1 loo</div><div class="line">ps=1)</div><div class="line">   Buffers: shared hit=8141</div><div class="line">   -&gt;  Index Only Scan using tb_pkey on tb  (cost=0.42..31389.42 rows=1000000 width=0) (actual </div><div class="line">time=0.073..1542.385 rows=1000000 loops=1)</div><div class="line">         Heap Fetches: 1000000</div><div class="line">         Buffers: shared hit=8141</div><div class="line"> Planning time: 0.203 ms</div><div class="line"> Execution time: 1968.514 ms</div><div class="line">(7 rows)</div><div class="line">Time: 1969.929 ms</div></pre></td></tr></table></figure></p>
+<p>顺序扫描之后看到时间反而变多了！查看执行计划可以看到，用的是Index Only Scan，读取到的页面是8141，而且还要读Heap上的100万条数据来查看事务信息，所以在该例子中采用索引扫描并不能有多大提升。</p>
+<h2 id="优化方法——建触发器"><a href="#优化方法——建触发器" class="headerlink" title="优化方法——建触发器"></a>优化方法——建触发器</h2><p>如果这个表更新不那么频繁，可以建一个表用来缓存count的结果，再建一个触发器来更新缓存表。查的时候，查缓存count的那个表。<br>举个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--建立count缓存表</span></div><div class="line"> <span class="keyword">create</span> <span class="keyword">table</span> tb_count(<span class="keyword">col</span> <span class="built_in">int</span>);</div><div class="line"><span class="comment">--初始化count缓存表</span></div><div class="line"> <span class="keyword">insert</span> <span class="keyword">into</span> tb_count ( <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tb);</div><div class="line"><span class="comment">--创建更新函数</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> <span class="keyword">REPLACE</span> <span class="keyword">FUNCTION</span> tb_func()  <span class="keyword">RETURNS</span> <span class="keyword">TRIGGER</span> <span class="keyword">AS</span> $$</div><div class="line">        <span class="keyword">BEGIN</span></div><div class="line">                <span class="keyword">update</span>  tb_count  <span class="keyword">set</span> <span class="keyword">col</span> = <span class="keyword">col</span> + <span class="number">1</span>;</div><div class="line">                RETURN null;</div><div class="line">        <span class="keyword">END</span>;</div><div class="line">$$ LANGUAGE plpgsql; </div><div class="line"><span class="comment">--创建触发器</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> tb_insert</div><div class="line">    <span class="keyword">AFTER</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> tb</div><div class="line">    <span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></div><div class="line">    <span class="keyword">EXECUTE</span> <span class="keyword">PROCEDURE</span> tb_func();</div><div class="line">    </div><div class="line"><span class="comment">--类似的创建对于如下2个的触发器</span></div><div class="line">    <span class="keyword">DELETE</span></div><div class="line">    <span class="keyword">TRUNCATE</span></div></pre></td></tr></table></figure>
+<p>下面我们来看一下，优化之后的效率：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000001</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 898.974 ms</div><div class="line">postgres=# select * from tb_count;</div><div class="line">   col   </div><div class="line">---------</div><div class="line"> 1000001</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 2.463 ms</div><div class="line">postgres=#</div></pre></td></tr></table></figure>
+<p>可以看到，优化之后时间从原来的898ms降低为2ms。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/count/">count</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/优化/">优化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Here-Document" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/Here-Document/" class="article-date">
+      <time datetime="2016-10-02T11:49:52.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/Here-Document/">Here Document</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>我们经常需要在shell中新建文件并输入内容，通常的做法有2种。<br>第一种： 用vim打开一个文件，输入内容，保存并退出。<br>第二种： 用echo输出重定向：echo “hello world” &gt; a.out。<br>但是这两种方法都有一定弊端，比如第一种无法在shell脚本里面实现往文件中输入内容。第二种，无法输入多行内容。<br>如果我们需要在shell脚本中对文件中输入多行内容，这时候我们Here Document就派上用场了。</p>
+<h2 id="什么是Here-Document"><a href="#什么是Here-Document" class="headerlink" title="什么是Here Document?"></a>什么是Here Document?</h2><p>Here Document 是在Linux Shell 中的一种特殊的重定向方式，它的基本的形式如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cmd &lt;&lt; delimiter</div><div class="line">  Here Document Content</div><div class="line">delimiter</div></pre></td></tr></table></figure></p>
+<p>它的作用就是将两个 delimiter 之间的内容(Here Document Content 部分) 传递给cmd 作为输入参数。</p>
+<h2 id="在shell脚本中对文件输入多行内容"><a href="#在shell脚本中对文件输入多行内容" class="headerlink" title="在shell脚本中对文件输入多行内容"></a>在shell脚本中对文件输入多行内容</h2><p>基本方法是用here document把输入重定向给cat然后输出重定向到a.out文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-ThinkPad-X201 ~ $ cat &lt;&lt;EOF &gt; a.out</div><div class="line">&gt; this is line1</div><div class="line">&gt; this is line2</div><div class="line">&gt; this is line3</div><div class="line">&gt; ...</div><div class="line">&gt; this is lineN</div><div class="line">&gt; EOF</div><div class="line">yshen@yshen-ThinkPad-X201 ~ $ cat a.out </div><div class="line">this is line1</div><div class="line">this is line2</div><div class="line">this is line3</div><div class="line">...</div><div class="line">this is lineN</div></pre></td></tr></table></figure></p>
+<p>这样，我们就使用Here Document在shell脚本中完成了多行文本的输入。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-贪吃蛇-基于SDL" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/17/贪吃蛇-基于SDL/" class="article-date">
+      <time datetime="2016-09-17T18:15:58.000Z" itemprop="datePublished">2016-09-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>贪吃蛇不用多说了吧，就是一条蛇吃水果，吃一个他的长度就加１。</p>
+<h2 id="无图无真相"><a href="#无图无真相" class="headerlink" title="无图无真相"></a>无图无真相</h2><p><img src="/uploads/snake.png" alt="tup"></p>
+<p>目前只是先实现了基本的功能，移动，长度加１。还没有实现碰撞检测的功能。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SDL/">SDL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+    </div>
+
+      
         <p class="article-more-link">
-          <a href="/2016/10/11/linux监控脚本-绘图/#more">阅读全文 >></a>
+          <a href="/2016/09/17/贪吃蛇-基于SDL/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -467,11 +915,11 @@
 
 
   
-    <article id="post-数据库性能测试标准TPC" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-c语言转汇编语言shell脚本" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/11/数据库性能测试标准TPC/" class="article-date">
-      <time datetime="2016-10-11T07:31:30.000Z" itemprop="datePublished">2016-10-11</time>
+      <a href="/2016/09/17/c语言转汇编语言shell脚本/" class="article-date">
+      <time datetime="2016-09-17T17:58:57.000Z" itemprop="datePublished">2016-09-17</time>
 </a>
 
 
@@ -486,7 +934,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a>
+      <a class="article-title" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a>
     </h1>
   
 
@@ -496,20 +944,9 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>经常有人在自己机器上跑了一个简单的查询，就发布到网上说哪个数据性能如何如何。数据库性能的好坏影响因素很多，比如业务特点、数据量、测试时间、硬件配置等等。那么有没有一个标准来度量数据库性能的好呢？</p>
-</blockquote>
-<p>有这么一个组织：TPC，即事务处理性能委员位TPC(Transaction Processing Performance Council)，成立于88年，制定了一系列用来测试数据库性能的标准，在业内广泛应用。<br>TPC成员有很多软硬件厂商组成，比如IBM，INTEL传统的硬件厂商；还有ORALCE、SAP、REDHAT等软件厂商等。国内的HUAWEI也在其中。可以说TPC组织覆盖了数据库的整个生态系统。<br>他们的官网是：<a href="http://www.tpc.org" target="_blank" rel="external">http://www.tpc.org</a></p>
-<p>TPC有很多测试标准，见下图。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/le1aa8mmq6jnh0191fscinj7/image_1aup9fil01m0qsda13k0mi51jmp9.png" alt="TPC测试标准"></p>
-<p>其中最有名的是TPC-C和TPC-H标准。TPC-C标准是TPC推出的最早的一个标准，主要用来测试交易处理的的场景。TPC-H标准主要用来测试决策支持场景。</p>
-<h2 id="TPC-C"><a href="#TPC-C" class="headerlink" title="TPC-C"></a>TPC-C</h2><p>TPC-C全称为TPC Benchmark C，主要用来测试交易处理场景下数据库的性能。该测试标准模拟了一个批发商管理订单的场景。包括了输入订单，发货，收钱，查询订单状态。性能指标有2个分别是：</p>
-<ul>
-<li>new-order txn rate (tpmC)</li>
-<li>price/performance ($/tpmC)</li>
-</ul>
-<p>根据字面意思不难理解，tmpC是每分钟处理订单的数量，$/tmpC是一个经济指标说的是每tmpC花费。</p>
-<h2 id="TPC-H"><a href="#TPC-H" class="headerlink" title="TPC-H"></a>TPC-H</h2><p>TPC-H全称The TPC Benchmark™H ，主要用来测试决策支持场景下数据库的性能。该测试标准模拟了商业环境中一些即席查询（Ad-hoc queries）和并发修改。这些场景都需要访问大量的数据，执行的查询非常复杂。是不是可以理解成为OLAP场景测试？</p>
+        <p>最近在学习汇编，为了方便写了一个shell脚本，用来把c语言转换为汇编语言。很方便。</p>
+<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash  </div><div class="line">if [  &quot;$#&quot; = &quot;0&quot; ] ; then</div><div class="line">        echo &apos;help: c2asm FILENAME&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line"></div><div class="line"></div><div class="line">if [ -f &quot;$1&quot; ] ; then</div><div class="line">        echo &apos;check file ok!&apos;  </div><div class="line">else</div><div class="line">        echo &apos;c2asm: file not exist&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line">echo &apos;generating asm file...&apos;  </div><div class="line">gcc -O0 -S &quot;$1&quot;</div><div class="line">tmp=$1</div><div class="line">asmfile=$&#123;tmp%%.c&#125;.s;</div><div class="line"></div><div class="line">echo &quot;asm file generated: $asmfile&quot;  </div><div class="line">echo &apos;==================asm====================&apos;  </div><div class="line">cat &quot;$asmfile&quot; | grep -v &apos;\.&apos;</div><div class="line">echo &apos;==================c======================&apos;  </div><div class="line">cat &quot;$1&quot;</div><div class="line">echo &apos;==================END====================&apos;  </div><div class="line">echo &apos;done&apos;</div></pre></td></tr></table></figure>
+<h2 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">check file ok!</div><div class="line">generating asm file...</div><div class="line">asm file generated: main.s</div><div class="line">==================asm====================</div><div class="line">main:</div><div class="line">	pushq	%rbp</div><div class="line">	movq	%rsp, %rbp</div><div class="line">	movl	$1, -8(%rbp)</div><div class="line">	movl	$1, -4(%rbp)</div><div class="line">	movl	-8(%rbp), %edx</div><div class="line">	movl	-4(%rbp), %eax</div><div class="line">	addl	%edx, %eax</div><div class="line">	popq	%rbp</div><div class="line">	ret</div><div class="line">==================c======================</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a,b;</div><div class="line">	a = 1;</div><div class="line">	b = 1;</div><div class="line">	return a+b;</div><div class="line"></div><div class="line">&#125;</div><div class="line">==================END====================</div><div class="line">done</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -520,139 +957,7 @@
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-好书推荐：《操作系统设计与实现》" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/10/好书推荐：《操作系统设计与实现》/" class="article-date">
-      <time datetime="2016-10-10T11:54:32.000Z" itemprop="datePublished">2016-10-10</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p><img src="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png" alt=""></p>
-<p>这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/读书/">读书</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书-操作系统-linux-minix/">读书 操作系统 linux minix</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-linux中的硬链接和软链接" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/10/linux中的硬链接和软链接/" class="article-date">
-      <time datetime="2016-10-10T06:03:07.000Z" itemprop="datePublished">2016-10-10</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="建立硬链接和软链接"><a href="#建立硬链接和软链接" class="headerlink" title="建立硬链接和软链接"></a>建立硬链接和软链接</h2><p>在linux中我们通过ln命令来建立硬链接和软链接，默认是建立硬链接，加上-s参数那么建立的就是软链接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;Hello world&quot; &gt; a</div><div class="line">$ ln a a_hard_link</div><div class="line">$ ln -s a a_soft_link</div></pre></td></tr></table></figure></p>
-<p>建立好之后，用ls命令看一下，记得加上-i这样我们就可以看到inode号了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ls -ali</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
-<p><strong>inode</strong><br>科普一下：inode全称是index node即索引节点。可见inode中并没有存放文件的实际内容，而是存放了索引。这个索引指向的是磁盘中存放文件内容的物理位置。<br><strong>目录</strong><br>在linux中目录也有一个inode，inode指向记录目录实际内容的磁盘物理位置。</p>
-<h2 id="什么是硬链接和软链接"><a href="#什么是硬链接和软链接" class="headerlink" title="什么是硬链接和软链接"></a>什么是硬链接和软链接</h2><p>再回到我们的例子里，ls的结果第一列是该文件的inode号，可以看到硬链接的inode号和文件原来的inode号是一样的。说明指向的物理位置是一样的。<br>我们看软链接的inode号不同，说明是一个新的文件，该文件指向的是另外的一个物理位置。该物理位置里面存放着链接目标的路径。</p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>让我们删除连接目标文件a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ rm a</div><div class="line">$ ls -ali</div><div class="line">总用量 12</div><div class="line">19796573 drwxrwxr-x  2 yshen yshen 4096 10月 10 11:35 .</div><div class="line">58720267 drwxrwxr-x 43 yshen yshen 4096 10月 10 11:33 ..</div><div class="line">19796575 -rw-rw-r--  1 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
-<p>硬链接和软链接现在还能访问么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cat a_hard_link </div><div class="line">Hello world</div><div class="line">$ cat a_soft_link </div><div class="line">cat: a_soft_link: 没有那个文件或目录</div></pre></td></tr></table></figure></p>
-<p>硬链接还能访问，软链接现在已经失效了！根据定义我们不难找出原因：<br>(1)硬链接指向的是物理位置和连接对象指向的物理位置一样，该物理位置有一个引用计数（ls的第三列），删除链接对象后，引用计数从原来的2变为1，所以物理上文件并没有删除，如果为0的话采用unlink删除。所以硬链接依然可以访问。<br>(2)软链接其实是一个文件，文件指向的路径已经失效了，所以会显示没有那个文件或目录。</p>
-<p>我们总结一下区别：<br>(1) 链接目标失效之后，硬链接依然可以访问。软链接不能访问。<br>(2) 硬链接只能指向和链接目标同一个分区，软链接没有限制，甚至可以指向网络地址。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
     </div>
 
       
@@ -674,7 +979,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
     </nav>
   
 </div>
