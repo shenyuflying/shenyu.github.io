@@ -1,0 +1,1059 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="PostgreSQL,NLS,l10n," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？
+
+[TOC]
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL本地化过程及维护">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/index.html">
+<meta property="og:site_name" content="申宇的博客">
+<meta property="og:description" content="PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？
+
+[TOC]
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，">
+<meta property="og:updated_time" content="2016-11-03T07:49:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PostgreSQL本地化过程及维护">
+<meta name="twitter:description" content="PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？
+
+[TOC]
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/"/>
+
+  <title> PostgreSQL本地化过程及维护 | 申宇的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb429a85ad18af872ff8bb7c498e87c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">申宇的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Shen Yu's blog</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/categories/读书" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-travel">
+          <a href="/categories/旅行" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-plane"></i> <br />
+            
+            旅行
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-message">
+          <a href="/message" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comment"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PostgreSQL本地化过程及维护
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-03T07:47:59+00:00" content="2016-11-03">
+              2016-11-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/03/PostgreSQL本地化过程及维护/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/03/PostgreSQL本地化过程及维护/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/03/PostgreSQL本地化过程及维护/" class="leancloud_visitors" data-flag-title="PostgreSQL本地化过程及维护">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？</p>
+</blockquote>
+<p>[TOC]</p>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>.po文件： po，Portable Object，里面记录了翻译内容。<br>.mo文件： mo，Machine Object，其实是一个二进制文件，用来提供给程序使用。<br>xgettext：一个工具，根据c文件生成po文件<br>msgfmt： 一个工具，根据po文件生成mo文件<br>msgmerge：更新po文件<br>nls.mk：翻译包的配置，比如翻译哪些c文件</p>
+<h2 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">        xgettext            人工翻译        msgfmt          INSTALL</div><div class="line">.c文件-----------&gt;.pot文件----------&gt;.po----------&gt;.mo------------&gt;./bin/po/zh/LC_MESSAGES/.mo</div><div class="line"></div><div class="line">         gcc                              INSTALL</div><div class="line">.c文件-----------&gt;可执行文件--------------------------------------&gt;./bin</div></pre></td></tr></table></figure>
+<p>基本过程如上图，首先需要xgettext工具根据.c文件生成.pot文件，接下来需要人工翻译。翻译过后用msgfmt工具把翻译好的.po文件生成.mo文件。最后把.mo文件放到制定位置即可。但是不需要我们自己直接调这些工具来完成本地化的工作，其过程都写在了<code>nls-global.mk</code>文件里面。我们只要<code>make init-po</code>、<code>make update-po</code>、<code>make install-po</code>这几个步骤即可。</p>
+<p>最后生成的目录结构如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── psql.c</div><div class="line">...</div><div class="line">├── Makefile</div><div class="line">├── nls.mk</div><div class="line">├── po</div><div class="line">│   ├── cs.mo</div><div class="line">│   ├── cs.po</div><div class="line">...</div><div class="line">│   ├── zh_CN.mo</div><div class="line">│   ├── zh_CN.po</div><div class="line">│   ├── zh_TW.mo</div><div class="line">│   └── zh_TW.po</div><div class="line"></div><div class="line">├── prompt.c</div><div class="line">...</div><div class="line"></div><div class="line">1 directory, 65 files</div></pre></td></tr></table></figure></p>
+<h2 id="本地化详细过程"><a href="#本地化详细过程" class="headerlink" title="本地化详细过程"></a>本地化详细过程</h2><p>./configure的时候加上–enable-nls构建选项之后，构建过程会发生如下变化：</p>
+<ol>
+<li>gcc就会有-DENABLE_NLS的宏定义。从而gettext相关的代码就会被编译进去。</li>
+<li>make就会处理相关国际化的内容。相关过程包含了nls.mk和nls-global.mk文件里面。</li>
+</ol>
+<p>每个工具比如src/bin/psql目录面都有一个nls.mk文件用来说明目录下对应工具的翻译包的生成规则，另外src文件夹下面还有一个nls-global.mk文件里面写了如何利用gettext相关工具生成翻译和安装翻译包。下面看一下他们中的内容。</p>
+<a id="more"></a>
+<h3 id="nls-mk"><a href="#nls-mk" class="headerlink" title="nls.mk"></a>nls.mk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">CATALOG_NAME     = psql</div><div class="line">AVAIL_LANGUAGES  = cs de es fr it ja pl pt_BR ru zh_CN zh_TW</div><div class="line">GETTEXT_FILES    = command.c common.c copy.c help.c input.c large_obj.c \</div><div class="line">                   mainloop.c psqlscanslash.c startup.c \</div><div class="line">                   describe.c sql_help.h sql_help.c \</div><div class="line">                   tab-complete.c variables.c \</div><div class="line">                   ../../fe_utils/print.c ../../fe_utils/psqlscan.c \</div><div class="line">                   ../../common/exec.c ../../common/fe_memutils.c ../../common/username.c \</div><div class="line">    GETTEXT_TRIGGER../../common/wait_error.c</div><div class="line">GETTEXT_TRIGGERS = N_ psql_error simple_prompt write_error</div><div class="line">GETTEXT_FLAGS    = psql_error:1:c-format write_error:1:c-format</div></pre></td></tr></table></figure>
+<p>下面来解释每个变量：<br><code>CATALOG_NAME</code>是指对应的程序，这里是psql<br><code>AVAIL_LANGUAGES</code>是指的可用的翻译，比如这里有多种。<br><code>GETTEXT_FILES</code>是指需要翻译的c文件，一般把程序c文件中带输出的c文件都加到这里<br><code>GETTEXT_TRIGGERS</code>是除了默认的指包含可翻译字符串的函数，默认的有<code>_</code>、<code>gettext</code>。<br><code>GETTEXT_FLAGS</code>是指<code>GETTEXT_TRIGGERS</code>列出的对应函数的第几个参数是待翻译的字符串</p>
+<h3 id="nls-global-mk"><a href="#nls-global-mk" class="headerlink" title="nls-global.mk"></a>nls-global.mk</h3><p>这个文件比较长，我们分开来看。<br>第一部分都是注释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"># src/nls-global.mk                                 </div><div class="line"># Common rules for Native Language Support (NLS)</div><div class="line">#</div><div class="line"># If some subdirectory of the source tree wants to provide NLS, it</div><div class="line"># needs to contain a file &apos;nls.mk&apos; with the following make variable</div><div class="line"># assignments:</div><div class="line">#</div><div class="line"># CATALOG_NAME          -- name of the message catalog (xxx.po); probably</div><div class="line">#                          name of the program</div><div class="line"># AVAIL_LANGUAGES       -- list of languages that are provided/supported</div><div class="line"># GETTEXT_FILES         -- list of source files that contain message strings</div><div class="line"># GETTEXT_TRIGGERS      -- (optional) list of functions that contain</div><div class="line">#                          translatable strings</div><div class="line"># GETTEXT_FLAGS         -- (optional) list of gettext --flag arguments to mark</div><div class="line">#                          function arguments that contain C format strings</div><div class="line">#                          (functions must be listed in TRIGGERS and FLAGS)</div><div class="line">#</div><div class="line"># That&apos;s all, the rest is done here, if --enable-nls was specified.</div><div class="line">#</div><div class="line"># The only user-visible targets here are &apos;init-po&apos;, to make an initial</div><div class="line"># &quot;blank&quot; catalog from program sources, and &apos;update-po&apos;, which is to</div><div class="line"># be called if the messages in the program source have changed, in</div><div class="line"># order to merge the changes into the existing .po files.</div></pre></td></tr></table></figure></p>
+<p>是说如果这个文件夹下的程序需要本地化NLS那么需要包含一个nls.mk的文件，以及它的格式。nls.mk文件的内容上面讲过。<br>还说了用户只需要用<code>make init-po</code>来初始化一个空的<code>catalog</code>语言包然后<code>make update-po</code>来维护翻译就行了。另外的用户可以不关心。其实还提供了如下命令<br><code>make install-po</code>来安装本地化文件<br><code>make clean-po</code>来删除一些无用的中间文件比如.pot .po.new .mo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># existence checked by Makefile.global; otherwise we won&apos;t get here</div><div class="line">include $(srcdir)/nls.mk</div></pre></td></tr></table></figure></p>
+<p>包含了这个目录下的nls.mk文件，即一些规则。其实这样只需要维护nls.mk文件就行。nls-global.mk文件一般不需要改动。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># If user specified the languages he wants in --enable-nls=LANGUAGES,</div><div class="line"># filter out the rest.  Else use all available ones.</div><div class="line">ifdef WANTED_LANGUAGES</div><div class="line">LANGUAGES = $(filter $(WANTED_LANGUAGES), $(AVAIL_LANGUAGES))</div><div class="line">else</div><div class="line">LANGUAGES = $(AVAIL_LANGUAGES)</div><div class="line">endif</div></pre></td></tr></table></figure></p>
+<p>这几行说了在./configure的时候加了<code>--enable-nls=LANGUAGES</code>就是说只需要支持一种语言，那么make就会用<code>filter</code>函数过滤掉不需要的语言，否则就会生成所有语言的翻译。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PO_FILES = $(addprefix po/, $(addsuffix .po, $(LANGUAGES)))</div><div class="line">ALL_PO_FILES = $(addprefix po/, $(addsuffix .po, $(AVAIL_LANGUAGES)))</div><div class="line">MO_FILES = $(addprefix po/, $(addsuffix .mo, $(LANGUAGES)))</div></pre></td></tr></table></figure></p>
+<p>这几行是说接下来需要生成哪些po文件和mo文件。比如LANGUAGES是<code>zh_CN</code>那么addsuffix会加上<code>.po</code>后缀生成<code>zh_CN.po</code>接下来addprefix会加上<code>po/</code>前缀生成<code>po/zh_CN.po</code>类似的也会生成<code>po/zh_CN.mo</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ifdef XGETTEXT</div><div class="line">XGETTEXT += -ctranslator --copyright-holder=&apos;PostgreSQL Global Development Group&apos; --msgid-bugs-address=pgsql-bugs@postgresql.org --no-wrap --sort-by-file --package-name=&apos;$(CATALOG_NAME) (PostgreSQL)&apos; --package-version=&apos;$(MAJORVERSION)&apos;</div><div class="line">endif</div><div class="line"></div><div class="line">ifdef MSGMERGE</div><div class="line">MSGMERGE += --no-wrap --previous --sort-by-file</div><div class="line">endif</div></pre></td></tr></table></figure>
+<p>这几行是在准备xgettext和msgerge命令需要的参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># _ is defined in c.h, so it&apos;s global</div><div class="line">GETTEXT_TRIGGERS += _</div><div class="line">GETTEXT_FLAGS    += _:1:pass-c-format</div></pre></td></tr></table></figure>
+<p>这几行对比nls.mk文件中对应的选项，其实就是加了默认的<code>_()</code>函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># common settings that apply to backend and all backend modules</div><div class="line">BACKEND_COMMON_GETTEXT_TRIGGERS = \</div><div class="line">    errmsg errmsg_plural:1,2 \</div><div class="line">    errdetail errdetail_log errdetail_plural:1,2 \</div><div class="line">    errhint \</div><div class="line">    errcontext \</div><div class="line">    XactLockTableWait:4 \</div><div class="line">    MultiXactIdWait:6 \</div><div class="line">    ConditionalMultiXactIdWait:6</div><div class="line">BACKEND_COMMON_GETTEXT_FLAGS = \</div><div class="line">    errmsg:1:c-format errmsg_plural:1:c-format errmsg_plural:2:c-format \</div><div class="line">    errdetail:1:c-format errdetail_log:1:c-format errdetail_plural:1:c-format errdetail_plural:2:c-format \</div><div class="line">    errhint:1:c-format \</div><div class="line">    errcontext:1:c-format</div></pre></td></tr></table></figure></p>
+<p>接下来又加了另外的一些函数。这些可以认为是多个语言包默认都要支持的，就不用挨个加在nls.mk文件里面了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">all-po: $(MO_FILES)</div><div class="line"></div><div class="line">%.mo: %.po</div><div class="line">    $(MSGFMT) $(MSGFMT_FLAGS) -o $@ $&lt;</div></pre></td></tr></table></figure></p>
+<p>这里是生成规则，是说最后需要生成<code>.mo</code>文件。生成<code>.mo</code>文件首先需要先成<code>.po</code>文件。<code>.mo</code>来生成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ifeq ($(word 1,$(GETTEXT_FILES)),+)</div><div class="line">po/$(CATALOG_NAME).pot: $(word 2, $(GETTEXT_FILES)) $(MAKEFILE_LIST)                                                                                                                                             </div><div class="line">ifdef XGETTEXT</div><div class="line">    $(XGETTEXT) -D $(srcdir) -n $(addprefix -k, $(GETTEXT_TRIGGERS)) $(addprefix --flag=, $(GETTEXT_FLAGS)) -f $&lt;</div><div class="line">else</div><div class="line">    @echo &quot;You don&apos;t have &apos;xgettext&apos;.&quot;; exit 1</div><div class="line">endif</div><div class="line">else # GETTEXT_FILES</div><div class="line">po/$(CATALOG_NAME).pot: $(GETTEXT_FILES) $(MAKEFILE_LIST)</div><div class="line"># Change to srcdir explicitly, don&apos;t rely on $^.  That way we get</div><div class="line"># consistent #: file references in the po files.</div><div class="line">ifdef XGETTEXT</div><div class="line">    $(XGETTEXT) -D $(srcdir) -n $(addprefix -k, $(GETTEXT_TRIGGERS)) $(addprefix --flag=, $(GETTEXT_FLAGS)) $(GETTEXT_FILES)</div><div class="line">else</div><div class="line">    @echo &quot;You don&apos;t have &apos;xgettext&apos;.&quot;; exit 1</div><div class="line">endif</div><div class="line">endif # GETTEXT_FILES</div><div class="line">    @$(MKDIR_P) $(dir $@)</div><div class="line">    sed -e &apos;1,18 &#123; s/SOME DESCRIPTIVE TITLE./LANGUAGE message translation file for $(CATALOG_NAME)/;s/PACKAGE/PostgreSQL/g;s/VERSION/$(MAJORVERSION)/g;s/YEAR/&apos;`date +%Y`&apos;/g; &#125;&apos; messages.po &gt;$@</div><div class="line">    rm messages.po</div></pre></td></tr></table></figure></p>
+<p>这一段是最重要的，根据规则<code>po/$(CATALOG_NAME).pot: $(GETTEXT_FILES) $(MAKEFILE_LIST)</code>来看是生成<code>pot</code>文件依赖<code>GETTEXT_FILES</code>和<code>MAKEFILE_LIST</code>这段比较复杂，就是用xgettext生成po文件。下面是一些安装的规则，这里就略去不讲了。具体语法可以参考make的文档。</p>
+<p>ok，明白了基本的原理，那么如何维护呢？下面介绍一些维护的内容。</p>
+<h2 id="维护"><a href="#维护" class="headerlink" title="维护"></a>维护</h2><h3 id="添加了新的程序"><a href="#添加了新的程序" class="headerlink" title="添加了新的程序"></a>添加了新的程序</h3><p>从其他目录下拷贝一个nls.mk文件过来，可以参考psql的那个nls.mk：<br>执行如下命令从c文件生成po文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make init-po</div></pre></td></tr></table></figure></p>
+<p>接下来翻译po文件即可，翻译过后把fuzzy去掉。需要注意占位符的位置是一致的。<br>最后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make install</div></pre></td></tr></table></figure></p>
+<p>生成mo文件并安装到对应的目录</p>
+<h3 id="更改或加入了新的翻译字符串"><a href="#更改或加入了新的翻译字符串" class="headerlink" title="更改或加入了新的翻译字符串"></a>更改或加入了新的翻译字符串</h3><p>当我们改动代码加入或修改了需要翻译的字符串时需要执行命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make update-po</div></pre></td></tr></table></figure></p>
+<p>接下来翻译po文件即可，翻译过后把fuzzy去掉。<br>最后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make install</div></pre></td></tr></table></figure></p>
+<h3 id="更改或加入了新的c文件"><a href="#更改或加入了新的c文件" class="headerlink" title="更改或加入了新的c文件"></a>更改或加入了新的c文件</h3><p>修改nls.mk在<code>GETTEXT_FILES</code>加上新加的c文件</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PostgreSQL/" rel="tag">#PostgreSQL</a>
+          
+            <a href="/tags/NLS/" rel="tag">#NLS</a>
+          
+            <a href="/tags/l10n/" rel="tag">#l10n</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/02/C语言程序的国际化/" rel="next" title="C语言程序的国际化">
+                <i class="fa fa-chevron-left"></i> C语言程序的国际化
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/03/PostgreSQL本地化过程及维护/"
+           data-title="PostgreSQL本地化过程及维护" data-url="http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="申宇" />
+          <p class="site-author-name" itemprop="name">申宇</p>
+          <p class="site-description motion-element" itemprop="description">Shen Yu</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#术语"><span class="nav-number">1.</span> <span class="nav-text">术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本过程"><span class="nav-number">2.</span> <span class="nav-text">基本过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地化详细过程"><span class="nav-number">3.</span> <span class="nav-text">本地化详细过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nls-mk"><span class="nav-number">3.1.</span> <span class="nav-text">nls.mk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nls-global-mk"><span class="nav-number">3.2.</span> <span class="nav-text">nls-global.mk</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#维护"><span class="nav-number">4.</span> <span class="nav-text">维护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加了新的程序"><span class="nav-number">4.1.</span> <span class="nav-text">添加了新的程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改或加入了新的翻译字符串"><span class="nav-number">4.2.</span> <span class="nav-text">更改或加入了新的翻译字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改或加入了新的c文件"><span class="nav-number">4.3.</span> <span class="nav-text">更改或加入了新的c文件</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">申宇</span>
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = '//push.zhanzhang.baidu.com/push.js';
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"shenyuflying"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("tHwJsWkqIE1e1i4wXj9Y1cHi-gzGzoHsz", "DqaivLSuCd7mai7KePrrSh29");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>
