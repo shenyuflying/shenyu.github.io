@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="申宇" />
+
+
+
+<meta name="description" content="PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？
+
+[TOC]
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL本地化过程及维护">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/index.html">
+<meta property="og:site_name" content="申宇的博客">
+<meta property="og:description" content="PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？
+
+[TOC]
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，">
+<meta property="og:updated_time" content="2016-11-03T07:49:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PostgreSQL本地化过程及维护">
+<meta name="twitter:description" content="PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？
+
+[TOC]
+术语.po文件： po，Portable Object，里面记录了翻译内容。.mo文件： mo，">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="申宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>PostgreSQL本地化过程及维护 | 申宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">申宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Shen Yu&#39;s blog</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLS/">NLS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/count/">count</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/database/">database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debugging/">debugging</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/l10n/">l10n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-shell/">linux shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/优化/">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/国际化/">国际化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程题/">编程题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书-操作系统-linux-minix/">读书 操作系统 linux minix</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于数据库内核</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">申宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">申宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Shen Yu&#39;s blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-PostgreSQL本地化过程及维护" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/03/PostgreSQL本地化过程及维护/" class="article-date">
+      <time datetime="2016-11-03T07:47:59.000Z" itemprop="datePublished">2016-11-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PostgreSQL本地化过程及维护
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLS/">NLS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/l10n/">l10n</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？</p>
+</blockquote>
+<p>[TOC]</p>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>.po文件： po，Portable Object，里面记录了翻译内容。<br>.mo文件： mo，Machine Object，其实是一个二进制文件，用来提供给程序使用。<br>xgettext：一个工具，根据c文件生成po文件<br>msgfmt： 一个工具，根据po文件生成mo文件<br>msgmerge：更新po文件<br>nls.mk：翻译包的配置，比如翻译哪些c文件</p>
+<h2 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">        xgettext            人工翻译        msgfmt          INSTALL</div><div class="line">.c文件-----------&gt;.pot文件----------&gt;.po----------&gt;.mo------------&gt;./bin/po/zh/LC_MESSAGES/.mo</div><div class="line"></div><div class="line">         gcc                              INSTALL</div><div class="line">.c文件-----------&gt;可执行文件--------------------------------------&gt;./bin</div></pre></td></tr></table></figure>
+<p>基本过程如上图，首先需要xgettext工具根据.c文件生成.pot文件，接下来需要人工翻译。翻译过后用msgfmt工具把翻译好的.po文件生成.mo文件。最后把.mo文件放到制定位置即可。但是不需要我们自己直接调这些工具来完成本地化的工作，其过程都写在了<code>nls-global.mk</code>文件里面。我们只要<code>make init-po</code>、<code>make update-po</code>、<code>make install-po</code>这几个步骤即可。</p>
+<p>最后生成的目录结构如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── psql.c</div><div class="line">...</div><div class="line">├── Makefile</div><div class="line">├── nls.mk</div><div class="line">├── po</div><div class="line">│   ├── cs.mo</div><div class="line">│   ├── cs.po</div><div class="line">...</div><div class="line">│   ├── zh_CN.mo</div><div class="line">│   ├── zh_CN.po</div><div class="line">│   ├── zh_TW.mo</div><div class="line">│   └── zh_TW.po</div><div class="line"></div><div class="line">├── prompt.c</div><div class="line">...</div><div class="line"></div><div class="line">1 directory, 65 files</div></pre></td></tr></table></figure></p>
+<h2 id="本地化详细过程"><a href="#本地化详细过程" class="headerlink" title="本地化详细过程"></a>本地化详细过程</h2><p>./configure的时候加上–enable-nls构建选项之后，构建过程会发生如下变化：</p>
+<ol>
+<li>gcc就会有-DENABLE_NLS的宏定义。从而gettext相关的代码就会被编译进去。</li>
+<li>make就会处理相关国际化的内容。相关过程包含了nls.mk和nls-global.mk文件里面。</li>
+</ol>
+<p>每个工具比如src/bin/psql目录面都有一个nls.mk文件用来说明目录下对应工具的翻译包的生成规则，另外src文件夹下面还有一个nls-global.mk文件里面写了如何利用gettext相关工具生成翻译和安装翻译包。下面看一下他们中的内容。</p>
+<a id="more"></a>
+<h3 id="nls-mk"><a href="#nls-mk" class="headerlink" title="nls.mk"></a>nls.mk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">CATALOG_NAME     = psql</div><div class="line">AVAIL_LANGUAGES  = cs de es fr it ja pl pt_BR ru zh_CN zh_TW</div><div class="line">GETTEXT_FILES    = command.c common.c copy.c help.c input.c large_obj.c \</div><div class="line">                   mainloop.c psqlscanslash.c startup.c \</div><div class="line">                   describe.c sql_help.h sql_help.c \</div><div class="line">                   tab-complete.c variables.c \</div><div class="line">                   ../../fe_utils/print.c ../../fe_utils/psqlscan.c \</div><div class="line">                   ../../common/exec.c ../../common/fe_memutils.c ../../common/username.c \</div><div class="line">    GETTEXT_TRIGGER../../common/wait_error.c</div><div class="line">GETTEXT_TRIGGERS = N_ psql_error simple_prompt write_error</div><div class="line">GETTEXT_FLAGS    = psql_error:1:c-format write_error:1:c-format</div></pre></td></tr></table></figure>
+<p>下面来解释每个变量：<br><code>CATALOG_NAME</code>是指对应的程序，这里是psql<br><code>AVAIL_LANGUAGES</code>是指的可用的翻译，比如这里有多种。<br><code>GETTEXT_FILES</code>是指需要翻译的c文件，一般把程序c文件中带输出的c文件都加到这里<br><code>GETTEXT_TRIGGERS</code>是除了默认的指包含可翻译字符串的函数，默认的有<code>_</code>、<code>gettext</code>。<br><code>GETTEXT_FLAGS</code>是指<code>GETTEXT_TRIGGERS</code>列出的对应函数的第几个参数是待翻译的字符串</p>
+<h3 id="nls-global-mk"><a href="#nls-global-mk" class="headerlink" title="nls-global.mk"></a>nls-global.mk</h3><p>这个文件比较长，我们分开来看。<br>第一部分都是注释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"># src/nls-global.mk                                 </div><div class="line"># Common rules for Native Language Support (NLS)</div><div class="line">#</div><div class="line"># If some subdirectory of the source tree wants to provide NLS, it</div><div class="line"># needs to contain a file &apos;nls.mk&apos; with the following make variable</div><div class="line"># assignments:</div><div class="line">#</div><div class="line"># CATALOG_NAME          -- name of the message catalog (xxx.po); probably</div><div class="line">#                          name of the program</div><div class="line"># AVAIL_LANGUAGES       -- list of languages that are provided/supported</div><div class="line"># GETTEXT_FILES         -- list of source files that contain message strings</div><div class="line"># GETTEXT_TRIGGERS      -- (optional) list of functions that contain</div><div class="line">#                          translatable strings</div><div class="line"># GETTEXT_FLAGS         -- (optional) list of gettext --flag arguments to mark</div><div class="line">#                          function arguments that contain C format strings</div><div class="line">#                          (functions must be listed in TRIGGERS and FLAGS)</div><div class="line">#</div><div class="line"># That&apos;s all, the rest is done here, if --enable-nls was specified.</div><div class="line">#</div><div class="line"># The only user-visible targets here are &apos;init-po&apos;, to make an initial</div><div class="line"># &quot;blank&quot; catalog from program sources, and &apos;update-po&apos;, which is to</div><div class="line"># be called if the messages in the program source have changed, in</div><div class="line"># order to merge the changes into the existing .po files.</div></pre></td></tr></table></figure></p>
+<p>是说如果这个文件夹下的程序需要本地化NLS那么需要包含一个nls.mk的文件，以及它的格式。nls.mk文件的内容上面讲过。<br>还说了用户只需要用<code>make init-po</code>来初始化一个空的<code>catalog</code>语言包然后<code>make update-po</code>来维护翻译就行了。另外的用户可以不关心。其实还提供了如下命令<br><code>make install-po</code>来安装本地化文件<br><code>make clean-po</code>来删除一些无用的中间文件比如.pot .po.new .mo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># existence checked by Makefile.global; otherwise we won&apos;t get here</div><div class="line">include $(srcdir)/nls.mk</div></pre></td></tr></table></figure></p>
+<p>包含了这个目录下的nls.mk文件，即一些规则。其实这样只需要维护nls.mk文件就行。nls-global.mk文件一般不需要改动。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># If user specified the languages he wants in --enable-nls=LANGUAGES,</div><div class="line"># filter out the rest.  Else use all available ones.</div><div class="line">ifdef WANTED_LANGUAGES</div><div class="line">LANGUAGES = $(filter $(WANTED_LANGUAGES), $(AVAIL_LANGUAGES))</div><div class="line">else</div><div class="line">LANGUAGES = $(AVAIL_LANGUAGES)</div><div class="line">endif</div></pre></td></tr></table></figure></p>
+<p>这几行说了在./configure的时候加了<code>--enable-nls=LANGUAGES</code>就是说只需要支持一种语言，那么make就会用<code>filter</code>函数过滤掉不需要的语言，否则就会生成所有语言的翻译。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PO_FILES = $(addprefix po/, $(addsuffix .po, $(LANGUAGES)))</div><div class="line">ALL_PO_FILES = $(addprefix po/, $(addsuffix .po, $(AVAIL_LANGUAGES)))</div><div class="line">MO_FILES = $(addprefix po/, $(addsuffix .mo, $(LANGUAGES)))</div></pre></td></tr></table></figure></p>
+<p>这几行是说接下来需要生成哪些po文件和mo文件。比如LANGUAGES是<code>zh_CN</code>那么addsuffix会加上<code>.po</code>后缀生成<code>zh_CN.po</code>接下来addprefix会加上<code>po/</code>前缀生成<code>po/zh_CN.po</code>类似的也会生成<code>po/zh_CN.mo</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ifdef XGETTEXT</div><div class="line">XGETTEXT += -ctranslator --copyright-holder=&apos;PostgreSQL Global Development Group&apos; --msgid-bugs-address=pgsql-bugs@postgresql.org --no-wrap --sort-by-file --package-name=&apos;$(CATALOG_NAME) (PostgreSQL)&apos; --package-version=&apos;$(MAJORVERSION)&apos;</div><div class="line">endif</div><div class="line"></div><div class="line">ifdef MSGMERGE</div><div class="line">MSGMERGE += --no-wrap --previous --sort-by-file</div><div class="line">endif</div></pre></td></tr></table></figure>
+<p>这几行是在准备xgettext和msgerge命令需要的参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># _ is defined in c.h, so it&apos;s global</div><div class="line">GETTEXT_TRIGGERS += _</div><div class="line">GETTEXT_FLAGS    += _:1:pass-c-format</div></pre></td></tr></table></figure>
+<p>这几行对比nls.mk文件中对应的选项，其实就是加了默认的<code>_()</code>函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># common settings that apply to backend and all backend modules</div><div class="line">BACKEND_COMMON_GETTEXT_TRIGGERS = \</div><div class="line">    errmsg errmsg_plural:1,2 \</div><div class="line">    errdetail errdetail_log errdetail_plural:1,2 \</div><div class="line">    errhint \</div><div class="line">    errcontext \</div><div class="line">    XactLockTableWait:4 \</div><div class="line">    MultiXactIdWait:6 \</div><div class="line">    ConditionalMultiXactIdWait:6</div><div class="line">BACKEND_COMMON_GETTEXT_FLAGS = \</div><div class="line">    errmsg:1:c-format errmsg_plural:1:c-format errmsg_plural:2:c-format \</div><div class="line">    errdetail:1:c-format errdetail_log:1:c-format errdetail_plural:1:c-format errdetail_plural:2:c-format \</div><div class="line">    errhint:1:c-format \</div><div class="line">    errcontext:1:c-format</div></pre></td></tr></table></figure></p>
+<p>接下来又加了另外的一些函数。这些可以认为是多个语言包默认都要支持的，就不用挨个加在nls.mk文件里面了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">all-po: $(MO_FILES)</div><div class="line"></div><div class="line">%.mo: %.po</div><div class="line">    $(MSGFMT) $(MSGFMT_FLAGS) -o $@ $&lt;</div></pre></td></tr></table></figure></p>
+<p>这里是生成规则，是说最后需要生成<code>.mo</code>文件。生成<code>.mo</code>文件首先需要先成<code>.po</code>文件。<code>.mo</code>来生成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ifeq ($(word 1,$(GETTEXT_FILES)),+)</div><div class="line">po/$(CATALOG_NAME).pot: $(word 2, $(GETTEXT_FILES)) $(MAKEFILE_LIST)                                                                                                                                             </div><div class="line">ifdef XGETTEXT</div><div class="line">    $(XGETTEXT) -D $(srcdir) -n $(addprefix -k, $(GETTEXT_TRIGGERS)) $(addprefix --flag=, $(GETTEXT_FLAGS)) -f $&lt;</div><div class="line">else</div><div class="line">    @echo &quot;You don&apos;t have &apos;xgettext&apos;.&quot;; exit 1</div><div class="line">endif</div><div class="line">else # GETTEXT_FILES</div><div class="line">po/$(CATALOG_NAME).pot: $(GETTEXT_FILES) $(MAKEFILE_LIST)</div><div class="line"># Change to srcdir explicitly, don&apos;t rely on $^.  That way we get</div><div class="line"># consistent #: file references in the po files.</div><div class="line">ifdef XGETTEXT</div><div class="line">    $(XGETTEXT) -D $(srcdir) -n $(addprefix -k, $(GETTEXT_TRIGGERS)) $(addprefix --flag=, $(GETTEXT_FLAGS)) $(GETTEXT_FILES)</div><div class="line">else</div><div class="line">    @echo &quot;You don&apos;t have &apos;xgettext&apos;.&quot;; exit 1</div><div class="line">endif</div><div class="line">endif # GETTEXT_FILES</div><div class="line">    @$(MKDIR_P) $(dir $@)</div><div class="line">    sed -e &apos;1,18 &#123; s/SOME DESCRIPTIVE TITLE./LANGUAGE message translation file for $(CATALOG_NAME)/;s/PACKAGE/PostgreSQL/g;s/VERSION/$(MAJORVERSION)/g;s/YEAR/&apos;`date +%Y`&apos;/g; &#125;&apos; messages.po &gt;$@</div><div class="line">    rm messages.po</div></pre></td></tr></table></figure></p>
+<p>这一段是最重要的，根据规则<code>po/$(CATALOG_NAME).pot: $(GETTEXT_FILES) $(MAKEFILE_LIST)</code>来看是生成<code>pot</code>文件依赖<code>GETTEXT_FILES</code>和<code>MAKEFILE_LIST</code>这段比较复杂，就是用xgettext生成po文件。下面是一些安装的规则，这里就略去不讲了。具体语法可以参考make的文档。</p>
+<p>ok，明白了基本的原理，那么如何维护呢？下面介绍一些维护的内容。</p>
+<h2 id="维护"><a href="#维护" class="headerlink" title="维护"></a>维护</h2><h3 id="添加了新的程序"><a href="#添加了新的程序" class="headerlink" title="添加了新的程序"></a>添加了新的程序</h3><p>从其他目录下拷贝一个nls.mk文件过来，可以参考psql的那个nls.mk：<br>执行如下命令从c文件生成po文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make init-po</div></pre></td></tr></table></figure></p>
+<p>接下来翻译po文件即可，翻译过后把fuzzy去掉。需要注意占位符的位置是一致的。<br>最后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make install</div></pre></td></tr></table></figure></p>
+<p>生成mo文件并安装到对应的目录</p>
+<h3 id="更改或加入了新的翻译字符串"><a href="#更改或加入了新的翻译字符串" class="headerlink" title="更改或加入了新的翻译字符串"></a>更改或加入了新的翻译字符串</h3><p>当我们改动代码加入或修改了需要翻译的字符串时需要执行命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make update-po</div></pre></td></tr></table></figure></p>
+<p>接下来翻译po文件即可，翻译过后把fuzzy去掉。<br>最后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make install</div></pre></td></tr></table></figure></p>
+<h3 id="更改或加入了新的c文件"><a href="#更改或加入了新的c文件" class="headerlink" title="更改或加入了新的c文件"></a>更改或加入了新的c文件</h3><p>修改nls.mk在<code>GETTEXT_FILES</code>加上新加的c文件</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">申宇</a></p>
+        <p><span>发布时间:</span>2016-11-03, 07:47:59</p>
+        <p><span>最后更新:</span>2016-11-03, 07:49:40</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/03/PostgreSQL本地化过程及维护/" title="PostgreSQL本地化过程及维护">http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/02/C语言程序的国际化/">
+                    C语言程序的国际化
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#术语"><span class="toc-number">1.</span> <span class="toc-text">术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本过程"><span class="toc-number">2.</span> <span class="toc-text">基本过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地化详细过程"><span class="toc-number">3.</span> <span class="toc-text">本地化详细过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#nls-mk"><span class="toc-number">3.1.</span> <span class="toc-text">nls.mk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nls-global-mk"><span class="toc-number">3.2.</span> <span class="toc-text">nls-global.mk</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#维护"><span class="toc-number">4.</span> <span class="toc-text">维护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加了新的程序"><span class="toc-number">4.1.</span> <span class="toc-text">添加了新的程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更改或加入了新的翻译字符串"><span class="toc-number">4.2.</span> <span class="toc-text">更改或加入了新的翻译字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更改或加入了新的c文件"><span class="toc-number">4.3.</span> <span class="toc-text">更改或加入了新的c文件</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"PostgreSQL本地化过程及维护　| 申宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/03/PostgreSQL本地化过程及维护/" data-title="PostgreSQL本地化过程及维护" data-url="http://shenyu.wiki/2016/11/03/PostgreSQL本地化过程及维护/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/02/C语言程序的国际化/" title="下一篇: C语言程序的国际化">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql大数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2016 申宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
