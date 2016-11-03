@@ -59,8 +59,6 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 
 
 
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
 
 
     <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
@@ -86,7 +84,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 <script>
     var yiliaConfig = {
         fancybox: true,
-        animate: true,
+        animate: false,
         isHome: false,
         isPost: true,
         isArchive: false,
@@ -94,7 +92,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
         scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: undefined
+        search: true
     }
 </script>
 
@@ -118,7 +116,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 <div class="intrude-less">
     <header id="header" class="inner">
         <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
         </a>
         <hgroup>
           <h1 class="header-author"><a href="/">申宇</a></h1>
@@ -128,6 +126,13 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
         <p class="header-subtitle">Shen Yu&#39;s blog</p>
         
 
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
         
 
 
@@ -181,20 +186,20 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
                         
                             <li><a href="/">主页</a></li>
                         
-                            <li><a href="/archives/">所有文章</a></li>
+                            <li><a href="/archives/">归档</a></li>
                         
-                            <li><a href="/tags/">标签云</a></li>
+                            <li><a href="/tags/">标签</a></li>
                         
-                            <li><a href="/about/">关于我</a></li>
+                            <li><a href="/about/">关于</a></li>
                         
                         </ul>
                     </nav>
                     <nav class="header-nav">
                         <ul class="social">
                             
-                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
                             
-                                <a class="fa GitHub" href="#" title="GitHub"></a>
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
                             
                                 <a class="fa RSS" href="/atom.xml" title="RSS"></a>
                             
@@ -228,7 +233,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
                 
                 <section class="switch-part switch-part4">
                 
-                    <div id="js-aboutme">专注于前端</div>
+                    <div id="js-aboutme">专注于数据库内核</div>
                 </section>
                 
             </div>
@@ -245,7 +250,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
             </a>
             <hgroup>
               <h1 class="header-author"><a href="/" title="回到主页">申宇</a></h1>
@@ -258,11 +263,11 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
                 
                     <li><a href="/">主页</a></li>
                 
-                    <li><a href="/archives/">所有文章</a></li>
+                    <li><a href="/archives/">归档</a></li>
                 
-                    <li><a href="/tags/">标签云</a></li>
+                    <li><a href="/tags/">标签</a></li>
                 
-                    <li><a href="/about/">关于我</a></li>
+                    <li><a href="/about/">关于</a></li>
                 
                 <div class="clearfix"></div>
                 </ul>
@@ -270,9 +275,9 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
             <nav class="header-nav">
                         <ul class="social">
                             
-                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
                             
-                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
                             
                                 <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
                             
@@ -433,6 +438,25 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 
 
     
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2015/02/17/mysql大数据处理/" data-title="mysql大数据处理" data-url="http://shenyu.wiki/2015/02/17/mysql大数据处理/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
 
 
 
@@ -467,7 +491,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
         <div id="footer-info">
             <div class="footer-left">
                 <i class="fa fa-copyright"></i> 
-                2016 申宇
+                2014-2016 申宇
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
@@ -516,6 +540,27 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 
 
 
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
 <div class="scroll" id="scroll">
