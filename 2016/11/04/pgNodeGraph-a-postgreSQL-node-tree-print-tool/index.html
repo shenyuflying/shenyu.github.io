@@ -15,22 +15,23 @@
 
 
 
-<meta name="description" content="二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。
-
-12345678910111213141516171819# 编译$ gcc c2bs.c -o c2bs# 帮助$ ./c2bs2convert to binary or strings.will re">
+<meta name="description" content="The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for">
 <meta property="og:type" content="article">
-<meta property="og:title" content="二进制文件 十六进制文件 互转">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/02/二进制文件-十六进制文件-互转/index.html">
+<meta property="og:title" content="pgNodeGraph -- a postgreSQL node tree print tool">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。
-
-12345678910111213141516171819# 编译$ gcc c2bs.c -o c2bs# 帮助$ ./c2bs2convert to binary or strings.will re">
-<meta property="og:updated_time" content="2016-10-05T10:28:39.000Z">
+<meta property="og:description" content="The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3pnykidt3h56e4n5ukn6e9bz/image_1at06c8lbe4r1k4lrcn1o5hll113.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/5hpdpk2pagv927zqtajj1nu3/image_1at05s7f0n6l6i9blt0918kp9.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/6ufsqp1cmsirhumjbt61r1an/image_1at0639g0ftv1fulrt1ojs105am.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/cduxtumwqj7nuvvt93en76dk/image_1at05cvlss4p17abdpk6su88kc.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/2ktr9kohxtguhc1w5o0o8qc5/image_1at074oh613aeirvkbifu0gam1g.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/iht0aj2dj7zyoj1l2wt3isfb/image_1at08ct2v1f1q7mcdrh1g861qi12f.png">
+<meta property="og:updated_time" content="2016-11-04T05:44:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="二进制文件 十六进制文件 互转">
-<meta name="twitter:description" content="二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。
-
-12345678910111213141516171819# 编译$ gcc c2bs.c -o c2bs# 帮助$ ./c2bs2convert to binary or strings.will re">
+<meta name="twitter:title" content="pgNodeGraph -- a postgreSQL node tree print tool">
+<meta name="twitter:description" content="The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/3pnykidt3h56e4n5ukn6e9bz/image_1at06c8lbe4r1k4lrcn1o5hll113.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -60,7 +61,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>二进制文件 十六进制文件 互转 | 申宇的博客</title>
+<title>pgNodeGraph -- a postgreSQL node tree print tool | 申宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -271,11 +272,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-二进制文件-十六进制文件-互转" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-pgNodeGraph-a-postgreSQL-node-tree-print-tool" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/02/二进制文件-十六进制文件-互转/" class="article-date">
-      <time datetime="2016-10-02T13:06:30.000Z" itemprop="datePublished">2016-10-02</time>
+      <a href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/" class="article-date">
+      <time datetime="2016-11-04T05:43:06.000Z" itemprop="datePublished">2016-11-04</time>
 </a>
 
 
@@ -290,7 +291,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      二进制文件 十六进制文件 互转
+      pgNodeGraph -- a postgreSQL node tree print tool
     </h1>
   
 
@@ -301,7 +302,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程题/">编程题</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/database/">database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/postgreSQL/">postgreSQL</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -312,11 +313,31 @@
       
           
         <blockquote>
-<p>二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。</p>
+<p>The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for developing or debugging purposess.</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 编译</div><div class="line">$ gcc c2bs.c -o c2bs</div><div class="line"></div><div class="line"># 帮助</div><div class="line">$ ./c2bs2</div><div class="line">convert to binary or strings.</div><div class="line">will read from stdin and write to stdout</div><div class="line">usage: ./c2bs2 [options]</div><div class="line">[options]</div><div class="line">    -b convert to binary</div><div class="line">    -s convert to string</div><div class="line"></div><div class="line"># 二进制可执行文件转16进制字符串</div><div class="line">$ cat ./c2bs | ./c2bs -c &gt; c2bs.hex </div><div class="line">$ head c2bs.hex</div><div class="line">7f454c4602010100000000000000000002003e000100000020064000000000004000000000000000a0110000000000000000000040003800090040001e001b000600000005000000400000000000000040004000000000004000400000000000f801000000000000f8010000000...</div><div class="line"></div><div class="line"># 十六进制字符串再转回到二进制</div><div class="line">$ cat ./c2bs.hex | ./c2bs -b &gt; c2bs</div></pre></td></tr></table></figure>
-<p> 源码如下，需要注意的是，都用了不带符号的unsigned char类型，这个很关键，想想为什么？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> talbe[<span class="string">'f'</span>+<span class="number">1</span>];</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in_2[<span class="number">3</span>]=&#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (argc == <span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"convert to binary or strings.\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"will read from stdin and write to stdout\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"usage: %s [options]\n"</span></div><div class="line">			<span class="string">"[options]\n"</span></div><div class="line">			<span class="string">"    -b convert to binary\n"</span></div><div class="line">			<span class="string">"    -s convert to string\n"</span>,argv[<span class="number">0</span>]);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">switch</span>(argv[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> <span class="string">'s'</span>:</div><div class="line">			<span class="keyword">while</span>( fread(&amp;in,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%02x"</span>,in);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		<span class="keyword">break</span>;</div><div class="line">		</div><div class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</div><div class="line"></div><div class="line">			talbe[<span class="string">'0'</span>]=<span class="number">0</span>;	</div><div class="line">			talbe[<span class="string">'1'</span>]=<span class="number">1</span>;	</div><div class="line">			talbe[<span class="string">'2'</span>]=<span class="number">2</span>;	</div><div class="line">			talbe[<span class="string">'3'</span>]=<span class="number">3</span>;	</div><div class="line">			talbe[<span class="string">'4'</span>]=<span class="number">4</span>;	</div><div class="line">			talbe[<span class="string">'5'</span>]=<span class="number">5</span>;	</div><div class="line">			talbe[<span class="string">'6'</span>]=<span class="number">6</span>;	</div><div class="line">			talbe[<span class="string">'7'</span>]=<span class="number">7</span>;	</div><div class="line">			talbe[<span class="string">'8'</span>]=<span class="number">8</span>;	</div><div class="line">			talbe[<span class="string">'9'</span>]=<span class="number">9</span>;	</div><div class="line">			talbe[<span class="string">'a'</span>]=<span class="number">10</span>;	</div><div class="line">			talbe[<span class="string">'b'</span>]=<span class="number">11</span>;	</div><div class="line">			talbe[<span class="string">'c'</span>]=<span class="number">12</span>;	</div><div class="line">			talbe[<span class="string">'d'</span>]=<span class="number">13</span>;	</div><div class="line">			talbe[<span class="string">'e'</span>]=<span class="number">14</span>;	</div><div class="line">			talbe[<span class="string">'f'</span>]=<span class="number">15</span>;	</div><div class="line">			<span class="keyword">while</span>( fread(in_2,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="number">2</span>,<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">unsigned</span> <span class="keyword">char</span> out;</div><div class="line">				out = <span class="number">16</span>*talbe[in_2[<span class="number">0</span>]] + talbe[in_2[<span class="number">1</span>]]; </div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%c"</span>,out);</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"unknown parameter %s"</span>,argv[<span class="number">1</span>]);</div><div class="line">		<span class="keyword">break</span>;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="short-tour"><a href="#short-tour" class="headerlink" title="short tour"></a>short tour</h2><p>suppose we have a table like this<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">postgres=# \d class</div><div class="line">             Table &quot;public.class&quot;</div><div class="line">  Column   |         Type          | Modifiers </div><div class="line">-----------+-----------------------+-----------</div><div class="line"> classno   | character varying(10) | </div><div class="line"> classname | character varying(10) | </div><div class="line"> gno       | character varying(10) |</div></pre></td></tr></table></figure></p>
+<p>by turning the following option on, the postgreSQL will print the node tree after parse and plan the query.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">set debug_print_parse = on;</div><div class="line">set debug_print_plan = on;</div><div class="line">set debug_pretty_print = on;</div></pre></td></tr></table></figure></p>
+<p>now let’s execute a statment.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">postgres=# select * from class;</div></pre></td></tr></table></figure></p>
+<p>the sever will print the parse and plan node tree in the log. according to different type of queries, the out put usually last for hundred or thousand lines. below is an example.</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/3pnykidt3h56e4n5ukn6e9bz/image_1at06c8lbe4r1k4lrcn1o5hll113.png" alt="image_1at06c8lbe4r1k4lrcn1o5hll113.png-32.9kB"></p>
+<p>the node tree printed by of postgreSQL, as you have seen is hard for the developer or user to see it as a whole. so, is there a way to print the node tree as a picture format? the answer is yes. now, let me show you how to use pgNodeGraph to convert the node tree to a picture format.</p>
+<ol>
+<li>copy and paste the node tree in text form.</li>
+<li>put it in node dir</li>
+<li>run <code>$ ./pgNodeGraph</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ./pgNodeGraph </div><div class="line">processing file sample.node ...done</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>after a short wait, the node tree in jpg format is generated under the pic directory.</p>
+<p>QueryNodeTree：<br><img src="http://static.zybuluo.com/shenyuflying/5hpdpk2pagv927zqtajj1nu3/image_1at05s7f0n6l6i9blt0918kp9.png" alt="image_1at05s7f0n6l6i9blt0918kp9.png-421.8kB"></p>
+<p>PlanNodeTree：<br><img src="http://static.zybuluo.com/shenyuflying/6ufsqp1cmsirhumjbt61r1an/image_1at0639g0ftv1fulrt1ojs105am.png" alt="image_1at0639g0ftv1fulrt1ojs105am.png-404.8kB"></p>
+<h2 id="A-complex-example"><a href="#A-complex-example" class="headerlink" title="A complex example"></a>A complex example</h2><p>Now, let’s try a much more complex query to see whether pgNodeGraph will work well.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">select classno, classname, avg(score)::numeric(5,1) as 平均分</div><div class="line">from   sc, (select * from class where class.gno=&apos;一年级&apos;) as sub</div><div class="line">where</div><div class="line"> sc.sno in (select sno from student where student.classno=sub.classno)</div><div class="line"> and</div><div class="line"> sc.cno in (select course.cno from course where course.cname=&apos;数学&apos;)</div><div class="line">group by classno, classname</div><div class="line">having avg(score)&gt;60</div><div class="line">order by 平均分 desc;</div></pre></td></tr></table></figure>
+<p>following the same procedure in above, we generate the result as below.<br>QueryNodeTree:<br><img src="http://static.zybuluo.com/shenyuflying/cduxtumwqj7nuvvt93en76dk/image_1at05cvlss4p17abdpk6su88kc.png" alt="image_1at05cvlss4p17abdpk6su88kc.png-2852.3kB"><br>PlanNodeTree:<br><img src="http://static.zybuluo.com/shenyuflying/2ktr9kohxtguhc1w5o0o8qc5/image_1at074oh613aeirvkbifu0gam1g.png" alt="image_1at074oh613aeirvkbifu0gam1g.png-5300.1kB"></p>
+<h1 id="hack-into-the-code"><a href="#hack-into-the-code" class="headerlink" title="hack into the code"></a>hack into the code</h1><p>pgNodeGraph tool first convert the node tree printed by postgreSQL to dot format.</p>
+<p>the node tree:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&#123;Node1</div><div class="line"> :elem1</div><div class="line"> :elem2</div><div class="line"> :elem3</div><div class="line"> &#123;Node2</div><div class="line">  :elem1</div><div class="line">  :elem2</div><div class="line">  :elem3</div><div class="line">  &#123;Node3</div><div class="line">   :elem1</div><div class="line">   :elem2</div><div class="line">   :elem3</div><div class="line">  &#125;</div><div class="line">  :elem4</div><div class="line">  :elem5</div><div class="line"> &#125;</div><div class="line"> :elem4</div><div class="line"> &#123;Node4</div><div class="line">   :elem1</div><div class="line">   :elem2</div><div class="line">   :elem3</div><div class="line"> &#125;</div><div class="line"> :elem5</div><div class="line"> :elem6</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>the corresponding dot format:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">digraph Query &#123;</div><div class="line">size=&quot;100000,100000&quot;;</div><div class="line">rankdir=LR;</div><div class="line">node [shape=record];</div><div class="line">node1 [shape=record, label=&quot;&lt;f0&gt; Node1 | &lt;f1&gt; elem1 | &lt;f2&gt; elem2 | &lt;f3&gt; elem3 | &lt;f4&gt; elem4 | &lt;f5&gt; elem5 | &lt;f6&gt; elem6 &quot;];</div><div class="line">node2 [shape=record, label=&quot;&lt;f0&gt; Node2 | &lt;f1&gt; elem1 | &lt;f2&gt; elem2 | &lt;f3&gt; elem3 | &lt;f4&gt; elem4 | &lt;f5&gt; elem5 &quot;];</div><div class="line">node3 [shape=record, label=&quot;&lt;f0&gt; Node3 | &lt;f1&gt; elem1 | &lt;f2&gt; elem2 | &lt;f3&gt; elem3 &quot;];</div><div class="line">node4 [shape=record, label=&quot;&lt;f0&gt; Node4 | &lt;f1&gt; elem1 | &lt;f2&gt; elem2 | &lt;f3&gt; elem3 &quot;];</div><div class="line">node1:f3 -&gt; node2:f0</div><div class="line">node1:f4 -&gt; node4:f0</div><div class="line">node2:f3 -&gt; node3:f0</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>the by using the <code>dot</code> tool to genereate the picture.<br>so, you must have <code>dot</code> or <code>graphvis</code> tool installed on  your system.</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/iht0aj2dj7zyoj1l2wt3isfb/image_1at08ct2v1f1q7mcdrh1g861qi12f.png" alt="image_1at08ct2v1f1q7mcdrh1g861qi12f.png-47.7kB"></p>
 
       
     </div>
@@ -325,13 +346,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></p>
+        <p><span>本文标题:</span><a href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">申宇</a></p>
-        <p><span>发布时间:</span>2016-10-02, 13:06:30</p>
-        <p><span>最后更新:</span>2016-10-05, 10:28:39</p>
+        <p><span>发布时间:</span>2016-11-04, 05:43:06</p>
+        <p><span>最后更新:</span>2016-11-04, 05:44:06</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/10/02/二进制文件-十六进制文件-互转/" title="二进制文件 十六进制文件 互转">http://shenyu.wiki/2016/10/02/二进制文件-十六进制文件-互转/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/02/二进制文件-十六进制文件-互转/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/" title="pgNodeGraph -- a postgreSQL node tree print tool">http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -343,16 +364,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/10/02/wget下载网站供离线浏览/">
-                    wget下载网站供离线浏览
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/10/02/PostgreSQL-count-优化/">
-                    PostgreSQL count(*) 优化
+                <a href="/2016/11/03/PostgreSQL本地化过程及维护/">
+                    PostgreSQL本地化过程及维护
                 </a>
             </div>
         
@@ -364,7 +379,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#short-tour"><span class="toc-number">1.</span> <span class="toc-text">short tour</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-complex-example"><span class="toc-number">2.</span> <span class="toc-text">A complex example</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hack-into-the-code"><span class="toc-number"></span> <span class="toc-text">hack into the code</span></a>
         
     </div>
     <style>
@@ -400,7 +415,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"二进制文件 十六进制文件 互转　| 申宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"pgNodeGraph -- a postgreSQL node tree print tool　| 申宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -416,7 +431,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/02/二进制文件-十六进制文件-互转/" data-title="二进制文件 十六进制文件 互转" data-url="http://shenyu.wiki/2016/10/02/二进制文件-十六进制文件-互转/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/" data-title="pgNodeGraph -- a postgreSQL node tree print tool" data-url="http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -439,15 +454,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/02/wget下载网站供离线浏览/" title="上一篇: wget下载网站供离线浏览">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/10/02/PostgreSQL-count-优化/" title="下一篇: PostgreSQL count(*) 优化">
+            <a href="/2016/11/03/PostgreSQL本地化过程及维护/" title="下一篇: PostgreSQL本地化过程及维护">
                 <i class="fa fa-angle-right"></i>
             </a>
         
