@@ -27,7 +27,7 @@
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/cduxtumwqj7nuvvt93en76dk/image_1at05cvlss4p17abdpk6su88kc.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/2ktr9kohxtguhc1w5o0o8qc5/image_1at074oh613aeirvkbifu0gam1g.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/iht0aj2dj7zyoj1l2wt3isfb/image_1at08ct2v1f1q7mcdrh1g861qi12f.png">
-<meta property="og:updated_time" content="2016-11-04T05:44:06.000Z">
+<meta property="og:updated_time" content="2016-11-04T05:52:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pgNodeGraph -- a postgreSQL node tree print tool">
 <meta name="twitter:description" content="The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for">
@@ -315,6 +315,7 @@
         <blockquote>
 <p>The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for developing or debugging purposess.</p>
 </blockquote>
+<p><a href="https://github.com/shenyuflying/pgNodeGraph" target="_blank" rel="external">view source on github</a></p>
 <h2 id="short-tour"><a href="#short-tour" class="headerlink" title="short tour"></a>short tour</h2><p>suppose we have a table like this<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">postgres=# \d class</div><div class="line">             Table &quot;public.class&quot;</div><div class="line">  Column   |         Type          | Modifiers </div><div class="line">-----------+-----------------------+-----------</div><div class="line"> classno   | character varying(10) | </div><div class="line"> classname | character varying(10) | </div><div class="line"> gno       | character varying(10) |</div></pre></td></tr></table></figure></p>
 <p>by turning the following option on, the postgreSQL will print the node tree after parse and plan the query.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">set debug_print_parse = on;</div><div class="line">set debug_print_plan = on;</div><div class="line">set debug_pretty_print = on;</div></pre></td></tr></table></figure></p>
 <p>now let’s execute a statment.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">postgres=# select * from class;</div></pre></td></tr></table></figure></p>
@@ -330,6 +331,7 @@
 <p>after a short wait, the node tree in jpg format is generated under the pic directory.</p>
 <p>QueryNodeTree：<br><img src="http://static.zybuluo.com/shenyuflying/5hpdpk2pagv927zqtajj1nu3/image_1at05s7f0n6l6i9blt0918kp9.png" alt="image_1at05s7f0n6l6i9blt0918kp9.png-421.8kB"></p>
 <p>PlanNodeTree：<br><img src="http://static.zybuluo.com/shenyuflying/6ufsqp1cmsirhumjbt61r1an/image_1at0639g0ftv1fulrt1ojs105am.png" alt="image_1at0639g0ftv1fulrt1ojs105am.png-404.8kB"></p>
+<a id="more"></a>
 <h2 id="A-complex-example"><a href="#A-complex-example" class="headerlink" title="A complex example"></a>A complex example</h2><p>Now, let’s try a much more complex query to see whether pgNodeGraph will work well.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">select classno, classname, avg(score)::numeric(5,1) as 平均分</div><div class="line">from   sc, (select * from class where class.gno=&apos;一年级&apos;) as sub</div><div class="line">where</div><div class="line"> sc.sno in (select sno from student where student.classno=sub.classno)</div><div class="line"> and</div><div class="line"> sc.cno in (select course.cno from course where course.cname=&apos;数学&apos;)</div><div class="line">group by classno, classname</div><div class="line">having avg(score)&gt;60</div><div class="line">order by 平均分 desc;</div></pre></td></tr></table></figure>
 <p>following the same procedure in above, we generate the result as below.<br>QueryNodeTree:<br><img src="http://static.zybuluo.com/shenyuflying/cduxtumwqj7nuvvt93en76dk/image_1at05cvlss4p17abdpk6su88kc.png" alt="image_1at05cvlss4p17abdpk6su88kc.png-2852.3kB"><br>PlanNodeTree:<br><img src="http://static.zybuluo.com/shenyuflying/2ktr9kohxtguhc1w5o0o8qc5/image_1at074oh613aeirvkbifu0gam1g.png" alt="image_1at074oh613aeirvkbifu0gam1g.png-5300.1kB"></p>
@@ -349,7 +351,7 @@
         <p><span>本文标题:</span><a href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">申宇</a></p>
         <p><span>发布时间:</span>2016-11-04, 05:43:06</p>
-        <p><span>最后更新:</span>2016-11-04, 05:44:06</p>
+        <p><span>最后更新:</span>2016-11-04, 05:52:23</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/" title="pgNodeGraph -- a postgreSQL node tree print tool">http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/</a>
             <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
