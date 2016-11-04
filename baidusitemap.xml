@@ -3,10 +3,9 @@
 
 
     
-    
   <url>
     <loc>http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/</loc>
-    <lastmod>2016-11-04T05:52:23.000Z</lastmod>
+    <lastmod>2016-11-04T06:03:50.000Z</lastmod>
     <data>
         <display>
         <title>pgNodeGraph -- a postgreSQL node tree print tool</title>
@@ -14,9 +13,9 @@
         
         <tag>c</tag>
          
-        <tag>database</tag>
+        <tag>PostgreSQL</tag>
          
-        <tag>postgreSQL</tag>
+        <tag>database</tag>
          
         <tag>Linux</tag>
          
@@ -26,6 +25,7 @@
     </data>
     </url>
 
+    
     
     
   <url>
