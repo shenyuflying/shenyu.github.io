@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2016/11/09/PostgreSQL-ODBC-driver-internal/</loc>
+    <lastmod>2016-11-09T03:05:24.000Z</lastmod>
+    <data>
+        <display>
+        <title>PostgreSQL ODBC driver internal</title>
+        <pubTime>2016-11-09T03:04:32.000Z</pubTime>
+        
+        <tag>PostgreSQL</tag>
+         
+        <tag>ODBC</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="http://shenyu.wiki/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/</loc>
     <lastmod>2016-11-04T06:03:50.000Z</lastmod>
     <data>
@@ -735,12 +757,12 @@
 
     
   <url>
-    <loc>http://shenyu.wiki/2014/10/02/%E6%B8%85%E5%8D%8E%E5%8C%97%E5%A4%A7/</loc>
+    <loc>http://shenyu.wiki/2014/10/01/%E8%A5%BF%E5%AE%89/</loc>
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     <data>
         <display>
-        <title>清华北大 Tsinghua and Peking University</title>
-        <pubTime>2014-10-02T12:57:41.000Z</pubTime>
+        <title>西安 Xi'an</title>
+        <pubTime>2014-10-01T16:48:26.000Z</pubTime>
         
         <tag>旅行</tag>
          
@@ -755,12 +777,12 @@
 
     
   <url>
-    <loc>http://shenyu.wiki/2014/10/01/%E8%A5%BF%E5%AE%89/</loc>
+    <loc>http://shenyu.wiki/2014/10/02/%E6%B8%85%E5%8D%8E%E5%8C%97%E5%A4%A7/</loc>
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     <data>
         <display>
-        <title>西安 Xi'an</title>
-        <pubTime>2014-10-01T16:48:26.000Z</pubTime>
+        <title>清华北大 Tsinghua and Peking University</title>
+        <pubTime>2014-10-02T12:57:41.000Z</pubTime>
         
         <tag>旅行</tag>
          
