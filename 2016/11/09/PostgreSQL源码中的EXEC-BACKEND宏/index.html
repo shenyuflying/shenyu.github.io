@@ -15,34 +15,19 @@
 
 
 
-<meta name="description" content="如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。
-
-这篇文章会告诉你：
-
-僵尸进程产生原理。
-如何产生僵尸进程。
-如何回收僵尸进程。">
+<meta name="description" content="看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：
+It exists because Windows doesn’t have fork(), only the equivalent offork-and-exec.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux中的僵尸进程">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/09/linux中的僵尸进程/index.html">
+<meta property="og:title" content="PostgreSQL源码中的EXEC_BACKEND宏">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。
-
-这篇文章会告诉你：
-
-僵尸进程产生原理。
-如何产生僵尸进程。
-如何回收僵尸进程。">
-<meta property="og:updated_time" content="2016-10-09T07:13:36.000Z">
+<meta property="og:description" content="看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：
+It exists because Windows doesn’t have fork(), only the equivalent offork-and-exec.">
+<meta property="og:updated_time" content="2016-11-09T08:04:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux中的僵尸进程">
-<meta name="twitter:description" content="如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。
-
-这篇文章会告诉你：
-
-僵尸进程产生原理。
-如何产生僵尸进程。
-如何回收僵尸进程。">
+<meta name="twitter:title" content="PostgreSQL源码中的EXEC_BACKEND宏">
+<meta name="twitter:description" content="看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：
+It exists because Windows doesn’t have fork(), only the equivalent offork-and-exec.">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -72,7 +57,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>linux中的僵尸进程 | 申宇的博客</title>
+<title>PostgreSQL源码中的EXEC_BACKEND宏 | 申宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -283,11 +268,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-linux中的僵尸进程" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-PostgreSQL源码中的EXEC-BACKEND宏" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/09/linux中的僵尸进程/" class="article-date">
-      <time datetime="2016-10-09T07:13:11.000Z" itemprop="datePublished">2016-10-09</time>
+      <a href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/" class="article-date">
+      <time datetime="2016-11-09T08:04:10.000Z" itemprop="datePublished">2016-11-09</time>
 </a>
 
 
@@ -302,7 +287,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      linux中的僵尸进程
+      PostgreSQL源码中的EXEC_BACKEND宏
     </h1>
   
 
@@ -313,7 +298,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -323,29 +308,11 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。</p>
-</blockquote>
-<p>这篇文章会告诉你：</p>
-<ol>
-<li>僵尸进程产生原理。</li>
-<li>如何产生僵尸进程。</li>
-<li>如何回收僵尸进程。</li>
-</ol>
-<a id="more"></a>
-<h2 id="产生僵尸进程"><a href="#产生僵尸进程" class="headerlink" title="产生僵尸进程"></a>产生僵尸进程</h2><p>根据僵尸进程的定义，我们不难用c语言来产生一个僵尸进程</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MB 1024*1024</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> pid;</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"new process PID=%d\n"</span>, getpid());</div><div class="line">    pid = fork();</div><div class="line">    <span class="keyword">if</span>(pid==<span class="number">0</span>)</div><div class="line">    &#123;   </div><div class="line">        <span class="comment">/* child */</span></div><div class="line">        <span class="built_in">printf</span>(<span class="string">"new process PID=%d\n"</span>, getpid());</div><div class="line">        <span class="keyword">char</span> * p = <span class="built_in">malloc</span>(<span class="number">512</span>*MB);</div><div class="line">        <span class="built_in">memset</span>(p,<span class="number">0</span>,<span class="number">512</span>*MB);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">    &#125;   </div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;   </div><div class="line">        <span class="comment">/* parent */</span></div><div class="line">        sleep(<span class="number">60</span>);</div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>编译并执行该程序，然后再看该程序进程的状态：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">new process PID=25810</div><div class="line">new process PID=25811</div><div class="line"></div><div class="line">$ ps aux | grep main</div><div class="line">yshen    25810  0.0  0.0   4200   620 pts/31   S+   14:30   0:00 ./main</div><div class="line">yshen    25811  0.0  0.0      0     0 pts/31   Z+   14:30   0:00 [main] &lt;defunct&gt;</div></pre></td></tr></table></figure></p>
-<p>可以看到，主进程的状态为S+即休眠状态，子进程的状态为Z+即僵尸状态。此时僵尸进程等待父进程读取其退出状态。在该程序中等待父进程退出之后，子进程也将退出（因为子进程的状态在父进程退出之后已经没什么用了）。</p>
-<p>用top命令来查看内存占用情况，可以看到实僵尸进程的内存占用等于0.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ top</div><div class="line">  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND </div><div class="line">25810 yshen     20   0    4200    792    712 S   0.0  0.0   0:00.00 main</div><div class="line">25811 yshen     20   0       0      0      0 Z   0.0  0.0   0:00.67 main</div></pre></td></tr></table></figure></p>
-<h2 id="处理僵尸进程"><a href="#处理僵尸进程" class="headerlink" title="处理僵尸进程"></a>处理僵尸进程</h2><p>根据以上分析，我们不难得出僵尸进程退出的2种情况：</p>
-<ol>
-<li>父进程用wait/waitpid来获取子进程的状态。</li>
-<li>父进程退出。</li>
-</ol>
-<p>子进程退出，也会给父进程发送SIGCHLD信号来通知。在实际编码中，一般应SIGCHLD信号进行处理。（如：重新fork拉起子进程或进行垃圾回收，记录日志等等）。如下例子我们注册SIGCHLD信号处理函数，等待子进程退出时由父进程调用wait来获取其退出状态。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">#include&lt;unistd.h&gt;</div><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#include&lt;signal.h&gt;</div><div class="line"></div><div class="line">void handler(int code)</div><div class="line">&#123;</div><div class="line">	int status;</div><div class="line">	pid_t pid =	wait(&amp;status);</div><div class="line">	printf(&quot;parent get SIGCHLD, child %d returned %d\n&quot;,</div><div class="line">									pid, WEXITSTATUS(status));</div><div class="line">	sleep(60); /* 加这行是因为父进程收到SIGCHLD信号打断了原来的sleep，如果不加这个父进程就会马上退出 */</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line"></div><div class="line">	int pid;</div><div class="line">	signal(SIGCHLD,handler);</div><div class="line">	</div><div class="line">	printf(&quot;new process PID=%d\n&quot;, getpid());</div><div class="line">	pid = fork();</div><div class="line"></div><div class="line">	if(pid==0)</div><div class="line">	&#123;</div><div class="line">		/* child */</div><div class="line">		printf(&quot;new process PID=%d\n&quot;, getpid());</div><div class="line">		exit(123);</div><div class="line">	&#125;</div><div class="line">	/* parent */</div><div class="line">	sleep(60);</div><div class="line">	exit(0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>编译并执行。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">new process PID=26559</div><div class="line">new process PID=26560</div><div class="line">parent get SIGCHLD, child 26560 returned 123</div><div class="line"></div><div class="line">$ ps aux | grep main</div><div class="line">yshen    26604  0.0  0.0   4200   624 pts/31   S+   15:07   0:00 ./main</div></pre></td></tr></table></figure></p>
-<p>可以看到，已经没有僵尸进程了。</p>
+        <p>看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从<a href="http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：" target="_blank" rel="external">http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：</a></p>
+<p>It exists because Windows doesn’t have fork(), only the equivalent of<br>fork-and-exec.  Which means that no state variables will be inherited<br>from the postmaster by its child processes, and any state that needs to<br>be carried across has to be handled explicitly.  You can define<br>EXEC_BACKEND in a non-Windows build, for the purpose of testing code<br>to see if it works in that environment.</p>
+<p>regards, tom lane </p>
+<p>意思是说用<code>EXEC_BACKEND</code>宏是因为Windows没有fork(),只好用别的方法来实现fork-and-exec。但是这样以来，生成的子进程没办法继承父进程的一些状态变量，所以状态变量必须显式的传给所有的子进程。在非Windows平台上编译的时候（比如linux）也可以定义<code>EXEC_BACKEND</code>宏来做调试。</p>
+<p>可见<code>EXEC_BACKEND</code>宏是为了在win32上用来实现变量传递机制。</p>
 
       
     </div>
@@ -354,13 +321,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></p>
+        <p><span>本文标题:</span><a href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">申宇</a></p>
-        <p><span>发布时间:</span>2016-10-09, 07:13:11</p>
-        <p><span>最后更新:</span>2016-10-09, 07:13:36</p>
+        <p><span>发布时间:</span>2016-11-09, 08:04:10</p>
+        <p><span>最后更新:</span>2016-11-09, 08:04:43</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/10/09/linux中的僵尸进程/" title="linux中的僵尸进程">http://shenyu.wiki/2016/10/09/linux中的僵尸进程/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/09/linux中的僵尸进程/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/" title="PostgreSQL源码中的EXEC_BACKEND宏">http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -372,16 +339,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/10/10/linux中的硬链接和软链接/">
-                    linux中的硬链接和软链接
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">
-                    字符串中特殊字符转义——php中urlencode urldecode的c语言版本
+                <a href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">
+                    PostgreSQL ODBC driver internal
                 </a>
             </div>
         
@@ -393,7 +354,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#产生僵尸进程"><span class="toc-number">1.</span> <span class="toc-text">产生僵尸进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理僵尸进程"><span class="toc-number">2.</span> <span class="toc-text">处理僵尸进程</span></a></li></ol>
+            
         
     </div>
     <style>
@@ -429,7 +390,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"linux中的僵尸进程　| 申宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"PostgreSQL源码中的EXEC_BACKEND宏　| 申宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -445,7 +406,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/09/linux中的僵尸进程/" data-title="linux中的僵尸进程" data-url="http://shenyu.wiki/2016/10/09/linux中的僵尸进程/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/" data-title="PostgreSQL源码中的EXEC_BACKEND宏" data-url="http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -468,15 +429,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/10/linux中的硬链接和软链接/" title="上一篇: linux中的硬链接和软链接">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" title="下一篇: 字符串中特殊字符转义——php中urlencode urldecode的c语言版本">
+            <a href="/2016/11/09/PostgreSQL-ODBC-driver-internal/" title="下一篇: PostgreSQL ODBC driver internal">
                 <i class="fa fa-angle-right"></i>
             </a>
         

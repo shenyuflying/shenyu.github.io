@@ -4,6 +4,17 @@
   
     
     <entry>
+      <title><![CDATA[PostgreSQL源码中的EXEC_BACKEND宏]]></title>
+      <url>http://shenyu.wiki/2016/11/09/PostgreSQL%E6%BA%90%E7%A0%81%E4%B8%AD%E7%9A%84EXEC-BACKEND%E5%AE%8F/</url>
+      <content type="html"><![CDATA[<p>看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从<a href="http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：" target="_blank" rel="external">http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：</a></p>
+<p>It exists because Windows doesn’t have fork(), only the equivalent of<br>fork-and-exec.  Which means that no state variables will be inherited<br>from the postmaster by its child processes, and any state that needs to<br>be carried across has to be handled explicitly.  You can define<br>EXEC_BACKEND in a non-Windows build, for the purpose of testing code<br>to see if it works in that environment.</p>
+<p>regards, tom lane </p>
+<p>意思是说用<code>EXEC_BACKEND</code>宏是因为Windows没有fork(),只好用别的方法来实现fork-and-exec。但是这样以来，生成的子进程没办法继承父进程的一些状态变量，所以状态变量必须显式的传给所有的子进程。在非Windows平台上编译的时候（比如linux）也可以定义<code>EXEC_BACKEND</code>宏来做调试。</p>
+<p>可见<code>EXEC_BACKEND</code>宏是为了在win32上用来实现变量传递机制。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[PostgreSQL ODBC driver internal]]></title>
       <url>http://shenyu.wiki/2016/11/09/PostgreSQL-ODBC-driver-internal/</url>
       <content type="html"><![CDATA[<p><img src="http://static.zybuluo.com/shenyuflying/15buljfauji0u51n4nxoxbmk/%E5%B9%BB%E7%81%AF%E7%89%871.png" alt="幻灯片1.png-23.4kB"></p>
