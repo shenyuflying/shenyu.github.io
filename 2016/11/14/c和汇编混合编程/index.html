@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，一些不能用C语言实现的特性可以用汇编实现，比如说可以利用一些特殊的指令来实现一些特别的功能（比如锁），或者硬件相关的功能（这点嵌入式开发经常用到）。本文介绍了如何把汇编语言嵌入到c语言中，最后给了2个例子。">
+<meta name="description" content="在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，实现硬件相关的功能（这点嵌入式开发经常用到）。第三，不能用C语言实现的特性可以用汇编实现，比如说可以利用lock指令来实现原子操作。本文介绍了如何把汇编语言嵌入到c语言中的基础，然后给了2个例子。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="c和汇编混合编程">
 <meta property="og:url" content="http://shenyu.wiki/2016/11/14/c和汇编混合编程/index.html">
 <meta property="og:site_name" content="申宇的博客">
-<meta property="og:description" content="在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，一些不能用C语言实现的特性可以用汇编实现，比如说可以利用一些特殊的指令来实现一些特别的功能（比如锁），或者硬件相关的功能（这点嵌入式开发经常用到）。本文介绍了如何把汇编语言嵌入到c语言中，最后给了2个例子。">
-<meta property="og:updated_time" content="2016-11-14T12:43:42.000Z">
+<meta property="og:description" content="在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，实现硬件相关的功能（这点嵌入式开发经常用到）。第三，不能用C语言实现的特性可以用汇编实现，比如说可以利用lock指令来实现原子操作。本文介绍了如何把汇编语言嵌入到c语言中的基础，然后给了2个例子。">
+<meta property="og:updated_time" content="2016-11-14T12:58:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="c和汇编混合编程">
-<meta name="twitter:description" content="在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，一些不能用C语言实现的特性可以用汇编实现，比如说可以利用一些特殊的指令来实现一些特别的功能（比如锁），或者硬件相关的功能（这点嵌入式开发经常用到）。本文介绍了如何把汇编语言嵌入到c语言中，最后给了2个例子。">
+<meta name="twitter:description" content="在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，实现硬件相关的功能（这点嵌入式开发经常用到）。第三，不能用C语言实现的特性可以用汇编实现，比如说可以利用lock指令来实现原子操作。本文介绍了如何把汇编语言嵌入到c语言中的基础，然后给了2个例子。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -306,7 +306,7 @@
       
           
         <blockquote>
-<p>在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，一些不能用C语言实现的特性可以用汇编实现，比如说可以利用一些特殊的指令来实现一些特别的功能（比如锁），或者硬件相关的功能（这点嵌入式开发经常用到）。<br>本文介绍了如何把汇编语言嵌入到c语言中，最后给了2个例子。</p>
+<p>在各种高级语言大行其道的今天为什么要用汇编呢？其实主要的原因有如下两个：第一，在C语言在关键地方嵌入汇编可以获得最大的性能提升，比如说一些关键算法；第二，实现硬件相关的功能（这点嵌入式开发经常用到）。第三，不能用C语言实现的特性可以用汇编实现，比如说可以利用lock指令来实现原子操作。<br>本文介绍了如何把汇编语言嵌入到c语言中的基础，然后给了2个例子。</p>
 </blockquote>
 <a id="more"></a>
 <p>在数据库中，为了实现一些特殊的操作，比如<a href="http://shenyu.wiki/2016/11/13/PostgreSQL%E4%B8%AD%E7%9A%84spinlock%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/">tas锁</a>，需要借助汇编来完成。比如PostgreSQL中的tas锁就是用汇编写的。那么如何用c和汇编混合编程呢？先介绍一下基本语法，c语言中嵌入汇编的语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">asm [volatile] ( AssemblerTemplate</div><div class="line">                 : OutputOperands</div><div class="line">                 [ : InputOperands</div><div class="line">                 [ : Clobbers ] ])</div></pre></td></tr></table></figure></p>
@@ -329,6 +329,7 @@
 <p>利用汇编的<code>xchg</code>指令，可以一条指令就完成a，b交换，而且不用中间变量<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> a=<span class="number">2</span>,b=<span class="number">1</span>;</div><div class="line">    <span class="comment">/* a=b;b=a;*/</span></div><div class="line">    <span class="keyword">asm</span>(<span class="string">"xchg %0,%1\n"</span></div><div class="line">        :<span class="string">"+rm"</span>(a),<span class="string">"+rm"</span>(b)</div><div class="line">        :<span class="comment">/* no output */</span></div><div class="line">        :<span class="string">"cc"</span>);</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"a=%d\nb=%d\n"</span>,a,b);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>可以看到结果，a，b已经赋值了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">a=1</div><div class="line">b=2</div></pre></td></tr></table></figure></p>
 <h2 id="例子3–tas锁"><a href="#例子3–tas锁" class="headerlink" title="例子3–tas锁"></a>例子3–tas锁</h2><p>tas锁求整个操作只由一条指令完成，并且将总线锁住，以保证操作的“原子性”。相比之下，C语句在编译之后到底有几条指令是没有保证的，也无法要求在计算过程中对总线加锁。这时候就要借助<code>lock</code>指令来完成这个工作。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="number">__</span><span class="function">inline__ <span class="keyword">int</span></span></div><div class="line"><span class="title">tas</span><span class="params">(<span class="keyword">volatile</span> <span class="keyword">lock_t</span> *lock)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">register</span> <span class="keyword">lock_t</span> <span class="number">_</span>res = <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="number">__</span>asm__ <span class="number">__</span>volatile__(</div><div class="line">        <span class="string">"   cmpb    $0,%1   \n"</span></div><div class="line">        <span class="string">"   jne     1f      \n"</span></div><div class="line">        <span class="string">"   lock            \n"</span></div><div class="line">        <span class="string">"   xchgb   %0,%1   \n"</span></div><div class="line">        <span class="string">"1: \n"</span></div><div class="line">:       <span class="string">"+q"</span>(<span class="number">_</span>res), <span class="string">"+m"</span>(*lock)</div><div class="line">:       <span class="comment">/* no inputs */</span></div><div class="line">:       <span class="string">"memory"</span>, <span class="string">"cc"</span>);</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) <span class="number">_</span>res;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如上代码中的<code>lock</code>指令确保了接下来的<code>xchgb</code>指令交换<code>*lock</code>和<code>_res</code>的操作是原子性的。从而一下完成了获取<code>*lock</code>的值作为返回值和把<code>*lock</code>设为1这两个动作一下完成。</p>
 <p>如果感兴趣可以进一步阅读：<br>gcc官方文档：<a href="https://gcc.gnu.org/onlinedocs/gcc-6.2.0/gcc/Extended-Asm.html#Extended-Asm" target="_blank" rel="external">https://gcc.gnu.org/onlinedocs/gcc-6.2.0/gcc/Extended-Asm.html#Extended-Asm</a><br>Linux汇编语言开发指南：<a href="http://www.ibm.com/developerworks/cn/linux/l-assembly" target="_blank" rel="external">http://www.ibm.com/developerworks/cn/linux/l-assembly</a><br>一篇好的博文：<a href="http://blog.csdn.net/hu3167343/article/details/37660593" target="_blank" rel="external">http://blog.csdn.net/hu3167343/article/details/37660593</a></p>
 
       
@@ -341,7 +342,7 @@
         <p><span>本文标题:</span><a href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">申宇</a></p>
         <p><span>发布时间:</span>2016-11-14, 12:42:51</p>
-        <p><span>最后更新:</span>2016-11-14, 12:43:42</p>
+        <p><span>最后更新:</span>2016-11-14, 12:58:35</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/11/14/c和汇编混合编程/" title="c和汇编混合编程">http://shenyu.wiki/2016/11/14/c和汇编混合编程/</a>
             <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/14/c和汇编混合编程/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
