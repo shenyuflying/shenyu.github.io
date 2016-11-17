@@ -11,7 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="format-detection" content="telephone=no" />
-<meta name="author" content="申宇" />
+<meta name="author" content="小宇" />
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="PostgreSQL count(*) 优化">
 <meta property="og:url" content="http://shenyu.wiki/2016/10/02/PostgreSQL-count-优化/index.html">
-<meta property="og:site_name" content="申宇的博客">
+<meta property="og:site_name" content="小宇的博客">
 <meta property="og:description" content="在PostgreSQL数据库中，count()默认是全表扫描，那么对于数据量很大的表，因为需要把表的所有页面读入到内存，需要较多IO，耗费的时间很长。在很多应用中，需要频繁的count()来统计行数，那么在此类应用中如何优化count(*)的效率呢？
 建立一个表我们先建立一个100万行的表，来做实验。
 12345678910postgres=# create table tb ( a int, b">
@@ -35,7 +35,7 @@
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
 
-    <link rel="alternate" href="/atom.xml" title="申宇的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
 
 
 
@@ -60,7 +60,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>PostgreSQL count(*) 优化 | 申宇的博客</title>
+<title>PostgreSQL count(*) 优化 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -103,7 +103,7 @@
             <img src="/uploads/avatar.png" class="animated zoomIn">
         </a>
         <hgroup>
-          <h1 class="header-author"><a href="/">申宇</a></h1>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
         </hgroup>
 
         
@@ -229,7 +229,7 @@
       <nav id="mobile-nav">
       <div class="overlay">
           <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">申宇</a></h1>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
       </div>
     <div class="intrude-less">
         <header id="header" class="inner">
@@ -237,7 +237,7 @@
                 <img src="/uploads/avatar.png" class="animated zoomIn">
             </a>
             <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">申宇</a></h1>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
             <p class="header-subtitle">Shen Yu&#39;s blog</p>
@@ -340,12 +340,12 @@
     
     <div class="copyright">
         <p><span>本文标题:</span><a href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">申宇</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
         <p><span>发布时间:</span>2016-10-02, 12:50:10</p>
         <p><span>最后更新:</span>2016-10-05, 10:28:39</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/10/02/PostgreSQL-count-优化/" title="PostgreSQL count(*) 优化">http://shenyu.wiki/2016/10/02/PostgreSQL-count-优化/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/02/PostgreSQL-count-优化/　　作者: 申宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/02/PostgreSQL-count-优化/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -414,7 +414,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"PostgreSQL count(*) 优化　| 申宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"PostgreSQL count(*) 优化　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -481,7 +481,7 @@
         <div id="footer-info">
             <div class="footer-left">
                 <i class="fa fa-copyright"></i> 
-                2014-2016 申宇
+                2014-2016 小宇
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
