@@ -15,22 +15,28 @@
 
 
 
-<meta name="description" content="面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，我们该如何找出性能瓶颈？从研发角度来说，做一下性能分析(profiling)可能有所帮助。性能分析能找出来最慢的函数，从而发现性能问题的瓶颈。再从瓶颈入手，优化代码从而解决性能问题。
+<meta name="description" content="如果想要把一个文件中的内容放置到剪贴板，通常的做法是用vim打开文件，然后复制粘贴。有时候文章很长，那么需要多次操作才可以。能不能用一个命令把文件中的内容放置到剪贴板呢？
 
-常用的方法是gdb或pstack堆栈跟踪，比如postgreSQL经常卡在一个特定的地方很长时间，往往都有相同的堆栈跟踪信息。我们要做的就是用gdb附加到进程，将所">
+install1sudo apt-get install xsel
+how to1cat xxx.txt | xsel -b -i
+如果还想看到更多此类文章，请移步到小宇的博客。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PostgreSQL性能分析">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/13/PostgreSQL性能分析/index.html">
+<meta property="og:title" content="linux把文件放置到剪贴板">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/20/linux把文件放置到剪贴板/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，我们该如何找出性能瓶颈？从研发角度来说，做一下性能分析(profiling)可能有所帮助。性能分析能找出来最慢的函数，从而发现性能问题的瓶颈。再从瓶颈入手，优化代码从而解决性能问题。
+<meta property="og:description" content="如果想要把一个文件中的内容放置到剪贴板，通常的做法是用vim打开文件，然后复制粘贴。有时候文章很长，那么需要多次操作才可以。能不能用一个命令把文件中的内容放置到剪贴板呢？
 
-常用的方法是gdb或pstack堆栈跟踪，比如postgreSQL经常卡在一个特定的地方很长时间，往往都有相同的堆栈跟踪信息。我们要做的就是用gdb附加到进程，将所">
-<meta property="og:updated_time" content="2016-10-13T13:02:27.000Z">
+install1sudo apt-get install xsel
+how to1cat xxx.txt | xsel -b -i
+如果还想看到更多此类文章，请移步到小宇的博客。">
+<meta property="og:updated_time" content="2016-11-20T03:01:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PostgreSQL性能分析">
-<meta name="twitter:description" content="面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，我们该如何找出性能瓶颈？从研发角度来说，做一下性能分析(profiling)可能有所帮助。性能分析能找出来最慢的函数，从而发现性能问题的瓶颈。再从瓶颈入手，优化代码从而解决性能问题。
+<meta name="twitter:title" content="linux把文件放置到剪贴板">
+<meta name="twitter:description" content="如果想要把一个文件中的内容放置到剪贴板，通常的做法是用vim打开文件，然后复制粘贴。有时候文章很长，那么需要多次操作才可以。能不能用一个命令把文件中的内容放置到剪贴板呢？
 
-常用的方法是gdb或pstack堆栈跟踪，比如postgreSQL经常卡在一个特定的地方很长时间，往往都有相同的堆栈跟踪信息。我们要做的就是用gdb附加到进程，将所">
+install1sudo apt-get install xsel
+how to1cat xxx.txt | xsel -b -i
+如果还想看到更多此类文章，请移步到小宇的博客。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -60,7 +66,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>PostgreSQL性能分析 | 小宇的博客</title>
+<title>linux把文件放置到剪贴板 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -271,11 +277,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-PostgreSQL性能分析" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-linux把文件放置到剪贴板" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/13/PostgreSQL性能分析/" class="article-date">
-      <time datetime="2016-10-13T12:49:37.000Z" itemprop="datePublished">2016-10-13</time>
+      <a href="/2016/11/20/linux把文件放置到剪贴板/" class="article-date">
+      <time datetime="2016-11-20T03:01:08.000Z" itemprop="datePublished">2016-11-20</time>
 </a>
 
 
@@ -290,7 +296,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      PostgreSQL性能分析
+      linux把文件放置到剪贴板
     </h1>
   
 
@@ -301,7 +307,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/database/">database</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -312,28 +318,11 @@
       
           
         <blockquote>
-<p>面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，我们该如何找出性能瓶颈？从研发角度来说，做一下性能分析(profiling)可能有所帮助。性能分析能找出来最慢的函数，从而发现性能问题的瓶颈。再从瓶颈入手，优化代码从而解决性能问题。</p>
+<p>如果想要把一个文件中的内容放置到剪贴板，通常的做法是用vim打开文件，然后复制粘贴。有时候文章很长，那么需要多次操作才可以。能不能用一个命令把文件中的内容放置到剪贴板呢？</p>
 </blockquote>
-<p>常用的方法是gdb或pstack堆栈跟踪，比如postgreSQL经常卡在一个特定的地方很长时间，往往都有相同的堆栈跟踪信息。我们要做的就是用gdb附加到进程，将所有进程堆栈打出来，然后利用一些简单的脚本将信息做汇总，再利用sort|uniq|sort的方法排序统计出最多的堆栈信息，或最多的函数调用信息。</p>
-<p>其实这种profile工具已经有了，其中一个简洁有效的工具是<a href="https://poormansprofiler.org/" target="_blank" rel="external">poor man’s profiler</a>，Google, Facebook, Wikipedia, Intel的工程师都在用这个工具来分析程序的性能。在这里我对其改造一番，使得其更方便的分析postgreSQL数据库。</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># ./poormansprofile.sh  </div><div class="line">usage: promansprofile username samples sleeptime</div></pre></td></tr></table></figure>
-<p>username是postgreSQL登陆的用户名，脚本里来找到对应用户的pid<br>samples是采样点数<br>sleeptime是每采样点数间隔<br>比如我们分析<code>yshen</code>用户进程，采样点300个，那么如下命令启动分析：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># ./poormansprofile.sh  yshen 300 0</div><div class="line">1/300 completed.</div><div class="line">2/300 completed.</div><div class="line">3/300 completed.</div><div class="line">4/300 completed.</div><div class="line">5/300 completed.</div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line">300/300 completed.</div></pre></td></tr></table></figure></p>
-<p>PS: 在有些环境下，需要用root用户。</p>
-<h2 id="分析结果"><a href="#分析结果" class="headerlink" title="分析结果"></a>分析结果</h2><p>这个脚本可以分析</p>
-<ul>
-<li>函数排名：即哪个函数调用最占时间。</li>
-<li>堆栈排名：即种调用堆栈最占用时间。</li>
-</ul>
-<h4 id="函数排名"><a href="#函数排名" class="headerlink" title="函数排名"></a>函数排名</h4><p>如下是跑回归测试的函数排名分析。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">266 ServerLoop</div><div class="line">266 PostmasterMain</div><div class="line">266 PostgresMain</div><div class="line">266 main</div><div class="line">266 BackendStartup</div><div class="line">266 BackendRun</div><div class="line">259 exec_simple_query</div><div class="line">134 CommitTransactionCommand</div><div class="line">134 CommitTransaction</div><div class="line">132 XLogFlush</div><div class="line">132 RecordTransactionCommit</div><div class="line">129 finish_xact_command</div><div class="line">128 XLogWrite</div><div class="line">128 pg_fdatasync</div><div class="line">128 issue_xlog_fsync</div><div class="line">128 __fdatasync_nocancel</div><div class="line">120 PortalRun</div><div class="line">101 standard_ProcessUtility</div><div class="line">101 ProcessUtility</div><div class="line"> 99 PortalRunMulti</div><div class="line"> 96 PortalRunUtility</div><div class="line"> 75 ProcessUtilitySlow</div><div class="line"> 74 smgrimmedsync</div><div class="line"> 74 pg_fsync_no_writethrough</div><div class="line"> 74 pg_fsync</div><div class="line"> 74 mdimmedsync</div><div class="line"> 74 __fsync_nocancel</div><div class="line"> 74 FileSync</div><div class="line"> 73 index_build</div><div class="line"> 69 btbuild</div></pre></td></tr></table></figure></p>
-<p>可以看到ServerLoop这个函数最占用时间，很正常，因为这个函数在等待用户连接。下面几个函数其中有个函数XLogFlush，FileSync，smgrimmedsync，pg_fdatasync等等都是IO相关，可见IO非常耗时。以上是正常状态下的函数排名，如果有异常应该就可以发现，比如一些阻塞行为，死锁，IO，网络问题都能在这里发现。</p>
-<h2 id="堆栈排名"><a href="#堆栈排名" class="headerlink" title="堆栈排名"></a>堆栈排名</h2><p>堆栈排名更加详细，说了哪种堆栈状态最耗时。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">45 __fdatasync_nocancel,pg_fdatasync,issue_xlog_fsync,XLogWrite,XLogFlush,RecordTransactionCommit,CommitTransaction,CommitTransactionCommand,finish_xact_command,exec_simple_query,PostgresMain,BackendRun,BackendStartup,ServerLoop,PostmasterMain,main</div><div class="line"> 7 __fsync_nocancel,pg_fsync_no_writethrough,pg_fsync,FileSync,mdimmedsync,smgrimmedsync,_bt_load,_bt_leafbuild,btbuild,index_build,index_create,DefineIndex,ProcessUtilitySlow,standard_ProcessUtility,ProcessUtility,PortalRunUtility,PortalRunMulti,PortalRun,exec_simple_query,PostgresMain,BackendRun,BackendStartup,ServerLoop,PostmasterMain,main</div><div class="line"> 4 __fsync_nocancel,pg_fsync_no_writethrough,pg_fsync,FileSync,mdimmedsync,smgrimmedsync,_bt_load,_bt_leafbuild,btbuild,index_build,index_create,create_toast_table,CheckAndCreateToastTable,NewRelationCreateToastTable,ProcessUtilitySlow,standard_ProcessUtility,ProcessUtility,PortalRunUtility,PortalRunMulti,PortalRun,exec_simple_query,PostgresMain,BackendRun,BackendStartup,ServerLoop,PostmasterMain,mai</div></pre></td></tr></table></figure></p>
-<p>分析第一个堆栈，出现了45次，堆栈的内容是CommitTransaction提交事务带来的刷盘持久化操作，可见很耗时啊，因为带来了IO。同样的，如果发现什么异常行为也可以在这里发现。</p>
-<h2 id="源码1-——只分析用户进程"><a href="#源码1-——只分析用户进程" class="headerlink" title="源码1 ——只分析用户进程"></a>源码1 ——只分析用户进程</h2><p>源码如下：<br>如果去掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed &apos;s/,/\n/g&apos; | \</div><div class="line">uniq | \</div></pre></td></tr></table></figure></p>
-<p>这两行就是显示的堆栈排名，否则是函数排名。</p>
-<a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">if [ $# != 3 ] ; then</div><div class="line">        echo &quot;usage: promansprofile username samples sleeptime&quot;</div><div class="line">        exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">username=$1</div><div class="line">nsamples=$2</div><div class="line">sleeptime=$3</div><div class="line"></div><div class="line">if [ $(ps aux | grep &quot;postgres: $username&quot; | wc -l) -eq 1 ] ; then</div><div class="line">        echo &quot;user process is not running&quot;</div><div class="line">        exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">for x in $(seq 1 $nsamples)</div><div class="line">  do</div><div class="line">    ps_info=$(ps aux | grep &quot;postgres: $username&quot; )</div><div class="line">    pid=$(echo $ps_info | sed -n &quot;1, 1p&quot; | awk &apos;&#123;print $2&#125;&apos;)</div><div class="line">    gdb -ex &quot;set pagination 0&quot; -ex &quot;thread apply all bt&quot; -batch -p $pid  2&gt;/dev/null</div><div class="line">    sleep $sleeptime</div><div class="line">    echo &quot;$x/$nsamples completed.&quot; &gt;&amp;2</div><div class="line">  done | \</div><div class="line">awk &apos;</div><div class="line">  BEGIN &#123; s = &quot;&quot;; &#125; </div><div class="line">  /^Thread/ &#123; print s; s = &quot;&quot;; &#125; </div><div class="line">  /^\#/ &#123; if (s != &quot;&quot; ) &#123; s = s &quot;,&quot; $4&#125; else &#123; s = $4 &#125; &#125; </div><div class="line">  END &#123; print s &#125;&apos; | \</div><div class="line">sed &apos;s/,/\n/g&apos; | \</div><div class="line">uniq | \</div><div class="line">sort | \</div><div class="line">uniq -c | \</div><div class="line">sort -r -n -k 1,1</div></pre></td></tr></table></figure>
-<h2 id="源码2-——分析所有postgreSQL进程"><a href="#源码2-——分析所有postgreSQL进程" class="headerlink" title="源码2 ——分析所有postgreSQL进程"></a>源码2 ——分析所有postgreSQL进程</h2><p>以下源码能分析所有PostgreSQL进程，比如vacuum、log、stat、checkpoint进程。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">if [ $# != 2 ] ; then                                                                                                                                  </div><div class="line">    echo &quot;usage: promansprofile samples sleeptime&quot;</div><div class="line">    exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">nsamples=$1</div><div class="line">sleeptime=$2</div><div class="line"></div><div class="line"></div><div class="line">for x in $(seq 1 $nsamples)</div><div class="line">  do  </div><div class="line">    ps_info=$(ps aux)</div><div class="line">    ps_cnt=$(echo $ps_info | wc -l)</div><div class="line">    for p in $(seq 1 $ps_cnt) ; do</div><div class="line">        pid=$(echo $ps_info | sed -n &quot;$p, 1p&quot; | awk &apos;&#123;print $2&#125;&apos;)</div><div class="line">        gdb -ex &quot;set pagination 0&quot; -ex &quot;thread apply all bt&quot; -batch -p $pid  2&gt;/dev/null </div><div class="line">    done</div><div class="line">    sleep $sleeptime</div><div class="line">    echo &quot;$x/$nsamples completed.&quot; &gt;&amp;2</div><div class="line">  done | \ </div><div class="line">awk &apos;</div><div class="line">  BEGIN &#123; s = &quot;&quot;; &#125; </div><div class="line">  /^Thread/ &#123; print s; s = &quot;&quot;; &#125; </div><div class="line">  /^\#/ &#123; if (s != &quot;&quot; ) &#123; s = s &quot;,&quot; $4&#125; else &#123; s = $4 &#125; &#125; </div><div class="line">  END &#123; print s &#125;&apos; | \ </div><div class="line">sed &apos;s/,/\n/g&apos; | \ </div><div class="line">uniq  |\  </div><div class="line">sort |\</div><div class="line">uniq -c |\</div><div class="line">sort -r -n -k 1,1</div></pre></td></tr></table></figure></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>如果有人说gdb这样不断attach到进程，是否对数据库的性能有影响，大概会拖慢0.2秒。但是为了找出性能问题所在，这样做是值得的，你的付出将会得到加倍回报。稍后我再介绍一个比gdb更快的堆栈工具，只需要1ms就能打出来堆栈。</p>
+<h2 id="install"><a href="#install" class="headerlink" title="install"></a>install</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install xsel</div></pre></td></tr></table></figure>
+<h2 id="how-to"><a href="#how-to" class="headerlink" title="how to"></a>how to</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat xxx.txt | xsel -b -i</div></pre></td></tr></table></figure>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -342,13 +331,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></p>
+        <p><span>本文标题:</span><a href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-10-13, 12:49:37</p>
-        <p><span>最后更新:</span>2016-10-13, 13:02:27</p>
+        <p><span>发布时间:</span>2016-11-20, 03:01:08</p>
+        <p><span>最后更新:</span>2016-11-20, 03:01:49</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/10/13/PostgreSQL性能分析/" title="PostgreSQL性能分析">http://shenyu.wiki/2016/10/13/PostgreSQL性能分析/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/13/PostgreSQL性能分析/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/20/linux把文件放置到剪贴板/" title="linux把文件放置到剪贴板">http://shenyu.wiki/2016/11/20/linux把文件放置到剪贴板/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/20/linux把文件放置到剪贴板/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -360,16 +349,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/10/14/yap-yet-another-program-profiling-tool/">
-                    yap--yet another program profiling tool
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">
-                    PostgreSQL日志分析工具——pgBadger
+                <a href="/2016/11/17/c语言程序输出调试信息/">
+                    c语言程序输出调试信息
                 </a>
             </div>
         
@@ -381,7 +364,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用方法"><span class="toc-number">1.</span> <span class="toc-text">使用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析结果"><span class="toc-number">2.</span> <span class="toc-text">分析结果</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#函数排名"><span class="toc-number">2.0.1.</span> <span class="toc-text">函数排名</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆栈排名"><span class="toc-number">3.</span> <span class="toc-text">堆栈排名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码1-——只分析用户进程"><span class="toc-number">4.</span> <span class="toc-text">源码1 ——只分析用户进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码2-——分析所有postgreSQL进程"><span class="toc-number">5.</span> <span class="toc-text">源码2 ——分析所有postgreSQL进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#install"><span class="toc-number">1.</span> <span class="toc-text">install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#how-to"><span class="toc-number">2.</span> <span class="toc-text">how to</span></a></li></ol>
         
     </div>
     <style>
@@ -417,7 +400,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"PostgreSQL性能分析　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"linux把文件放置到剪贴板　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -433,7 +416,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/13/PostgreSQL性能分析/" data-title="PostgreSQL性能分析" data-url="http://shenyu.wiki/2016/10/13/PostgreSQL性能分析/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/20/linux把文件放置到剪贴板/" data-title="linux把文件放置到剪贴板" data-url="http://shenyu.wiki/2016/11/20/linux把文件放置到剪贴板/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -456,15 +439,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/14/yap-yet-another-program-profiling-tool/" title="上一篇: yap--yet another program profiling tool">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/" title="下一篇: PostgreSQL日志分析工具——pgBadger">
+            <a href="/2016/11/17/c语言程序输出调试信息/" title="下一篇: c语言程序输出调试信息">
                 <i class="fa fa-angle-right"></i>
             </a>
         
