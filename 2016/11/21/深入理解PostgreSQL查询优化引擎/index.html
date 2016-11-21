@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="深入理解PostgreSQL查询优化引擎标签（空格分隔）： PostgreSQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解PostgreSQL查询优化引擎">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/21/深入理解PostgreSQL查询优化引擎/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="深入理解PostgreSQL查询优化引擎标签（空格分隔）： PostgreSQL">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/jvqhy0z9ktshjd06tcvfifcm/%E5%B9%BB%E7%81%AF%E7%89%871.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/q0yatpul7e0m3iiunk9j389t/%E5%B9%BB%E7%81%AF%E7%89%872.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/877ir8ozck08wdhd1h4t1rvi/%E5%B9%BB%E7%81%AF%E7%89%873.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/qe612v7qpadzo6ggqia7yahq/%E5%B9%BB%E7%81%AF%E7%89%874.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/s7omh9y4geeso8kk6sxzcype/%E5%B9%BB%E7%81%AF%E7%89%875.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/27ru82cqcgy7tvakzka78tmq/%E5%B9%BB%E7%81%AF%E7%89%876.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3k5pmccouj6by0mjk5k00fu4/%E5%B9%BB%E7%81%AF%E7%89%877.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/pd11sv4ai1g6j080gde6w01l/%E5%B9%BB%E7%81%AF%E7%89%878.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/fh2x3tmnoweqlfh4a5bw4p9r/%E5%B9%BB%E7%81%AF%E7%89%879.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gneunqz5i06l7wgyq38sy6ot/%E5%B9%BB%E7%81%AF%E7%89%8710.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/dvcz7gnogz1vn4ws2f0zdblw/%E5%B9%BB%E7%81%AF%E7%89%8711.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/c1axvfd3p7ykss8cpem96wdw/%E5%B9%BB%E7%81%AF%E7%89%8712.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/uteqki84bgyx1b4ij0ecm10f/%E5%B9%BB%E7%81%AF%E7%89%8713.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/nc50r7o51kp7i0560p83rjqy/%E5%B9%BB%E7%81%AF%E7%89%8714.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ujt8bd94pm11gy103un86174/%E5%B9%BB%E7%81%AF%E7%89%8715.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/rfwsqz3td7rcohd62dxwnlbx/%E5%B9%BB%E7%81%AF%E7%89%8716.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/hlzx8jw3mg4vru8me9f20p25/%E5%B9%BB%E7%81%AF%E7%89%8717.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/igbaih7nd7n9j63gj75sfip6/%E5%B9%BB%E7%81%AF%E7%89%8718.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/dwrcbxwssvz9754fz780af1q/%E5%B9%BB%E7%81%AF%E7%89%8719.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/wvae67x2489j8zyr7svz5vmv/%E5%B9%BB%E7%81%AF%E7%89%8720.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/5p6jb3dfmdulbhpjpb6yd4iq/%E5%B9%BB%E7%81%AF%E7%89%8721.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/jzti5tc3oh4c15lt1xw2rvwn/%E5%B9%BB%E7%81%AF%E7%89%8722.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/b1dsgnl6btuqbxi87mfh6hxp/%E5%B9%BB%E7%81%AF%E7%89%8723.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/7qjwrridvj2377ni5kt7xjzq/%E5%B9%BB%E7%81%AF%E7%89%8724.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/4jlacvwjuhpq9jmay8ynp792/%E5%B9%BB%E7%81%AF%E7%89%8725.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/bvxwj9y7473g4ecjs2o1cqwy/%E5%B9%BB%E7%81%AF%E7%89%8726.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ys2z3oqmnnbtj8y5n8zeihbo/%E5%B9%BB%E7%81%AF%E7%89%8727.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/nxdh607v7ilqm4s0h1g06g1j/%E5%B9%BB%E7%81%AF%E7%89%8728.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gnkzpxs0qwqxaeyof6rdqrsn/%E5%B9%BB%E7%81%AF%E7%89%8729.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/e4mwg6j78nspoldnyxxhsesa/%E5%B9%BB%E7%81%AF%E7%89%8730.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/pxyvfup0wqa62zd0qe870trb/%E5%B9%BB%E7%81%AF%E7%89%8731.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/te79hytppmsdmjwvtt30bzm8/%E5%B9%BB%E7%81%AF%E7%89%8732.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/6nfsluzqw842bz7mzsepiak8/%E5%B9%BB%E7%81%AF%E7%89%8733.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/mofyhkdecnu2hqmqghij9euu/%E5%B9%BB%E7%81%AF%E7%89%8734.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/vx130whs4kxw41wlp7fam4v9/%E5%B9%BB%E7%81%AF%E7%89%8735.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/tg2wmoqqlab9z4ewf91o1f4a/%E5%B9%BB%E7%81%AF%E7%89%8736.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/57ncsasqxb490r5pob5zxppb/%E5%B9%BB%E7%81%AF%E7%89%8737.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/81c4038o58eqleqxn788verr/%E5%B9%BB%E7%81%AF%E7%89%8738.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/rs1e3zr2kqa6van4eh0mrpyr/%E5%B9%BB%E7%81%AF%E7%89%8739.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/8ih0p2q9o4oldl6densuoj5f/%E5%B9%BB%E7%81%AF%E7%89%8740.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/7nkuifedh2k5qedxu5vfax9z/%E5%B9%BB%E7%81%AF%E7%89%8741.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/pse5xe03kr9exunswbf3l3h2/%E5%B9%BB%E7%81%AF%E7%89%8742.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/flzy8k79q578humvjx24yyiv/%E5%B9%BB%E7%81%AF%E7%89%8743.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/vtu7pkhkyoaqb65y7wnjmsbt/%E5%B9%BB%E7%81%AF%E7%89%8744.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gbbm3k631ubdckxb80zkn8fz/%E5%B9%BB%E7%81%AF%E7%89%8745.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/su06h9vnli6y0zk05p363gcw/%E5%B9%BB%E7%81%AF%E7%89%8746.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/znrhw1ffxnf9e8cb6ro8xuwr/%E5%B9%BB%E7%81%AF%E7%89%8747.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/1y2r4io219t5fenuqrydr10e/%E5%B9%BB%E7%81%AF%E7%89%8748.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ht513ei7a83t37d75h18443x/%E5%B9%BB%E7%81%AF%E7%89%8749.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/z1mabaka4uoln6c66582cg09/%E5%B9%BB%E7%81%AF%E7%89%8750.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/nhyk7drut2ow12as11589zis/%E5%B9%BB%E7%81%AF%E7%89%8751.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/kxn8p2rt1df2vhnfetgp5egd/%E5%B9%BB%E7%81%AF%E7%89%8752.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/mdnn58l0he99pds8z4zgs5ag/%E5%B9%BB%E7%81%AF%E7%89%8753.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/hnzvkgnfxzfonq9t7kin83io/%E5%B9%BB%E7%81%AF%E7%89%8754.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/360eexwape2q8ou1nwmv69jv/%E5%B9%BB%E7%81%AF%E7%89%8755.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/4o1bqsibwpfuzdewjsfguzsr/%E5%B9%BB%E7%81%AF%E7%89%8756.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/9murlz88jqywuw1hpwwzqnci/%E5%B9%BB%E7%81%AF%E7%89%8757.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/35ts93z58d5qgbxtal7v270b/%E5%B9%BB%E7%81%AF%E7%89%8758.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/u8snipur77lrvng9vqi0ol2w/%E5%B9%BB%E7%81%AF%E7%89%8759.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/l7x3b6cfa85z8renc7pfxbkw/%E5%B9%BB%E7%81%AF%E7%89%8760.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/y1x8b9drzne1btvpimgkjei9/%E5%B9%BB%E7%81%AF%E7%89%8761.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gwacllvn1lcbh4uhaueiwjcf/%E5%B9%BB%E7%81%AF%E7%89%8762.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/qgv53tnut3enag48myneimn2/%E5%B9%BB%E7%81%AF%E7%89%8763.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/nf060s84rc3uont4ox6oxu8c/%E5%B9%BB%E7%81%AF%E7%89%8764.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/xwduo2m4xjggs7asddjdltmd/%E5%B9%BB%E7%81%AF%E7%89%8765.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3n61zrj48mfybb7o8w6luqsr/%E5%B9%BB%E7%81%AF%E7%89%8766.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/4b4wpceng3if8w8jr4d13qpm/%E5%B9%BB%E7%81%AF%E7%89%8767.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/qh5mit4aluzj1vbu497r60rs/%E5%B9%BB%E7%81%AF%E7%89%8768.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/wd7q0nglu2m1gmqgylsputns/%E5%B9%BB%E7%81%AF%E7%89%8769.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/409tzkelzihcviagdhf3fkgx/%E5%B9%BB%E7%81%AF%E7%89%8770.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/c16k53hrvhrm7yh3s344a2dv/%E5%B9%BB%E7%81%AF%E7%89%8771.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/hp526n29ruvxasd15eey3a1l/%E5%B9%BB%E7%81%AF%E7%89%8772.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/mprs2s2ikgwu1m36xohw6wno/%E5%B9%BB%E7%81%AF%E7%89%8773.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/2dpfj20alz4j2uzlleu4bv81/%E5%B9%BB%E7%81%AF%E7%89%8774.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/11mxiix7u4splqpu6klczboa/%E5%B9%BB%E7%81%AF%E7%89%8775.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ytj6q5vyrx143677wxq5t8o3/%E5%B9%BB%E7%81%AF%E7%89%8776.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/0x9wqoen87y9c2n2p9184iv8/%E5%B9%BB%E7%81%AF%E7%89%8777.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/7cnca1ykcslxwryh1uq6j34x/%E5%B9%BB%E7%81%AF%E7%89%8778.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/df3arrsao690srl48se8fkvx/%E5%B9%BB%E7%81%AF%E7%89%8779.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gus683r55tvedbxlfd78so6m/%E5%B9%BB%E7%81%AF%E7%89%8780.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/5qgel78m9ca40bz7xy54hdak/%E5%B9%BB%E7%81%AF%E7%89%8781.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/2h35ocsc3u18q6qp60058x2m/%E5%B9%BB%E7%81%AF%E7%89%8782.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/i9q1lw0n0k90yyuwnek415hl/%E5%B9%BB%E7%81%AF%E7%89%8783.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/fp1yx59w46i1lp4fqt84dwdp/%E5%B9%BB%E7%81%AF%E7%89%8784.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/v8dmkit14lwm2b5nmyrmjmv1/%E5%B9%BB%E7%81%AF%E7%89%8785.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/aemdqnnhkeaul335c3whk16q/%E5%B9%BB%E7%81%AF%E7%89%8786.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/xr7054hjbfjc053fkryvmqxb/%E5%B9%BB%E7%81%AF%E7%89%8787.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/oz3mn1dyhtlqc9bikzsv2k70/%E5%B9%BB%E7%81%AF%E7%89%8788.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/e0xmpsqxtiik74yaxbuj2wsk/%E5%B9%BB%E7%81%AF%E7%89%8789.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ej8ebpp4jwrw053lbzq061id/%E5%B9%BB%E7%81%AF%E7%89%8790.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/xk4ph7a9skq4oxk2a59tz9fb/%E5%B9%BB%E7%81%AF%E7%89%8791.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/g7muhvmx4z6n1wjx9yi5gy6d/%E5%B9%BB%E7%81%AF%E7%89%8792.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/m9xl9ve6qtry3szujmxybqb8/%E5%B9%BB%E7%81%AF%E7%89%8793.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3kcsab5omgknjkokkgwj4rc3/%E5%B9%BB%E7%81%AF%E7%89%8794.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/pfqbtwgj0sq7jvr759ar23bo/%E5%B9%BB%E7%81%AF%E7%89%8795.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/p9psbbti0h8o8btjrn4hpnkz/%E5%B9%BB%E7%81%AF%E7%89%8796.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/khvv6ghh6cn36gic0xc63efh/%E5%B9%BB%E7%81%AF%E7%89%8797.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/qkgwtzbduin4tht0jdhpc2kz/%E5%B9%BB%E7%81%AF%E7%89%8798.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/a5eshwuv7t5vga617x3dtbrk/%E5%B9%BB%E7%81%AF%E7%89%8799.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/n26zwzezh8awl6m3eb3vvx3w/%E5%B9%BB%E7%81%AF%E7%89%87100.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3upj4w83x5c5rg317g94bfy2/%E5%B9%BB%E7%81%AF%E7%89%87101.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/y1zcms1bcwt6r9xyknb4nq3h/%E5%B9%BB%E7%81%AF%E7%89%87102.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/167vpcyqp07hv2oacuddql7v/%E5%B9%BB%E7%81%AF%E7%89%87103.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/iluowtgt8asx3ctsvxtcah71/%E5%B9%BB%E7%81%AF%E7%89%87104.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/nr8rtqjxfslnqfgexjnype2p/%E5%B9%BB%E7%81%AF%E7%89%87105.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/vyzrzl9ko7ca0o7ytquw98n0/%E5%B9%BB%E7%81%AF%E7%89%87106.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/wiz9otduyj5hsysewexfnhxs/%E5%B9%BB%E7%81%AF%E7%89%87107.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/jbz0wy39z57vgmn5dfvlil1i/%E5%B9%BB%E7%81%AF%E7%89%87108.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/jaqx0o42vnufwcl1c84n7vo6/%E5%B9%BB%E7%81%AF%E7%89%87109.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/6u1qr6u3j1kbv62tkhxfn6yi/%E5%B9%BB%E7%81%AF%E7%89%87110.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/yzffpxdo6whue2b164werzsf/%E5%B9%BB%E7%81%AF%E7%89%87111.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gjdtbswznp4tafizuwednof6/%E5%B9%BB%E7%81%AF%E7%89%87112.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/6o5w5xmlw2ed184li1iykudj/%E5%B9%BB%E7%81%AF%E7%89%87113.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3apj0aygsidvimwpaj9cq7gc/%E5%B9%BB%E7%81%AF%E7%89%87114.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/21gyp0qj0vgrzbsq7436f422/%E5%B9%BB%E7%81%AF%E7%89%87115.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/abc10eorugjv7l4m5gq7kikh/%E5%B9%BB%E7%81%AF%E7%89%87116.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/iojsb394gtwieijx1dsekec3/%E5%B9%BB%E7%81%AF%E7%89%87117.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/x0togse9i38ayyd8c2yqrzim/%E5%B9%BB%E7%81%AF%E7%89%87118.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ucdfglbmme8lg1j5ps3smzrk/%E5%B9%BB%E7%81%AF%E7%89%87119.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/odgupuxghwsf7qduvflamlc9/%E5%B9%BB%E7%81%AF%E7%89%87120.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/b77bq3stjazqdzhsrlv7304r/%E5%B9%BB%E7%81%AF%E7%89%87121.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/s8llwdix3qb8ob3hk1e13zne/%E5%B9%BB%E7%81%AF%E7%89%87122.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/5dyvc1gqi5dxjjchqskaxm8j/%E5%B9%BB%E7%81%AF%E7%89%87123.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/kb18vlepn7ju2u1fuia0cvup/%E5%B9%BB%E7%81%AF%E7%89%87124.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/oooaepc7tcjtnfoa0g2829sy/%E5%B9%BB%E7%81%AF%E7%89%87125.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/qy2a9n2l8khxs6dkpgv9vi5s/%E5%B9%BB%E7%81%AF%E7%89%87126.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/dtcraj9vyni70brtmkjf5dq2/%E5%B9%BB%E7%81%AF%E7%89%87127.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/75xuv344u4fa9lsi5z2fn38c/%E5%B9%BB%E7%81%AF%E7%89%87128.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/661bdfwt36u8vqdn1da1398h/%E5%B9%BB%E7%81%AF%E7%89%87129.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/3w802htroi2mommj7rdbvivz/%E5%B9%BB%E7%81%AF%E7%89%87130.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/305s04uipunyrsao4dimthkp/%E5%B9%BB%E7%81%AF%E7%89%87131.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/8u4j1sutgx9ic1smxebfxu45/%E5%B9%BB%E7%81%AF%E7%89%87132.png">
+<meta property="og:updated_time" content="2016-11-21T05:58:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解PostgreSQL查询优化引擎">
+<meta name="twitter:description" content="深入理解PostgreSQL查询优化引擎标签（空格分隔）： PostgreSQL">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/jvqhy0z9ktshjd06tcvfifcm/%E5%B9%BB%E7%81%AF%E7%89%871.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>深入理解PostgreSQL查询优化引擎 | 小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Shen Yu&#39;s blog</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLS/">NLS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/count/">count</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/database/">database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debug/">debug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debugging/">debugging</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/l10n/">l10n</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-shell/">linux shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/优化/">优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/博客/">博客</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/国际化/">国际化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程题/">编程题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络编程/">网络编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书-操作系统-linux-minix/">读书 操作系统 linux minix</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于数据库内核</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Shen Yu&#39;s blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-深入理解PostgreSQL查询优化引擎" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/21/深入理解PostgreSQL查询优化引擎/" class="article-date">
+      <time datetime="2016-11-21T05:57:19.000Z" itemprop="datePublished">2016-11-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入理解PostgreSQL查询优化引擎
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/slides/">slides</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/database/">database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="深入理解PostgreSQL查询优化引擎"><a href="#深入理解PostgreSQL查询优化引擎" class="headerlink" title="深入理解PostgreSQL查询优化引擎"></a>深入理解PostgreSQL查询优化引擎</h1><p>标签（空格分隔）： PostgreSQL</p>
+<hr>
+<p><img src="http://static.zybuluo.com/shenyuflying/jvqhy0z9ktshjd06tcvfifcm/%E5%B9%BB%E7%81%AF%E7%89%871.png" alt="幻灯片1.png-34.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/q0yatpul7e0m3iiunk9j389t/%E5%B9%BB%E7%81%AF%E7%89%872.png" alt="幻灯片2.png-52.9kB"><br><a id="more"></a><br><img src="http://static.zybuluo.com/shenyuflying/877ir8ozck08wdhd1h4t1rvi/%E5%B9%BB%E7%81%AF%E7%89%873.png" alt="幻灯片3.png-58.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/qe612v7qpadzo6ggqia7yahq/%E5%B9%BB%E7%81%AF%E7%89%874.png" alt="幻灯片4.png-346.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/s7omh9y4geeso8kk6sxzcype/%E5%B9%BB%E7%81%AF%E7%89%875.png" alt="幻灯片5.png-216.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/27ru82cqcgy7tvakzka78tmq/%E5%B9%BB%E7%81%AF%E7%89%876.png" alt="幻灯片6.png-247.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/3k5pmccouj6by0mjk5k00fu4/%E5%B9%BB%E7%81%AF%E7%89%877.png" alt="幻灯片7.png-182.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/pd11sv4ai1g6j080gde6w01l/%E5%B9%BB%E7%81%AF%E7%89%878.png" alt="幻灯片8.png-143.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/fh2x3tmnoweqlfh4a5bw4p9r/%E5%B9%BB%E7%81%AF%E7%89%879.png" alt="幻灯片9.png-189.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/gneunqz5i06l7wgyq38sy6ot/%E5%B9%BB%E7%81%AF%E7%89%8710.png" alt="幻灯片10.png-186.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/dvcz7gnogz1vn4ws2f0zdblw/%E5%B9%BB%E7%81%AF%E7%89%8711.png" alt="幻灯片11.png-189.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/c1axvfd3p7ykss8cpem96wdw/%E5%B9%BB%E7%81%AF%E7%89%8712.png" alt="幻灯片12.png-169.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/uteqki84bgyx1b4ij0ecm10f/%E5%B9%BB%E7%81%AF%E7%89%8713.png" alt="幻灯片13.png-54.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/nc50r7o51kp7i0560p83rjqy/%E5%B9%BB%E7%81%AF%E7%89%8714.png" alt="幻灯片14.png-252kB"><br><img src="http://static.zybuluo.com/shenyuflying/ujt8bd94pm11gy103un86174/%E5%B9%BB%E7%81%AF%E7%89%8715.png" alt="幻灯片15.png-249.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/rfwsqz3td7rcohd62dxwnlbx/%E5%B9%BB%E7%81%AF%E7%89%8716.png" alt="幻灯片16.png-259.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/hlzx8jw3mg4vru8me9f20p25/%E5%B9%BB%E7%81%AF%E7%89%8717.png" alt="幻灯片17.png-243kB"><br><img src="http://static.zybuluo.com/shenyuflying/igbaih7nd7n9j63gj75sfip6/%E5%B9%BB%E7%81%AF%E7%89%8718.png" alt="幻灯片18.png-238.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/dwrcbxwssvz9754fz780af1q/%E5%B9%BB%E7%81%AF%E7%89%8719.png" alt="幻灯片19.png-178.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/wvae67x2489j8zyr7svz5vmv/%E5%B9%BB%E7%81%AF%E7%89%8720.png" alt="幻灯片20.png-218.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/5p6jb3dfmdulbhpjpb6yd4iq/%E5%B9%BB%E7%81%AF%E7%89%8721.png" alt="幻灯片21.png-198.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/jzti5tc3oh4c15lt1xw2rvwn/%E5%B9%BB%E7%81%AF%E7%89%8722.png" alt="幻灯片22.png-163.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/b1dsgnl6btuqbxi87mfh6hxp/%E5%B9%BB%E7%81%AF%E7%89%8723.png" alt="幻灯片23.png-157.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/7qjwrridvj2377ni5kt7xjzq/%E5%B9%BB%E7%81%AF%E7%89%8724.png" alt="幻灯片24.png-192.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/4jlacvwjuhpq9jmay8ynp792/%E5%B9%BB%E7%81%AF%E7%89%8725.png" alt="幻灯片25.png-215.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/bvxwj9y7473g4ecjs2o1cqwy/%E5%B9%BB%E7%81%AF%E7%89%8726.png" alt="幻灯片26.png-216.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/ys2z3oqmnnbtj8y5n8zeihbo/%E5%B9%BB%E7%81%AF%E7%89%8727.png" alt="幻灯片27.png-85.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/nxdh607v7ilqm4s0h1g06g1j/%E5%B9%BB%E7%81%AF%E7%89%8728.png" alt="幻灯片28.png-68kB"><br><img src="http://static.zybuluo.com/shenyuflying/gnkzpxs0qwqxaeyof6rdqrsn/%E5%B9%BB%E7%81%AF%E7%89%8729.png" alt="幻灯片29.png-49.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/e4mwg6j78nspoldnyxxhsesa/%E5%B9%BB%E7%81%AF%E7%89%8730.png" alt="幻灯片30.png-221.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/pxyvfup0wqa62zd0qe870trb/%E5%B9%BB%E7%81%AF%E7%89%8731.png" alt="幻灯片31.png-47.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/te79hytppmsdmjwvtt30bzm8/%E5%B9%BB%E7%81%AF%E7%89%8732.png" alt="幻灯片32.png-25.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/6nfsluzqw842bz7mzsepiak8/%E5%B9%BB%E7%81%AF%E7%89%8733.png" alt="幻灯片33.png-44.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/mofyhkdecnu2hqmqghij9euu/%E5%B9%BB%E7%81%AF%E7%89%8734.png" alt="幻灯片34.png-50.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/vx130whs4kxw41wlp7fam4v9/%E5%B9%BB%E7%81%AF%E7%89%8735.png" alt="幻灯片35.png-91.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/tg2wmoqqlab9z4ewf91o1f4a/%E5%B9%BB%E7%81%AF%E7%89%8736.png" alt="幻灯片36.png-96kB"><br><img src="http://static.zybuluo.com/shenyuflying/57ncsasqxb490r5pob5zxppb/%E5%B9%BB%E7%81%AF%E7%89%8737.png" alt="幻灯片37.png-95.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/81c4038o58eqleqxn788verr/%E5%B9%BB%E7%81%AF%E7%89%8738.png" alt="幻灯片38.png-104.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/rs1e3zr2kqa6van4eh0mrpyr/%E5%B9%BB%E7%81%AF%E7%89%8739.png" alt="幻灯片39.png-223.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/8ih0p2q9o4oldl6densuoj5f/%E5%B9%BB%E7%81%AF%E7%89%8740.png" alt="幻灯片40.png-55.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/7nkuifedh2k5qedxu5vfax9z/%E5%B9%BB%E7%81%AF%E7%89%8741.png" alt="幻灯片41.png-34.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/pse5xe03kr9exunswbf3l3h2/%E5%B9%BB%E7%81%AF%E7%89%8742.png" alt="幻灯片42.png-97.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/flzy8k79q578humvjx24yyiv/%E5%B9%BB%E7%81%AF%E7%89%8743.png" alt="幻灯片43.png-67kB"><br><img src="http://static.zybuluo.com/shenyuflying/vtu7pkhkyoaqb65y7wnjmsbt/%E5%B9%BB%E7%81%AF%E7%89%8744.png" alt="幻灯片44.png-76.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/gbbm3k631ubdckxb80zkn8fz/%E5%B9%BB%E7%81%AF%E7%89%8745.png" alt="幻灯片45.png-14.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/su06h9vnli6y0zk05p363gcw/%E5%B9%BB%E7%81%AF%E7%89%8746.png" alt="幻灯片46.png-77.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/znrhw1ffxnf9e8cb6ro8xuwr/%E5%B9%BB%E7%81%AF%E7%89%8747.png" alt="幻灯片47.png-79.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/1y2r4io219t5fenuqrydr10e/%E5%B9%BB%E7%81%AF%E7%89%8748.png" alt="幻灯片48.png-76.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/ht513ei7a83t37d75h18443x/%E5%B9%BB%E7%81%AF%E7%89%8749.png" alt="幻灯片49.png-69kB"><br><img src="http://static.zybuluo.com/shenyuflying/z1mabaka4uoln6c66582cg09/%E5%B9%BB%E7%81%AF%E7%89%8750.png" alt="幻灯片50.png-21.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/nhyk7drut2ow12as11589zis/%E5%B9%BB%E7%81%AF%E7%89%8751.png" alt="幻灯片51.png-58.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/kxn8p2rt1df2vhnfetgp5egd/%E5%B9%BB%E7%81%AF%E7%89%8752.png" alt="幻灯片52.png-69.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/mdnn58l0he99pds8z4zgs5ag/%E5%B9%BB%E7%81%AF%E7%89%8753.png" alt="幻灯片53.png-78.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/hnzvkgnfxzfonq9t7kin83io/%E5%B9%BB%E7%81%AF%E7%89%8754.png" alt="幻灯片54.png-72.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/360eexwape2q8ou1nwmv69jv/%E5%B9%BB%E7%81%AF%E7%89%8755.png" alt="幻灯片55.png-67.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/4o1bqsibwpfuzdewjsfguzsr/%E5%B9%BB%E7%81%AF%E7%89%8756.png" alt="幻灯片56.png-64.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/9murlz88jqywuw1hpwwzqnci/%E5%B9%BB%E7%81%AF%E7%89%8757.png" alt="幻灯片57.png-68.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/35ts93z58d5qgbxtal7v270b/%E5%B9%BB%E7%81%AF%E7%89%8758.png" alt="幻灯片58.png-61.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/u8snipur77lrvng9vqi0ol2w/%E5%B9%BB%E7%81%AF%E7%89%8759.png" alt="幻灯片59.png-224.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/l7x3b6cfa85z8renc7pfxbkw/%E5%B9%BB%E7%81%AF%E7%89%8760.png" alt="幻灯片60.png-52kB"><br><img src="http://static.zybuluo.com/shenyuflying/y1x8b9drzne1btvpimgkjei9/%E5%B9%BB%E7%81%AF%E7%89%8761.png" alt="幻灯片61.png-40.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/gwacllvn1lcbh4uhaueiwjcf/%E5%B9%BB%E7%81%AF%E7%89%8762.png" alt="幻灯片62.png-34.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/qgv53tnut3enag48myneimn2/%E5%B9%BB%E7%81%AF%E7%89%8763.png" alt="幻灯片63.png-79.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/nf060s84rc3uont4ox6oxu8c/%E5%B9%BB%E7%81%AF%E7%89%8764.png" alt="幻灯片64.png-44.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/xwduo2m4xjggs7asddjdltmd/%E5%B9%BB%E7%81%AF%E7%89%8765.png" alt="幻灯片65.png-242kB"><br><img src="http://static.zybuluo.com/shenyuflying/3n61zrj48mfybb7o8w6luqsr/%E5%B9%BB%E7%81%AF%E7%89%8766.png" alt="幻灯片66.png-163.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/4b4wpceng3if8w8jr4d13qpm/%E5%B9%BB%E7%81%AF%E7%89%8767.png" alt="幻灯片67.png-98.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/qh5mit4aluzj1vbu497r60rs/%E5%B9%BB%E7%81%AF%E7%89%8768.png" alt="幻灯片68.png-99.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/wd7q0nglu2m1gmqgylsputns/%E5%B9%BB%E7%81%AF%E7%89%8769.png" alt="幻灯片69.png-220.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/409tzkelzihcviagdhf3fkgx/%E5%B9%BB%E7%81%AF%E7%89%8770.png" alt="幻灯片70.png-56.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/c16k53hrvhrm7yh3s344a2dv/%E5%B9%BB%E7%81%AF%E7%89%8771.png" alt="幻灯片71.png-56.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/hp526n29ruvxasd15eey3a1l/%E5%B9%BB%E7%81%AF%E7%89%8772.png" alt="幻灯片72.png-43.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/mprs2s2ikgwu1m36xohw6wno/%E5%B9%BB%E7%81%AF%E7%89%8773.png" alt="幻灯片73.png-51.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/2dpfj20alz4j2uzlleu4bv81/%E5%B9%BB%E7%81%AF%E7%89%8774.png" alt="幻灯片74.png-68.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/11mxiix7u4splqpu6klczboa/%E5%B9%BB%E7%81%AF%E7%89%8775.png" alt="幻灯片75.png-52.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/ytj6q5vyrx143677wxq5t8o3/%E5%B9%BB%E7%81%AF%E7%89%8776.png" alt="幻灯片76.png-21kB"><br><img src="http://static.zybuluo.com/shenyuflying/0x9wqoen87y9c2n2p9184iv8/%E5%B9%BB%E7%81%AF%E7%89%8777.png" alt="幻灯片77.png-73.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/7cnca1ykcslxwryh1uq6j34x/%E5%B9%BB%E7%81%AF%E7%89%8778.png" alt="幻灯片78.png-161.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/df3arrsao690srl48se8fkvx/%E5%B9%BB%E7%81%AF%E7%89%8779.png" alt="幻灯片79.png-158.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/gus683r55tvedbxlfd78so6m/%E5%B9%BB%E7%81%AF%E7%89%8780.png" alt="幻灯片80.png-38.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/5qgel78m9ca40bz7xy54hdak/%E5%B9%BB%E7%81%AF%E7%89%8781.png" alt="幻灯片81.png-31.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/2h35ocsc3u18q6qp60058x2m/%E5%B9%BB%E7%81%AF%E7%89%8782.png" alt="幻灯片82.png-49.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/i9q1lw0n0k90yyuwnek415hl/%E5%B9%BB%E7%81%AF%E7%89%8783.png" alt="幻灯片83.png-91.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/fp1yx59w46i1lp4fqt84dwdp/%E5%B9%BB%E7%81%AF%E7%89%8784.png" alt="幻灯片84.png-83.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/v8dmkit14lwm2b5nmyrmjmv1/%E5%B9%BB%E7%81%AF%E7%89%8785.png" alt="幻灯片85.png-223.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/aemdqnnhkeaul335c3whk16q/%E5%B9%BB%E7%81%AF%E7%89%8786.png" alt="幻灯片86.png-185.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/xr7054hjbfjc053fkryvmqxb/%E5%B9%BB%E7%81%AF%E7%89%8787.png" alt="幻灯片87.png-163.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/oz3mn1dyhtlqc9bikzsv2k70/%E5%B9%BB%E7%81%AF%E7%89%8788.png" alt="幻灯片88.png-209.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/e0xmpsqxtiik74yaxbuj2wsk/%E5%B9%BB%E7%81%AF%E7%89%8789.png" alt="幻灯片89.png-259kB"><br><img src="http://static.zybuluo.com/shenyuflying/ej8ebpp4jwrw053lbzq061id/%E5%B9%BB%E7%81%AF%E7%89%8790.png" alt="幻灯片90.png-205.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/xk4ph7a9skq4oxk2a59tz9fb/%E5%B9%BB%E7%81%AF%E7%89%8791.png" alt="幻灯片91.png-244.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/g7muhvmx4z6n1wjx9yi5gy6d/%E5%B9%BB%E7%81%AF%E7%89%8792.png" alt="幻灯片92.png-211.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/m9xl9ve6qtry3szujmxybqb8/%E5%B9%BB%E7%81%AF%E7%89%8793.png" alt="幻灯片93.png-195kB"><br><img src="http://static.zybuluo.com/shenyuflying/3kcsab5omgknjkokkgwj4rc3/%E5%B9%BB%E7%81%AF%E7%89%8794.png" alt="幻灯片94.png-199.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/pfqbtwgj0sq7jvr759ar23bo/%E5%B9%BB%E7%81%AF%E7%89%8795.png" alt="幻灯片95.png-100.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/p9psbbti0h8o8btjrn4hpnkz/%E5%B9%BB%E7%81%AF%E7%89%8796.png" alt="幻灯片96.png-112.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/khvv6ghh6cn36gic0xc63efh/%E5%B9%BB%E7%81%AF%E7%89%8797.png" alt="幻灯片97.png-115.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/qkgwtzbduin4tht0jdhpc2kz/%E5%B9%BB%E7%81%AF%E7%89%8798.png" alt="幻灯片98.png-184.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/a5eshwuv7t5vga617x3dtbrk/%E5%B9%BB%E7%81%AF%E7%89%8799.png" alt="幻灯片99.png-71.7kB"><br><img src="http://static.zybuluo.com/shenyuflying/n26zwzezh8awl6m3eb3vvx3w/%E5%B9%BB%E7%81%AF%E7%89%87100.png" alt="幻灯片100.png-272.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/3upj4w83x5c5rg317g94bfy2/%E5%B9%BB%E7%81%AF%E7%89%87101.png" alt="幻灯片101.png-45.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/y1zcms1bcwt6r9xyknb4nq3h/%E5%B9%BB%E7%81%AF%E7%89%87102.png" alt="幻灯片102.png-81.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/167vpcyqp07hv2oacuddql7v/%E5%B9%BB%E7%81%AF%E7%89%87103.png" alt="幻灯片103.png-86.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/iluowtgt8asx3ctsvxtcah71/%E5%B9%BB%E7%81%AF%E7%89%87104.png" alt="幻灯片104.png-58.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/nr8rtqjxfslnqfgexjnype2p/%E5%B9%BB%E7%81%AF%E7%89%87105.png" alt="幻灯片105.png-64.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/vyzrzl9ko7ca0o7ytquw98n0/%E5%B9%BB%E7%81%AF%E7%89%87106.png" alt="幻灯片106.png-54.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/wiz9otduyj5hsysewexfnhxs/%E5%B9%BB%E7%81%AF%E7%89%87107.png" alt="幻灯片107.png-70.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/jbz0wy39z57vgmn5dfvlil1i/%E5%B9%BB%E7%81%AF%E7%89%87108.png" alt="幻灯片108.png-63.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/jaqx0o42vnufwcl1c84n7vo6/%E5%B9%BB%E7%81%AF%E7%89%87109.png" alt="幻灯片109.png-54.3kB"><br><img src="http://static.zybuluo.com/shenyuflying/6u1qr6u3j1kbv62tkhxfn6yi/%E5%B9%BB%E7%81%AF%E7%89%87110.png" alt="幻灯片110.png-67.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/yzffpxdo6whue2b164werzsf/%E5%B9%BB%E7%81%AF%E7%89%87111.png" alt="幻灯片111.png-54.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/gjdtbswznp4tafizuwednof6/%E5%B9%BB%E7%81%AF%E7%89%87112.png" alt="幻灯片112.png-112.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/6o5w5xmlw2ed184li1iykudj/%E5%B9%BB%E7%81%AF%E7%89%87113.png" alt="幻灯片113.png-129.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/3apj0aygsidvimwpaj9cq7gc/%E5%B9%BB%E7%81%AF%E7%89%87114.png" alt="幻灯片114.png-41.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/21gyp0qj0vgrzbsq7436f422/%E5%B9%BB%E7%81%AF%E7%89%87115.png" alt="幻灯片115.png-91.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/abc10eorugjv7l4m5gq7kikh/%E5%B9%BB%E7%81%AF%E7%89%87116.png" alt="幻灯片116.png-81.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/iojsb394gtwieijx1dsekec3/%E5%B9%BB%E7%81%AF%E7%89%87117.png" alt="幻灯片117.png-32.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/x0togse9i38ayyd8c2yqrzim/%E5%B9%BB%E7%81%AF%E7%89%87118.png" alt="幻灯片118.png-35.9kB"><br><img src="http://static.zybuluo.com/shenyuflying/ucdfglbmme8lg1j5ps3smzrk/%E5%B9%BB%E7%81%AF%E7%89%87119.png" alt="幻灯片119.png-93.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/odgupuxghwsf7qduvflamlc9/%E5%B9%BB%E7%81%AF%E7%89%87120.png" alt="幻灯片120.png-48.5kB"><br><img src="http://static.zybuluo.com/shenyuflying/b77bq3stjazqdzhsrlv7304r/%E5%B9%BB%E7%81%AF%E7%89%87121.png" alt="幻灯片121.png-44.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/s8llwdix3qb8ob3hk1e13zne/%E5%B9%BB%E7%81%AF%E7%89%87122.png" alt="幻灯片122.png-45kB"><br><img src="http://static.zybuluo.com/shenyuflying/5dyvc1gqi5dxjjchqskaxm8j/%E5%B9%BB%E7%81%AF%E7%89%87123.png" alt="幻灯片123.png-28.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/kb18vlepn7ju2u1fuia0cvup/%E5%B9%BB%E7%81%AF%E7%89%87124.png" alt="幻灯片124.png-64.6kB"><br><img src="http://static.zybuluo.com/shenyuflying/oooaepc7tcjtnfoa0g2829sy/%E5%B9%BB%E7%81%AF%E7%89%87125.png" alt="幻灯片125.png-69.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/qy2a9n2l8khxs6dkpgv9vi5s/%E5%B9%BB%E7%81%AF%E7%89%87126.png" alt="幻灯片126.png-91.8kB"><br><img src="http://static.zybuluo.com/shenyuflying/dtcraj9vyni70brtmkjf5dq2/%E5%B9%BB%E7%81%AF%E7%89%87127.png" alt="幻灯片127.png-71.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/75xuv344u4fa9lsi5z2fn38c/%E5%B9%BB%E7%81%AF%E7%89%87128.png" alt="幻灯片128.png-90.4kB"><br><img src="http://static.zybuluo.com/shenyuflying/661bdfwt36u8vqdn1da1398h/%E5%B9%BB%E7%81%AF%E7%89%87129.png" alt="幻灯片129.png-24kB"><br><img src="http://static.zybuluo.com/shenyuflying/3w802htroi2mommj7rdbvivz/%E5%B9%BB%E7%81%AF%E7%89%87130.png" alt="幻灯片130.png-68.2kB"><br><img src="http://static.zybuluo.com/shenyuflying/305s04uipunyrsao4dimthkp/%E5%B9%BB%E7%81%AF%E7%89%87131.png" alt="幻灯片131.png-69.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/8u4j1sutgx9ic1smxebfxu45/%E5%B9%BB%E7%81%AF%E7%89%87132.png" alt="幻灯片132.png-159.6kB"></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
+        <p><span>发布时间:</span>2016-11-21, 05:57:19</p>
+        <p><span>最后更新:</span>2016-11-21, 05:58:55</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/" title="深入理解PostgreSQL查询优化引擎">http://shenyu.wiki/2016/11/21/深入理解PostgreSQL查询优化引擎/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/21/深入理解PostgreSQL查询优化引擎/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/20/linux把文件放置到剪贴板/">
+                    linux把文件放置到剪贴板
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#深入理解PostgreSQL查询优化引擎"><span class="toc-number">1.</span> <span class="toc-text">深入理解PostgreSQL查询优化引擎</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"深入理解PostgreSQL查询优化引擎　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/21/深入理解PostgreSQL查询优化引擎/" data-title="深入理解PostgreSQL查询优化引擎" data-url="http://shenyu.wiki/2016/11/21/深入理解PostgreSQL查询优化引擎/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/20/linux把文件放置到剪贴板/" title="下一篇: linux把文件放置到剪贴板">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/12/linux中进程共享内存的2种方法/">linux中进程共享内存的2种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux进程改名/">linux进程改名</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC driver internal</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql大数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2016 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -269,6 +269,83 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-PostgreSQL本地化过程及维护" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/03/PostgreSQL本地化过程及维护/" class="article-date">
+      <time datetime="2016-11-03T07:47:59.000Z" itemprop="datePublished">2016-11-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <blockquote>
+<p>PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？</p>
+</blockquote>
+<p>[TOC]</p>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>.po文件： po，Portable Object，里面记录了翻译内容。<br>.mo文件： mo，Machine Object，其实是一个二进制文件，用来提供给程序使用。<br>xgettext：一个工具，根据c文件生成po文件<br>msgfmt： 一个工具，根据po文件生成mo文件<br>msgmerge：更新po文件<br>nls.mk：翻译包的配置，比如翻译哪些c文件</p>
+<h2 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">        xgettext            人工翻译        msgfmt          INSTALL</div><div class="line">.c文件-----------&gt;.pot文件----------&gt;.po----------&gt;.mo------------&gt;./bin/po/zh/LC_MESSAGES/.mo</div><div class="line"></div><div class="line">         gcc                              INSTALL</div><div class="line">.c文件-----------&gt;可执行文件--------------------------------------&gt;./bin</div></pre></td></tr></table></figure>
+<p>基本过程如上图，首先需要xgettext工具根据.c文件生成.pot文件，接下来需要人工翻译。翻译过后用msgfmt工具把翻译好的.po文件生成.mo文件。最后把.mo文件放到制定位置即可。但是不需要我们自己直接调这些工具来完成本地化的工作，其过程都写在了<code>nls-global.mk</code>文件里面。我们只要<code>make init-po</code>、<code>make update-po</code>、<code>make install-po</code>这几个步骤即可。</p>
+<p>最后生成的目录结构如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── psql.c</div><div class="line">...</div><div class="line">├── Makefile</div><div class="line">├── nls.mk</div><div class="line">├── po</div><div class="line">│   ├── cs.mo</div><div class="line">│   ├── cs.po</div><div class="line">...</div><div class="line">│   ├── zh_CN.mo</div><div class="line">│   ├── zh_CN.po</div><div class="line">│   ├── zh_TW.mo</div><div class="line">│   └── zh_TW.po</div><div class="line"></div><div class="line">├── prompt.c</div><div class="line">...</div><div class="line"></div><div class="line">1 directory, 65 files</div></pre></td></tr></table></figure></p>
+<h2 id="本地化详细过程"><a href="#本地化详细过程" class="headerlink" title="本地化详细过程"></a>本地化详细过程</h2><p>./configure的时候加上–enable-nls构建选项之后，构建过程会发生如下变化：</p>
+<ol>
+<li>gcc就会有-DENABLE_NLS的宏定义。从而gettext相关的代码就会被编译进去。</li>
+<li>make就会处理相关国际化的内容。相关过程包含了nls.mk和nls-global.mk文件里面。</li>
+</ol>
+<p>每个工具比如src/bin/psql目录面都有一个nls.mk文件用来说明目录下对应工具的翻译包的生成规则，另外src文件夹下面还有一个nls-global.mk文件里面写了如何利用gettext相关工具生成翻译和安装翻译包。下面看一下他们中的内容。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLS/">NLS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/l10n/">l10n</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/11/03/PostgreSQL本地化过程及维护/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-C语言程序的国际化" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -933,121 +1010,6 @@
         <p class="article-more-link">
           <a href="/2016/10/13/PostgreSQL性能分析/#more">阅读全文 >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-PostgreSQL日志分析工具——pgBadger" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/" class="article-date">
-      <time datetime="2016-10-13T07:29:26.000Z" itemprop="datePublished">2016-10-13</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，常用的办法就是查看服务器的日志。但是一头扎进几百M甚至几个G的日志里查看并不现实。那么如何快速回答：最慢的查询有哪些？查询相应时间分布？等等问题，并对最突出的问题着手优化呢？显然我们需要借助自动化工具来完成这个任务。</p>
-</blockquote>
-<p>pgBadger就是为分析<code>PostgreSQL全日志</code>为目的诞生的一个工具，能够分析日志并生成分析报告，<a href="/uploads/out.html">这里</a>给出了一个报告样本。怎么样，报告是不是很详细？</p>
-<h2 id="pdBadger安装"><a href="#pdBadger安装" class="headerlink" title="pdBadger安装"></a>pdBadger安装</h2><p>pgBadger代码托管在github上，可以到<a href="https://github.com/dalibo/pgbadger/releases" target="_blank" rel="external">这里</a>进行下载，最新的版本是<a href="https://github.com/dalibo/pgbadger/archive/v9.0.tar.gz" target="_blank" rel="external">v9.0</a><br>安装步骤页十分简单：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">wget https://github.com/dalibo/pgbadger/archive/v9.0.tar.gz</div><div class="line">tar xzf pgbadger-9.0.tar.gz</div><div class="line">cd pgbadger-9.x/</div><div class="line">perl Makefile.PL</div><div class="line">make &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
-<p>安装完后，在终端执行<code>pgbadger --version</code>显示版本信息后，表明安装成功。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ pgbadger --version</div><div class="line">pgBadger version 9.0</div></pre></td></tr></table></figure></p>
-<h2 id="收集PostgreSQL日志"><a href="#收集PostgreSQL日志" class="headerlink" title="收集PostgreSQL日志"></a>收集PostgreSQL日志</h2><p>要利用pgbadger来分析日志，那么我们首先要打开PostgreSQL记录日志的参数，如下是一个典型的配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">log_min_duration_statement = 0 </div><div class="line">log_checkpoints = on</div><div class="line">log_connections = on</div><div class="line">log_disconnections = on</div><div class="line">log_lock_waits = on</div><div class="line">log_temp_files = 0 </div><div class="line">log_autovacuum_min_duration = 0 </div><div class="line">log_line_prefix = &apos;%t [%p]: [%l-1] db=%d,user=%u,app=%a,client=%h&apos;</div><div class="line">log_destination = &apos;stderr&apos;  </div><div class="line">logging_collector = on    </div><div class="line">log_directory = &apos;pg_log&apos;</div><div class="line">log_filename = &apos;postgresql-%Y-%m-%d_%H%M%S.log&apos;</div><div class="line">log_file_mode = 0600</div><div class="line">log_rotation_age = 1d</div><div class="line">log_rotation_size = 1000MB</div><div class="line">lc_messages=&apos;C&apos;</div></pre></td></tr></table></figure></p>
-<p>接着打开数据库，如果数据库正在运行那么需要发送一个SIGHUP信号来让数据库重新读取配置。过段时间，我们就能够在<code>pg_log</code>文件夹下看到日志产生了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls</div><div class="line">postgresql-2016-10-13_113844.log</div></pre></td></tr></table></figure></p>
-<h2 id="生成分析报告"><a href="#生成分析报告" class="headerlink" title="生成分析报告"></a>生成分析报告</h2><p>生成分析报告非常简单只需要一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ pgbadger ./postgresql-2016-10-13_113844.log</div><div class="line">[========================&gt;] Parsed 5642240 bytes of 5642240 (100.00%), queries: 19436, events: 3002</div><div class="line">LOG: Ok, generating html report...</div></pre></td></tr></table></figure></p>
-<p>稍等片刻就会输出分析报告<a href="/uploads/out.html">out.html</a></p>
-<p>当然了，pgbadger还有一些高端玩法，比如</p>
-<ul>
-<li><p>分析压缩文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgbadger /var/log/postgres.log.1.tar.gz</div></pre></td></tr></table></figure>
-</li>
-<li><p>分析多个文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgbadger /var/log/postgresql/postgresql-2012-05-*</div></pre></td></tr></table></figure>
-</li>
-<li><p>排除某些类型查询</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pgbadger --exclude-query=&quot;^(COPY|COMMIT)&quot; /var/log/postgresql.log</div></pre></td></tr></table></figure>
-</li>
-<li><p>指定起始时间</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pgbadger -b &quot;2012-06-25 10:56:11&quot; -e &quot;2012-06-25 10:59:11&quot; </div><div class="line">                       /var/log/postgresql.log</div></pre></td></tr></table></figure>
-</li>
-<li><p>从管道读取</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /var/log/postgres.log | pgbadger -</div></pre></td></tr></table></figure>
-</li>
-<li><p>开启多进程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">perl pgbadger -j 8 /pglog/postgresql-9.1-main.log</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>也可以把pgbadger加入crontab计划中，来实现生成每周报告等等。</p>
-<h2 id="报告分析"><a href="#报告分析" class="headerlink" title="报告分析"></a>报告分析</h2><p>报告包括了很多方面的内容：</p>
-<p>总体信息</p>
-<ul>
-<li>服务器traffic信息，比如select、update、insert情况</li>
-<li>连接情况信息，比如每个库、用户连接情况</li>
-<li>会话信息，比如会话时长</li>
-<li>checkpoint检查点信息</li>
-<li>临时文件信息</li>
-<li>vacuum信息，比如做vacuum时间分布，做vacuum表情况，删除元组、页面信息</li>
-<li>等待锁的信息</li>
-<li>查询信息，insert/update/delete比例分布</li>
-<li>慢查询排名，查询耗时分布</li>
-<li>报错信息</li>
-</ul>
-<p>下面介绍一下主要的几个内容</p>
-<h3 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h3><p><img src="http://static.zybuluo.com/shenyuflying/f65eqmftm1egi0k8vkm68ub4/image_1auubla73147a1j8r1sf53a11ejq9.png" alt="image_1auubla73147a1j8r1sf53a11ejq9.png-27.5kB"></p>
-<h3 id="QPS"><a href="#QPS" class="headerlink" title="QPS"></a>QPS</h3><p><img src="http://static.zybuluo.com/shenyuflying/qtlgqigexi461t1ixoppuxkd/image_1auubnceb1ah08qorkt1hct1tf3m.png" alt="image_1auubnceb1ah08qorkt1hct1tf3m.png-46.6kB"></p>
-<p>这里可以看到有关服务器压力的信息。</p>
-<h3 id="查询时间分布-Histogram-of-query-times"><a href="#查询时间分布-Histogram-of-query-times" class="headerlink" title="查询时间分布 Histogram of query times"></a>查询时间分布 Histogram of query times</h3><p><img src="http://static.zybuluo.com/shenyuflying/n5eyqk5866jo00x082uubo63/image_1auubrt19117m130akqdhgbcd513.png" alt="image_1auubrt19117m130akqdhgbcd513.png-38.5kB"></p>
-<p>这里可以看到查询时间分布的信息。</p>
-<h3 id="慢查询排名-Slowest-individual-queries"><a href="#慢查询排名-Slowest-individual-queries" class="headerlink" title="慢查询排名 Slowest individual queries"></a>慢查询排名 Slowest individual queries</h3><p><img src="http://static.zybuluo.com/shenyuflying/b608kg30v8brh5m4mfupw7xt/image_1auubtkfr1kvfuke1dqiknii6p1g.png" alt="image_1auubtkfr1kvfuke1dqiknii6p1g.png-161.8kB"><br>这里可以看到慢查询信息。<br>另外还有<br>Time Consuming queries (N) —— 最耗时的查询<br>Most frequent queries (N) ——　最频繁的查询<br>Normalized slowest queries　——　归一化后最慢的查询</p>
-<p>PS：这里的归一化，就是排除参数不同的干扰。</p>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>另外报告中还有关于报错信息的统计和详细情况。有助于发现服务器的故障。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过pgbadger可以快速分析几百M甚至几个G的服务器日志。掌握服务器运行情况并快速回答：最慢的查询有哪些？查询相应时间分布？等等问题。有助于对最突出的问题着手优化。从而快速解决客户的抱怨。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/database/">database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>

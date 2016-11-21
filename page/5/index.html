@@ -269,6 +269,82 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-linux-shell聊天室" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/17/linux-shell聊天室/" class="article-date">
+      <time datetime="2016-09-17T17:38:43.000Z" itemprop="datePublished">2016-09-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>里程碑0：</p>
+<p>1、基于C/S架构的聊天室，分为客户端和服务器。<br>2、客户端登陆时输入服务器IP、port、 昵称不能重复</p>
+<p>里程碑1：</p>
+<p>3、可以群发消息或指定接收人<br>4、admin账号可以踢人<br>5、新加入用户可以看到聊天历史记录</p>
+<p>里程碑2：</p>
+<p>5、可以互传文件<br>6、保存聊天信息</p>
+<p>里程碑3：</p>
+<p>7、第一次登录时，需要注册。</p>
+<h2 id="技术设计"><a href="#技术设计" class="headerlink" title="技术设计"></a>技术设计</h2><p>1、在shell下的图形库：curses<br>2、多线程：pthread<br>3、网络：socket<br>4、消息结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> msg_st  </div><div class="line">&#123;  </div><div class="line">    <span class="keyword">char</span> name[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> to[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> data[<span class="number">4096</span>];  </div><div class="line">    <span class="keyword">char</span> cmd[<span class="number">256</span>];  </div><div class="line"><span class="comment">/*</div><div class="line"> * 其中，关于cmd内容：</div><div class="line"> * login 登陆</div><div class="line"> * offline 服务器即将踢人</div><div class="line"> * user 服务发送的用户列表，数据在data里</div><div class="line"> * chat 表示这是一条消息，数据在data里</div><div class="line"> */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>5、服务器用了epoll来监听多个fd</p>
+<h2 id="登陆界面"><a href="#登陆界面" class="headerlink" title="登陆界面"></a>登陆界面</h2><p><img src="http://img.blog.csdn.net/20141228204352953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="登陆界面"></p>
+<h2 id="聊天界面"><a href="#聊天界面" class="headerlink" title="聊天界面"></a>聊天界面</h2><p><img src="http://img.blog.csdn.net/20141228193822585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="聊天界面"></p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络编程/">网络编程</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/09/17/linux-shell聊天室/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-linux-shell-切换程序" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -881,74 +957,6 @@
         <p class="article-more-link">
           <a href="/2015/01/31/动态增长的栈/#more">阅读全文 >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-清华北大" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2014/10/02/清华北大/" class="article-date">
-      <time datetime="2014-10-02T12:57:41.000Z" itemprop="datePublished">2014-10-02</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>清华大学、北京大学是中国乃至亚洲最著名的高等学府之一。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/sgb8x1x819sneyf4hi8ao1kd/2016-10-04%2016-52-22%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$清华大学$$</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/v6m1ki0ntl2s1k0hfmtfm8bi/2016-10-04%2016-38-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$北京大学$$</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/旅行/">旅行</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>
