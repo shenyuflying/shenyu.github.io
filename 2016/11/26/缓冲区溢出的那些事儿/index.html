@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="缓冲区溢出是引发程序崩溃的常见原因之一，也常常背黑客利用来发动攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如找出蛛丝马迹从而何定位缓冲区溢出问题呢？">
+<meta name="description" content="缓冲区溢出是引发程序崩溃的常见原因之一，也常常被黑客利用来发起攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如何找出蛛丝马迹从而何定位缓冲区溢出问题呢？">
 <meta property="og:type" content="article">
 <meta property="og:title" content="缓冲区溢出的那些事儿">
 <meta property="og:url" content="http://shenyu.wiki/2016/11/26/缓冲区溢出的那些事儿/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="缓冲区溢出是引发程序崩溃的常见原因之一，也常常背黑客利用来发动攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如找出蛛丝马迹从而何定位缓冲区溢出问题呢？">
+<meta property="og:description" content="缓冲区溢出是引发程序崩溃的常见原因之一，也常常被黑客利用来发起攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如何找出蛛丝马迹从而何定位缓冲区溢出问题呢？">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/rboak7n33mxnoszte96b2y5g/image_1b2g8vaneki8o8su5a1dhh1k1v9.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/66vzc26db033zmnobl8xu9v3/image_1b2ddtar8ar31lv61upg143j1i449.png">
-<meta property="og:updated_time" content="2016-11-26T13:00:01.000Z">
+<meta property="og:updated_time" content="2016-11-26T13:09:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="缓冲区溢出的那些事儿">
-<meta name="twitter:description" content="缓冲区溢出是引发程序崩溃的常见原因之一，也常常背黑客利用来发动攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如找出蛛丝马迹从而何定位缓冲区溢出问题呢？">
+<meta name="twitter:description" content="缓冲区溢出是引发程序崩溃的常见原因之一，也常常被黑客利用来发起攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如何找出蛛丝马迹从而何定位缓冲区溢出问题呢？">
 <meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/rboak7n33mxnoszte96b2y5g/image_1b2g8vaneki8o8su5a1dhh1k1v9.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -309,14 +309,14 @@
       
           
         <blockquote>
-<p>缓冲区溢出是引发程序崩溃的常见原因之一，也常常背黑客利用来发动攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如找出蛛丝马迹从而何定位缓冲区溢出问题呢？</p>
+<p>缓冲区溢出是引发程序崩溃的常见原因之一，也常常被黑客利用来发起攻击。缓冲区溢出引发的bug常常难以定位。那么缓冲区溢出问题有什么现象呢？如何找出蛛丝马迹从而何定位缓冲区溢出问题呢？</p>
 </blockquote>
 <a id="more"></a>
-<p>什么是缓冲区呢？缓冲区就是在程序中开辟的一块区域。这块区域可以在堆上也可以在栈上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int function()</div><div class="line">&#123;</div><div class="line">    char buffer1[256]; // 在栈上的缓冲区</div><div class="line">    </div><div class="line">    char *buffer2 = (char *)malloc(sizeof(char)*256); //在堆上的缓冲区</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>一般来说，用malloc分配的内存区域在堆上；直接声明的数组是在栈上。堆上的缓冲区溢出和栈上的缓冲区后果是不一样的。在堆上的缓冲区溢出的后果一般，可能覆盖了临近的内存，当然如果临近的内存中有函数指针，也可能照成程序运行到错误的地址。在栈上的缓冲区溢出的后果往往更严重，因为可能破坏了程序的返回地址。下面我们分别对这两种情况进行讨论。</p>
+<p>什么是缓冲区？缓冲区就是在程序中开辟的一块区域。这块区域可以在堆上也可以在栈上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int function()</div><div class="line">&#123;</div><div class="line">    char buffer1[256]; // 在栈上的缓冲区</div><div class="line">    </div><div class="line">    char *buffer2 = (char *)malloc(sizeof(char)*256); //在堆上的缓冲区</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>一般来说，用malloc分配的内存区域在堆上；直接声明的缓冲区数组是在栈上。堆上的缓冲区溢出和栈上的缓冲区后果是不一样的。在堆上的缓冲区溢出的后果一般，可能覆盖了临近的内存，当然如果临近的内存中有函数指针，也可能照成程序运行到错误的地址。在栈上的缓冲区溢出的后果往往更严重，因为可能破坏了程序的返回地址。下面我们分别对这两种情况进行讨论。</p>
 <h2 id="栈上的缓冲区溢出"><a href="#栈上的缓冲区溢出" class="headerlink" title="栈上的缓冲区溢出"></a>栈上的缓冲区溢出</h2><p>我们有个程序运行中崩溃，生成core文件，用gdb查看堆栈如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(gdb) bt</div><div class="line">#0  0x00000000004004f7 in f () at main.c:11</div><div class="line">Cannot access memory at address 0x646c726f77206f74</div></pre></td></tr></table></figure></p>
-<p>堆栈显示在函数<code>f()</code>函数处崩溃，崩溃的指令地址是<code>0x4004f7</code>，崩溃的原因是不能访问内存<code>0x646c726f77206f74</code>区域。<br>我们通过汇编，进一步分析问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(gdb) disas f</div><div class="line">Dump of assembler code for function f:</div><div class="line">0x00000000004004f6 &lt;f+94&gt;:	leaveq </div><div class="line">0x00000000004004f7 &lt;f+95&gt;:	retq     #程序在返回时出错</div></pre></td></tr></table></figure></p>
-<p>发现程序在运行到<code>retq</code>指令出错。<code>retq</code>是程序结束时返回到调用者，返回地址记录在栈上，结合程序不能访问内存<code>0x646c726f77206f74</code>区域，我们有理由怀疑是程序的栈被破坏了。寄存器rsp和rbp中保存了栈的起始位置，如下图。<br><img src="http://static.zybuluo.com/shenyuflying/rboak7n33mxnoszte96b2y5g/image_1b2g8vaneki8o8su5a1dhh1k1v9.png" alt="image_1b2g8vaneki8o8su5a1dhh1k1v9.png-27kB"><br>所以我们接下来来检查寄存器rsp和rbp，看能否有所发现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(gdb) p (char *)$rsp</div><div class="line">$1 = 0x7fffffffde30 &quot;Hello world, Hello world, Hello world&quot;</div><div class="line">(gdb) p (char *)$rbp</div><div class="line">$2 = 0x7fffffffde40 &quot;lo world, Hello world&quot;</div></pre></td></tr></table></figure></p>
+<p>堆栈显示在函数<code>f()</code>函数处崩溃，崩溃的指令地址是<code>0x4004f7</code>，崩溃的原因是不能访问内存<code>0x646c726f77206f74</code>区域。同时我们找不到f的调用者。<br>我们通过汇编，进一步分析问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(gdb) disas f</div><div class="line">Dump of assembler code for function f:</div><div class="line">0x00000000004004f6 &lt;f+94&gt;:	leaveq </div><div class="line">0x00000000004004f7 &lt;f+95&gt;:	retq     #程序在返回时出错</div></pre></td></tr></table></figure></p>
+<p>发现程序在运行到<code>retq</code>指令出错。<code>retq</code>是程序结束时返回到调用者的指令，返回地址记录在栈上，结合程序不能访问内存<code>0x646c726f77206f74</code>区域，而且我们找不到调用者，我们有理由怀疑是程序的栈被破坏了。寄存器rsp和rbp中保存了栈的起始位置，如下图。<br><img src="http://static.zybuluo.com/shenyuflying/rboak7n33mxnoszte96b2y5g/image_1b2g8vaneki8o8su5a1dhh1k1v9.png" alt="image_1b2g8vaneki8o8su5a1dhh1k1v9.png-27kB"><br>所以我们接下来来检查寄存器rsp和rbp，看能否有所发现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(gdb) p (char *)$rsp</div><div class="line">$1 = 0x7fffffffde30 &quot;Hello world, Hello world, Hello world&quot;</div><div class="line">(gdb) p (char *)$rbp</div><div class="line">$2 = 0x7fffffffde40 &quot;lo world, Hello world&quot;</div></pre></td></tr></table></figure></p>
 <p>额，他们之中居然是字符串，而不是地址。很显然是缓冲区溢出覆盖了rsp和rbp。那么程序不能访问的地址<code>0x646c726f77206f74</code>是什么呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">(gdb) p (char)0x64</div><div class="line">$3 = 100 &apos;d&apos;</div><div class="line">(gdb) p (char)0x6c</div><div class="line">$4 = 108 &apos;l&apos;</div><div class="line">(gdb) p (char)0x72</div><div class="line">$5 = 114 &apos;r&apos;</div><div class="line">(gdb) p (char)0x6f</div><div class="line">$6 = 111 &apos;o&apos;</div><div class="line">(gdb) p (char)0x77</div><div class="line">$7 = 119 &apos;w&apos;</div></pre></td></tr></table></figure></p>
 <p>发现地址<code>0x646c726f77206f74</code>其实就是字符串world。<br>好了，问题定位出来了，那么如何来找到代码中的位置从而修复问题呢？我们在代码中搜索<code>world</code>这个字符串，发现如下函数，在栈上申请了2个字节，却写入了大于2个字节的内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">int f()</div><div class="line">&#123;</div><div class="line">	char buff[2];</div><div class="line">	strcpy(buff,&quot;Hello world, Hello world, Hello world&quot;);</div><div class="line">	printf(&quot;%s\n&quot;,buff);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="堆上的的缓冲区溢出"><a href="#堆上的的缓冲区溢出" class="headerlink" title="堆上的的缓冲区溢出"></a>堆上的的缓冲区溢出</h2><p>程序在core之后，我们看堆栈时往往发现最上层的函数是问号。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(gdb) bt</div><div class="line">#0  0x000000646c726f77 in ?? ()</div><div class="line">#1  0x0000000000400568 in f () at main.c:18</div><div class="line">#2  0x000000000040057d in main () at main.c:24</div></pre></td></tr></table></figure></p>
@@ -351,7 +351,7 @@
         <p><span>本文标题:</span><a href="/2016/11/26/缓冲区溢出的那些事儿/">缓冲区溢出的那些事儿</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
         <p><span>发布时间:</span>2016-11-26, 12:59:27</p>
-        <p><span>最后更新:</span>2016-11-26, 13:00:01</p>
+        <p><span>最后更新:</span>2016-11-26, 13:09:15</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/11/26/缓冲区溢出的那些事儿/" title="缓冲区溢出的那些事儿">http://shenyu.wiki/2016/11/26/缓冲区溢出的那些事儿/</a>
             <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/26/缓冲区溢出的那些事儿/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
