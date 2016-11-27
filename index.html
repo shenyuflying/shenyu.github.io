@@ -298,15 +298,11 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="http://static.zybuluo.com/shenyuflying/6cpy5loa4ivyfzj8n5yoi4aj/image_1b2d9g2k51tkmrhftg9j1es1s9.png" alt="在此输入正文"></p>
-<blockquote>
+              <blockquote>
 <p>最近偶然发现了这本书，翻看过后很多之前疑惑的问题豁然开朗。这本书虽然是以内核研发作为探讨对象，但是对PostgreSQL发生的coredump分析非常有用。一些引发coredump的问题比如内存非法访问的排查和分析这本书里面都有着深入的讲解。另外这本书也介绍了汇编语言如何在调试过程中发挥重要作用，同时介绍了很多调试工具如gdb、objdump、nm、strace、valgrind等等，而且讲解比较贴近与实战。<br>当然，还有很多没有涵盖的部分，比如如何预防写出bug这些方面。如果能够讲到代码规范、单元测试等等更加系统知识会更好。</p>
 </blockquote>
-<p>&lt;!-more–&gt;</p>
-<p>作者简介<br> 作者：（日本）吉岡弘隆 （日本）大和一洋 （日本）大岩尚宏 等 译者：马晶慧</p>
-<p>目录<br>第1章 热身准备 1<br>      1．调试是什么 1<br>      2．debug hacks的地图 4<br>      3．调试的心得 6<br>第2章 调试前的必知必会 13<br>      4．获取进程的内核转储 13<br>      5．调试器（gdb）的基本使用方法（之一） 18<br>      6．调试器（gdb）的基本使用方法（之二） 32<br>      7．调试器（gdb）的基本使用方法（之三） 39<br>      8．intel架构的基本知识 45<br>      9．调试时必需的栈知识 52<br>      10．函数调用时的参数传递方法（x86_64篇） 61<br>      11．函数调用时的参数传递方法（i386篇） 66<br>      12．函数调用时的参数传递方法（c++篇） 69<br>      13．怎样学习汇编语言 72<br>      14．从汇编代码查找相应的源代码 77<br>第3章 内核调试的准备 87<br>      15．oops信息的解读方法 87<br>      16．使用minicom进行串口连接 90<br>      17．通过网络获取内核消息 94<br>      18．使用sysrq键调试 98<br>      19．使用diskdump获取内核崩溃转储 104<br>      20．使用kdump获取内核崩溃转储 110<br>      21．crash命令的使用方法 113<br>      22．死机时利用ipmi watchdog timer获取崩溃转储 126<br>      23．用nmi watchdog在死机时获取崩溃转储 131<br>      24．内核独有的汇编指令（之一） 132<br>      25．内核独有的汇编指令（之二） 136<br>第4章 应用程序调试实践 139<br>     26．发生sigsegv，应用程序异常停止 139<br>     27．backtrace无法正确显示 147<br>     28．数组非法访问导致内存破坏 151<br>     29．利用监视点检测非法内存访问 157<br>     30．malloc()和free()发生故障 160<br>     31．应用程序停止响应（死锁篇） 163<br>     32．应用程序停止响应（死循环篇） 168<br>第5章 实践内核调试 177<br>     33．kernel panic（空指针引用篇） 177<br>     34．kernel panic（链表破坏篇） 184<br>     35．kernel panic 192<br>     36．内核停止响应（死循环篇） 205<br>     37．内核停止响应（自旋锁篇之一） 212<br>     38．内核停止响应（自旋锁篇之二） 215<br>     39．内核停止响应（信号量篇） 221<br>     40．实时进程停止响应 232<br>     41．运行缓慢的故障 240<br>     42．cpu负载过高的故障 245<br>第6章 高手们的调试技术 259<br>     43．使用strace寻找故障原因的线索 259<br>     44．objdump的方便选项 264<br>     45．valgrind的使用方法（基本篇） 267<br>     46．valgrind的使用方法（实践篇） 272<br>     47．利用kprobes获取内核内部信息 275<br>     48．使用jprobes查看内核内部的信息 280<br>     49．使用kprobes获取内核内部任意位置的信息 282<br>     50．使用kprobes在内核内部任意位置通过变量名获取信息 287<br>     51．使用kaho获取被编译器优化掉的变量的值 291<br>     52．使用systemtap调试运行中的内核（之一） 297<br>     53．使用systemtap调试运行中的内核（之二） 303<br>     54．/proc/meminfo中的宝藏 307<br>     55．用/proc/[pid]/mem快速读取进程的内存内容 311<br>     56．oom killer的行为和原理 315<br>     57．错误注入 323<br>     58．利用错误注入发现linux内核的潜在bug 328<br>     59．linux内核的init节 334<br>     60．解决性能问题 337<br>     61．利用vmware vprobe获取信息 346<br>     62．用xen获取内存转储 350<br>     63．理解用got/plt调用函数的原理 352<br>     64．调试initramfs镜像 357<br>     65．使用rt watchdog检测失去响应的实时进程 362<br>     66．查看手头的x86机器是否支持64位模式 366<br>    附录 debug hacks术语的基础知识 369<br>    索引 379</p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-
+<p><img src="http://static.zybuluo.com/shenyuflying/6cpy5loa4ivyfzj8n5yoi4aj/image_1b2d9g2k51tkmrhftg9j1es1s9.png" alt="在此输入正文"></p>
+          
       
     </div>
     
@@ -323,6 +319,10 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
     </div>
 
+      
+        <p class="article-more-link">
+          <a href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
