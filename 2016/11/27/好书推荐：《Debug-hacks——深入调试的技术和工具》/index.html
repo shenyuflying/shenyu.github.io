@@ -15,19 +15,18 @@
 
 
 
-<meta name="description" content="看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：
-It exists because Windows doesn’t have fork(), only the equivalent offork-and-exec.">
+<meta name="description" content="最近偶然发现了这本书，翻看过后很多之前疑惑的问题豁然开朗。这本书虽然是以内核研发作为探讨对象，但是对PostgreSQL发生的coredump分析非常有用。一些引发coredump的问题比如内存非法访问的排查和分析这本书里面都有着深入的讲解。另外这本书也介绍了汇编语言如何在调试过程中发挥重要作用，同时介绍了很多调试工具如gdb、objdump、nm、strace、valgrind等等，而且讲解">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PostgreSQL源码中的EXEC_BACKEND宏">
-<meta property="og:url" content="http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/index.html">
+<meta property="og:title" content="好书推荐：《Debug hacks——深入调试的技术和工具》">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：
-It exists because Windows doesn’t have fork(), only the equivalent offork-and-exec.">
-<meta property="og:updated_time" content="2016-11-09T08:04:43.000Z">
+<meta property="og:description" content="最近偶然发现了这本书，翻看过后很多之前疑惑的问题豁然开朗。这本书虽然是以内核研发作为探讨对象，但是对PostgreSQL发生的coredump分析非常有用。一些引发coredump的问题比如内存非法访问的排查和分析这本书里面都有着深入的讲解。另外这本书也介绍了汇编语言如何在调试过程中发挥重要作用，同时介绍了很多调试工具如gdb、objdump、nm、strace、valgrind等等，而且讲解">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/6cpy5loa4ivyfzj8n5yoi4aj/image_1b2d9g2k51tkmrhftg9j1es1s9.png">
+<meta property="og:updated_time" content="2016-11-27T09:59:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PostgreSQL源码中的EXEC_BACKEND宏">
-<meta name="twitter:description" content="看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：
-It exists because Windows doesn’t have fork(), only the equivalent offork-and-exec.">
+<meta name="twitter:title" content="好书推荐：《Debug hacks——深入调试的技术和工具》">
+<meta name="twitter:description" content="最近偶然发现了这本书，翻看过后很多之前疑惑的问题豁然开朗。这本书虽然是以内核研发作为探讨对象，但是对PostgreSQL发生的coredump分析非常有用。一些引发coredump的问题比如内存非法访问的排查和分析这本书里面都有着深入的讲解。另外这本书也介绍了汇编语言如何在调试过程中发挥重要作用，同时介绍了很多调试工具如gdb、objdump、nm、strace、valgrind等等，而且讲解">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/6cpy5loa4ivyfzj8n5yoi4aj/image_1b2d9g2k51tkmrhftg9j1es1s9.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -57,7 +56,7 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>PostgreSQL源码中的EXEC_BACKEND宏 | 小宇的博客</title>
+<title>好书推荐：《Debug hacks——深入调试的技术和工具》 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -268,11 +267,11 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-PostgreSQL源码中的EXEC-BACKEND宏" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-好书推荐：《Debug-hacks——深入调试的技术和工具》" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/" class="article-date">
-      <time datetime="2016-11-09T08:04:10.000Z" itemprop="datePublished">2016-11-09</time>
+      <a href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/" class="article-date">
+      <time datetime="2016-11-27T09:58:06.000Z" itemprop="datePublished">2016-11-27</time>
 </a>
 
 
@@ -287,7 +286,7 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
         
   
     <h1 class="article-title" itemprop="name">
-      PostgreSQL源码中的EXEC_BACKEND宏
+      好书推荐：《Debug hacks——深入调试的技术和工具》
     </h1>
   
 
@@ -295,10 +294,14 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/读书/">读书</a>
+    </div>
+
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -308,11 +311,14 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>看pg源码的时候经常会见到一个EXEC_BACKEND宏，在源码中并没有给出解释，那么它是什么意思呢？从<a href="http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：" target="_blank" rel="external">http://postgresql.nabble.com/EXEC-BACKEND-td1991462.html这里找到了解释：</a></p>
-<p>It exists because Windows doesn’t have fork(), only the equivalent of<br>fork-and-exec.  Which means that no state variables will be inherited<br>from the postmaster by its child processes, and any state that needs to<br>be carried across has to be handled explicitly.  You can define<br>EXEC_BACKEND in a non-Windows build, for the purpose of testing code<br>to see if it works in that environment.</p>
-<p>regards, tom lane </p>
-<p>意思是说用<code>EXEC_BACKEND</code>宏是因为Windows没有fork(),只好用别的方法来实现fork-and-exec。但是这样以来，生成的子进程没办法继承父进程的一些状态变量，所以状态变量必须显式的传给所有的子进程。在非Windows平台上编译的时候（比如linux）也可以定义<code>EXEC_BACKEND</code>宏来做调试。</p>
-<p>可见<code>EXEC_BACKEND</code>宏是为了在win32上用来实现变量传递机制。</p>
+        <p><img src="http://static.zybuluo.com/shenyuflying/6cpy5loa4ivyfzj8n5yoi4aj/image_1b2d9g2k51tkmrhftg9j1es1s9.png" alt="在此输入正文"></p>
+<blockquote>
+<p>最近偶然发现了这本书，翻看过后很多之前疑惑的问题豁然开朗。这本书虽然是以内核研发作为探讨对象，但是对PostgreSQL发生的coredump分析非常有用。一些引发coredump的问题比如内存非法访问的排查和分析这本书里面都有着深入的讲解。另外这本书也介绍了汇编语言如何在调试过程中发挥重要作用，同时介绍了很多调试工具如gdb、objdump、nm、strace、valgrind等等，而且讲解比较贴近与实战。<br>当然，还有很多没有涵盖的部分，比如如何预防写出bug这些方面。如果能够讲到代码规范、单元测试等等更加系统知识会更好。</p>
+</blockquote>
+<p>&lt;!-more–&gt;</p>
+<p>作者简介<br> 作者：（日本）吉岡弘隆 （日本）大和一洋 （日本）大岩尚宏 等 译者：马晶慧</p>
+<p>目录<br>第1章 热身准备 1<br>      1．调试是什么 1<br>      2．debug hacks的地图 4<br>      3．调试的心得 6<br>第2章 调试前的必知必会 13<br>      4．获取进程的内核转储 13<br>      5．调试器（gdb）的基本使用方法（之一） 18<br>      6．调试器（gdb）的基本使用方法（之二） 32<br>      7．调试器（gdb）的基本使用方法（之三） 39<br>      8．intel架构的基本知识 45<br>      9．调试时必需的栈知识 52<br>      10．函数调用时的参数传递方法（x86_64篇） 61<br>      11．函数调用时的参数传递方法（i386篇） 66<br>      12．函数调用时的参数传递方法（c++篇） 69<br>      13．怎样学习汇编语言 72<br>      14．从汇编代码查找相应的源代码 77<br>第3章 内核调试的准备 87<br>      15．oops信息的解读方法 87<br>      16．使用minicom进行串口连接 90<br>      17．通过网络获取内核消息 94<br>      18．使用sysrq键调试 98<br>      19．使用diskdump获取内核崩溃转储 104<br>      20．使用kdump获取内核崩溃转储 110<br>      21．crash命令的使用方法 113<br>      22．死机时利用ipmi watchdog timer获取崩溃转储 126<br>      23．用nmi watchdog在死机时获取崩溃转储 131<br>      24．内核独有的汇编指令（之一） 132<br>      25．内核独有的汇编指令（之二） 136<br>第4章 应用程序调试实践 139<br>     26．发生sigsegv，应用程序异常停止 139<br>     27．backtrace无法正确显示 147<br>     28．数组非法访问导致内存破坏 151<br>     29．利用监视点检测非法内存访问 157<br>     30．malloc()和free()发生故障 160<br>     31．应用程序停止响应（死锁篇） 163<br>     32．应用程序停止响应（死循环篇） 168<br>第5章 实践内核调试 177<br>     33．kernel panic（空指针引用篇） 177<br>     34．kernel panic（链表破坏篇） 184<br>     35．kernel panic 192<br>     36．内核停止响应（死循环篇） 205<br>     37．内核停止响应（自旋锁篇之一） 212<br>     38．内核停止响应（自旋锁篇之二） 215<br>     39．内核停止响应（信号量篇） 221<br>     40．实时进程停止响应 232<br>     41．运行缓慢的故障 240<br>     42．cpu负载过高的故障 245<br>第6章 高手们的调试技术 259<br>     43．使用strace寻找故障原因的线索 259<br>     44．objdump的方便选项 264<br>     45．valgrind的使用方法（基本篇） 267<br>     46．valgrind的使用方法（实践篇） 272<br>     47．利用kprobes获取内核内部信息 275<br>     48．使用jprobes查看内核内部的信息 280<br>     49．使用kprobes获取内核内部任意位置的信息 282<br>     50．使用kprobes在内核内部任意位置通过变量名获取信息 287<br>     51．使用kaho获取被编译器优化掉的变量的值 291<br>     52．使用systemtap调试运行中的内核（之一） 297<br>     53．使用systemtap调试运行中的内核（之二） 303<br>     54．/proc/meminfo中的宝藏 307<br>     55．用/proc/[pid]/mem快速读取进程的内存内容 311<br>     56．oom killer的行为和原理 315<br>     57．错误注入 323<br>     58．利用错误注入发现linux内核的潜在bug 328<br>     59．linux内核的init节 334<br>     60．解决性能问题 337<br>     61．利用vmware vprobe获取信息 346<br>     62．用xen获取内存转储 350<br>     63．理解用got/plt调用函数的原理 352<br>     64．调试initramfs镜像 357<br>     65．使用rt watchdog检测失去响应的实时进程 362<br>     66．查看手头的x86机器是否支持64位模式 366<br>    附录 debug hacks术语的基础知识 369<br>    索引 379</p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -321,13 +327,13 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></p>
+        <p><span>本文标题:</span><a href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">好书推荐：《Debug hacks——深入调试的技术和工具》</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-11-09, 08:04:10</p>
-        <p><span>最后更新:</span>2016-11-09, 08:04:43</p>
+        <p><span>发布时间:</span>2016-11-27, 09:58:06</p>
+        <p><span>最后更新:</span>2016-11-27, 09:59:20</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/" title="PostgreSQL源码中的EXEC_BACKEND宏">http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/" title="好书推荐：《Debug hacks——深入调试的技术和工具》">http://shenyu.wiki/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -339,16 +345,10 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/11/10/linux进程改名/">
-                    linux进程改名
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">
-                    PostgreSQL ODBC driver internal
+                <a href="/2016/11/26/缓冲区溢出的那些事儿/">
+                    缓冲区溢出的那些事儿
                 </a>
             </div>
         
@@ -396,7 +396,7 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"PostgreSQL源码中的EXEC_BACKEND宏　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"好书推荐：《Debug hacks——深入调试的技术和工具》　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -412,7 +412,7 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/" data-title="PostgreSQL源码中的EXEC_BACKEND宏" data-url="http://shenyu.wiki/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/" data-title="好书推荐：《Debug hacks——深入调试的技术和工具》" data-url="http://shenyu.wiki/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -435,15 +435,13 @@ It exists because Windows doesn’t have fork(), only the equivalent offork-and-
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/11/10/linux进程改名/" title="上一篇: linux进程改名">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/11/09/PostgreSQL-ODBC-driver-internal/" title="下一篇: PostgreSQL ODBC driver internal">
+            <a href="/2016/11/26/缓冲区溢出的那些事儿/" title="下一篇: 缓冲区溢出的那些事儿">
                 <i class="fa fa-angle-right"></i>
             </a>
         
