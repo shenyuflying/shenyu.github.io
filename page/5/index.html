@@ -269,6 +269,85 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-PostgreSQL-count-优化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/PostgreSQL-count-优化/" class="article-date">
+      <time datetime="2016-10-02T12:50:10.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>在PostgreSQL数据库中，count(<em>)默认是全表扫描，那么对于数据量很大的表，因为需要把表的所有页面读入到内存，需要较多IO，耗费的时间很长。在很多应用中，需要频繁的count(</em>)来统计行数，那么在此类应用中如何优化count(*)的效率呢？</p>
+<h2 id="建立一个表"><a href="#建立一个表" class="headerlink" title="建立一个表"></a>建立一个表</h2><p>我们先建立一个100万行的表，来做实验。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">postgres=# create table tb ( a int, b text);</div><div class="line">CREATE TABLE</div><div class="line">postgres=# insert into tb values ( generate_series(1,1000000), 'xxxxxx');</div><div class="line">INSERT 0 1000000</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line">Time: 652.431 ms</div></pre></td></tr></table></figure>
+<p>实际执行下来，花费时间是652ms<br>下面我们来看一下执行计划</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">postgres=# explain select count(*) from tb;</div><div class="line">                            QUERY PLAN                            </div><div class="line">------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=17906.00..17906.01 rows=1 width=0)</div><div class="line">   -&gt;  Seq Scan on tb  (cost=0.00..15406.00 rows=1000000 width=0)</div><div class="line">(2 rows)</div></pre></td></tr></table></figure>
+<p>可以看到，count(*)是采用顺序扫描的执行计划。</p>
+<h2 id="analyze会不会有改善？"><a href="#analyze会不会有改善？" class="headerlink" title="analyze会不会有改善？"></a>analyze会不会有改善？</h2><p>那么analyze会不会起作用呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">postgres=# analyze tb;</div><div class="line">ANALYZE</div><div class="line">Time: 201.853 ms</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line">Time: 649.252 ms</div></pre></td></tr></table></figure>
+<p>可以看到analyze基本没什么作用。</p>
+<h2 id="主键会不会有改善？"><a href="#主键会不会有改善？" class="headerlink" title="主键会不会有改善？"></a>主键会不会有改善？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">postgres=# alter table tb add  primary key(a);</div><div class="line">ALTER TABLE</div><div class="line">Time: 2353.671 ms</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 654.886 ms</div><div class="line">postgres=# alter table tb add  primary key(a);</div><div class="line">ERROR:  multiple primary keys for table &quot;tb&quot; are not allowed</div><div class="line">Time: 1.603 ms</div><div class="line">postgres=# explain select count(*) from tb;</div><div class="line">                            QUERY PLAN                            </div><div class="line">------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=17906.00..17906.01 rows=1 width=0)</div><div class="line">   -&gt;  Seq Scan on tb  (cost=0.00..15406.00 rows=1000000 width=0)</div><div class="line">(2 rows)</div><div class="line"></div><div class="line">Time: 1.246 ms</div></pre></td></tr></table></figure>
+<p>可以看到，加了索引之后还是在走顺序扫描，时间没有什么改善。</p>
+<h2 id="索引会不会有改善？"><a href="#索引会不会有改善？" class="headerlink" title="索引会不会有改善？"></a>索引会不会有改善？</h2><p>那么建立一个索引有没有作用？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">postgres=# create index tb_idx on tb(a);</div><div class="line">CREATE INDEX</div><div class="line">Time: 2009.193 ms</div><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000000</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 654.997 ms</div><div class="line">postgres=# explain select count(*) from tb;</div><div class="line">                            QUERY PLAN                            </div><div class="line">------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=17906.00..17906.01 rows=1 width=0)</div><div class="line">   -&gt;  Seq Scan on tb  (cost=0.00..15406.00 rows=1000000 width=0)</div><div class="line">(2 rows)</div></pre></td></tr></table></figure>
+<p>可以看到，建立了索引之后，时间依然没有明显改善，查看执行计划，可以看到依然是走的顺序扫描。<br>为什么不走索引呢？我们把顺序扫描关闭之后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">postgres=# set enable_seqscan = off;</div><div class="line">SET</div><div class="line">postgres=# explain (analyze,buffers) select count(*) from tb;</div><div class="line">                              QUERY PLAN                     </div><div class="line">                                           </div><div class="line">----------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=33889.43..33889.44 rows=1 width=0) (actual time=1968.386..1968.387 rows=1 loo</div><div class="line">ps=1)</div><div class="line">   Buffers: shared hit=8141</div><div class="line">   -&gt;  Index Only Scan using tb_pkey on tb  (cost=0.42..31389.42 rows=1000000 width=0) (actual </div><div class="line">time=0.073..1542.385 rows=1000000 loops=1)</div><div class="line">         Heap Fetches: 1000000</div><div class="line">         Buffers: shared hit=8141</div><div class="line"> Planning time: 0.203 ms</div><div class="line"> Execution time: 1968.514 ms</div><div class="line">(7 rows)</div><div class="line">Time: 1969.929 ms</div></pre></td></tr></table></figure></p>
+<p>顺序扫描之后看到时间反而变多了！查看执行计划可以看到，用的是Index Only Scan，读取到的页面是8141，而且还要读Heap上的100万条数据来查看事务信息，所以在该例子中采用索引扫描并不能有多大提升。</p>
+<h2 id="优化方法——建触发器"><a href="#优化方法——建触发器" class="headerlink" title="优化方法——建触发器"></a>优化方法——建触发器</h2><p>如果这个表更新不那么频繁，可以建一个表用来缓存count的结果，再建一个触发器来更新缓存表。查的时候，查缓存count的那个表。<br>举个例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--建立count缓存表</span></div><div class="line"> <span class="keyword">create</span> <span class="keyword">table</span> tb_count(<span class="keyword">col</span> <span class="built_in">int</span>);</div><div class="line"><span class="comment">--初始化count缓存表</span></div><div class="line"> <span class="keyword">insert</span> <span class="keyword">into</span> tb_count ( <span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tb);</div><div class="line"><span class="comment">--创建更新函数</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> <span class="keyword">REPLACE</span> <span class="keyword">FUNCTION</span> tb_func()  <span class="keyword">RETURNS</span> <span class="keyword">TRIGGER</span> <span class="keyword">AS</span> $$</div><div class="line">        <span class="keyword">BEGIN</span></div><div class="line">                <span class="keyword">update</span>  tb_count  <span class="keyword">set</span> <span class="keyword">col</span> = <span class="keyword">col</span> + <span class="number">1</span>;</div><div class="line">                RETURN null;</div><div class="line">        <span class="keyword">END</span>;</div><div class="line">$$ LANGUAGE plpgsql; </div><div class="line"><span class="comment">--创建触发器</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TRIGGER</span> tb_insert</div><div class="line">    <span class="keyword">AFTER</span> <span class="keyword">INSERT</span> <span class="keyword">ON</span> tb</div><div class="line">    <span class="keyword">FOR</span> <span class="keyword">EACH</span> <span class="keyword">ROW</span></div><div class="line">    <span class="keyword">EXECUTE</span> <span class="keyword">PROCEDURE</span> tb_func();</div><div class="line">    </div><div class="line"><span class="comment">--类似的创建对于如下2个的触发器</span></div><div class="line">    <span class="keyword">DELETE</span></div><div class="line">    <span class="keyword">TRUNCATE</span></div></pre></td></tr></table></figure>
+<p>下面我们来看一下，优化之后的效率：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">postgres=# select count(*) from tb;</div><div class="line">  count  </div><div class="line">---------</div><div class="line"> 1000001</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 898.974 ms</div><div class="line">postgres=# select * from tb_count;</div><div class="line">   col   </div><div class="line">---------</div><div class="line"> 1000001</div><div class="line">(1 row)</div><div class="line"></div><div class="line">Time: 2.463 ms</div><div class="line">postgres=#</div></pre></td></tr></table></figure>
+<p>可以看到，优化之后时间从原来的898ms降低为2ms。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/count/">count</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/优化/">优化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-Here-Document" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -851,75 +930,6 @@
 <p><img src="http://static.zybuluo.com/shenyuflying/usu0xch6mcnp42rby3u62p8p/2016-10-04%2013-45-00%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$ 鸟巢　水立方$$<br>国家游泳中心又称水立方,长宽高分别为177m ×177m×30m。其与国家体育场(俗称鸟巢)分列于北京城市中轴线北端的两侧。</p>
 <p><img src="http://static.zybuluo.com/shenyuflying/k0ej1vatj5ffs5vkn9uwpa4j/2016-10-04%2013-44-17%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$ 鸟巢$$<br>国家体育场（鸟巢）位于北京奥林匹克公园中心区南部，为2008年北京奥运会的主体育场。工程总占地面积21公顷。奥运会后成为北京市民参与体育活动及享受体育娱乐的大型专业场所，并成为地标性的体育建筑和奥运遗产。</p>
 <p><img src="http://static.zybuluo.com/shenyuflying/hpflyee8d2bh61j7gr7yzwx9/2016-10-04%2013-46-17%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$湖$$<br>森林公园的湖泊作为“龙头”，引起整个奥林匹克公园之中的龙形水系，把自然引入城市。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/旅行/">旅行</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-天安门" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/05/01/天安门/" class="article-date">
-      <time datetime="2016-05-01T13:40:09.000Z" itemprop="datePublished">2016-05-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/01/天安门/">天安门 Tiananmen</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>天安门，坐落在中华人民共和国首都北京市的中心、故宫的南端，与天安门广场以及人民英雄纪念碑、毛主席纪念堂、人民大会堂、中国国家博物馆隔长安街相望，占地面积4800平方米，以杰出的建筑艺术和特殊的政治地位为世人所瞩目。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/bnyu3xl0wxhl05pnn8y5p207/CghzfFW655SATWClAA_8fZQFgUE656.jpg" alt=""><br>$$天安门广场$$<br>天安门广场位于北京市中心，南北长880米，东西宽500米，面积达44万平方米，可容纳100万人举行盛大集会。是当今世界上最大的城中广场。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/fjim634uhf8dcj13zwk7ocqv/2016-10-04%2013-17-24%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$天安门$$<br>天安门是明清两代北京皇城的正门，始建于明朝永乐十五年（1417年）。天安门城楼长66米、宽37米。正中门洞上方悬挂着毛泽东画像，两边分别是“中华人民共和国万岁”和“世界人民大团结万岁”的大幅标语。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/9jz54rnyvcztch5gfgjvxv09/2016-10-04%2013-19-51%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$天安门城楼$$<br>天安门城楼为中国传统的重檐歇山顶建筑。城楼为木结构建筑，大殿飞檐下是排列有序的斗拱和梁枋。斗拱为中国传统木构架体系中独有，是斗形木弓形横木组成的具有翘、昂、拱特点的木制构件。梁枋又分额枋、檐枋，斗拱下面是额枋，上面彩画和金龙图案，柱子之间的构件叫檐枋，会有金龙和玺图案。</p>
 
       
     </div>
