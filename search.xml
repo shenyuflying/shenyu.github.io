@@ -4,6 +4,41 @@
   
     
     <entry>
+      <title><![CDATA[【小宇带你学PostgreSQL内核】第一课：课程简介]]></title>
+      <url>http://shenyu.wiki/2016/12/11/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%B8%80%E8%AF%BE%EF%BC%9A%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B/</url>
+      <content type="html"><![CDATA[<iframe height="498" width="510" src="http://player.youku.com/embed/XMTg1NzAxNjM4NA==" frameborder="0" 'allowfullscreen'=""></iframe>
+
+<a id="more"></a>
+<h2 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h2><ol>
+<li>课程简介</li>
+<li>开发环境</li>
+<li>内核架构</li>
+<li>parser</li>
+<li>rewriter</li>
+<li>optimizer</li>
+<li>executor</li>
+<li>access</li>
+<li>storage</li>
+<li>自己动手开发新特性</li>
+</ol>
+<hr>
+<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>课程目标：通过该课程了解PostgreSQL数据库的基本架构，各个模块的基本流程，具备基础的内核开发能力。掌握内核的学习方法。<br>课程对象：数据库内核研发人员，高年级学生。<br>先学知识：C语言，sql基础，linux。</p>
+<h3 id="历史与现状"><a href="#历史与现状" class="headerlink" title="历史与现状"></a>历史与现状</h3><p>A Brief History of PostgreSQL:<a href="https://www.postgresql.org/docs/9.6/static/history.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.6/static/history.html</a><br>官方ABOUT：<a href="https://www.postgresql.org/about/" target="_blank" rel="external">https://www.postgresql.org/about/</a><br>ReleaseNotes：<a href="https://www.postgresql.org/docs/9.6/static/release.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.6/static/release.html</a><br>数据库排行：<a href="http://db-engines.com/en/ranking" target="_blank" rel="external">http://db-engines.com/en/ranking</a></p>
+<p>与MySQL相比优势何在：<br>1.特性<br>2.性能<br>3.开源<br><a href="https://www.zhihu.com/question/20010554" target="_blank" rel="external">https://www.zhihu.com/question/20010554</a><br><a href="http://v.youku.com/v_show/id_XNTk4MTQwNTI0.html?from=s1.8-1-1.2&amp;spm=a2h0k.8191407.0.0" target="_blank" rel="external">http://v.youku.com/v_show/id_XNTk4MTQwNTI0.html?from=s1.8-1-1.2&amp;spm=a2h0k.8191407.0.0</a></p>
+<h3 id="国内搞pg的组织"><a href="#国内搞pg的组织" class="headerlink" title="国内搞pg的组织"></a>国内搞pg的组织</h3><p>阿里巴巴，腾讯，百度，华为，人大金仓，平安银行，国家电网，斯凯，去哪儿，同花顺，翰高，上容，武汉大学，人民大学，太阳塔，高德，沃趣，莲子数据。</p>
+<h3 id="国际搞pg的组织"><a href="#国际搞pg的组织" class="headerlink" title="国际搞pg的组织"></a>国际搞pg的组织</h3><p>EnterpriseDB，TeraData，EMC（Greeplum），Fujitsu，2ndQuadrant</p>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p><strong>网站</strong></p>
+<p>官网<a href="https://www.postgresql.org/" target="_blank" rel="external">https://www.postgresql.org/</a><br>github：<a href="https://git.postgresql.org/gitweb/" target="_blank" rel="external">https://git.postgresql.org/gitweb/</a><br>doxygen：<a href="https://doxygen.postgresql.org/" target="_blank" rel="external">https://doxygen.postgresql.org/</a><br>wiki：<a href="https://wiki.postgresql.org/wiki/Main_Page" target="_blank" rel="external">https://wiki.postgresql.org/wiki/Main_Page</a><br>FAQ：<a href="https://wiki.postgresql.org/wiki/Frequently_Asked_Questions" target="_blank" rel="external">https://wiki.postgresql.org/wiki/Frequently_Asked_Questions</a><br>TODO：<a href="https://wiki.postgresql.org/wiki/Todo" target="_blank" rel="external">https://wiki.postgresql.org/wiki/Todo</a><br>pg历年的会议资料：<a href="http://www.pgcon.org/" target="_blank" rel="external">http://www.pgcon.org/</a><br>hackers论坛：<a href="http://postgresql.nabble.com/" target="_blank" rel="external">http://postgresql.nabble.com/</a></p>
+<p><strong>博客</strong></p>
+<p>小宇的博客：<a href="http://www.shenyu.wiki/" target="_blank" rel="external">http://www.shenyu.wiki/</a><br>德哥：<a href="http://blog.163.com/digoal@126/blog/#m=0" target="_blank" rel="external">http://blog.163.com/digoal@126/blog/#m=0</a><br>国外：<a href="http://blog.pgaddict.com/" target="_blank" rel="external">http://blog.pgaddict.com/</a></p>
+<p><strong>书籍</strong></p>
+<p>《PostgreSQL修炼之道》<br>《数据库系统实现》<br>《PostgreSQL内核分析》<br>《数据查询优化器的艺术》<br>更多内容在这里：<a href="http://search.dangdang.com/?key=postgresql&amp;act=input" target="_blank" rel="external">http://search.dangdang.com/?key=postgresql&amp;act=input</a></p>
+<p><strong>论文</strong><br>《The design of POSTGRES》<br>更多内容在这里：<a href="https://www.postgresql.org/docs/9.6/static/history.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.6/static/history.html</a></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[PostgreSQL内存盘性能测试]]></title>
       <url>http://shenyu.wiki/2016/11/29/PostgreSQL%E5%86%85%E5%AD%98%E7%9B%98%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/</url>
       <content type="html"><![CDATA[<blockquote>

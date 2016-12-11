@@ -15,16 +15,13 @@
 
 
 
-<meta name="description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
 <meta property="og:type" content="article">
-<meta property="og:title" content="yap--yet another program profiling tool">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/index.html">
+<meta property="og:title" content="【小宇带你学PostgreSQL内核】第一课：课程简介">
+<meta property="og:url" content="http://shenyu.wiki/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
-<meta property="og:updated_time" content="2016-10-14T08:13:55.000Z">
+<meta property="og:updated_time" content="2016-12-11T10:18:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yap--yet another program profiling tool">
-<meta name="twitter:description" content="Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanc">
+<meta name="twitter:title" content="【小宇带你学PostgreSQL内核】第一课：课程简介">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -54,7 +51,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>yap--yet another program profiling tool | 小宇的博客</title>
+<title>【小宇带你学PostgreSQL内核】第一课：课程简介 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -265,11 +262,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-yap-yet-another-program-profiling-tool" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-【小宇带你学PostgreSQL内核】第一课：课程简介" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/14/yap-yet-another-program-profiling-tool/" class="article-date">
-      <time datetime="2016-10-14T07:59:13.000Z" itemprop="datePublished">2016-10-14</time>
+      <a href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/" class="article-date">
+      <time datetime="2016-12-11T09:53:45.000Z" itemprop="datePublished">2016-12-11</time>
 </a>
 
 
@@ -284,7 +281,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      yap--yet another program profiling tool
+      【小宇带你学PostgreSQL内核】第一课：课程简介
     </h1>
   
 
@@ -292,10 +289,14 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a>
+    </div>
+
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -305,33 +306,35 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanced techniques (such as systemtap and dtrace call level probes), it is overkill to build upon that. Poor man doesn’t have time. Poor man needs food.  –quoted from <a href="https://poormansprofiler.org/" target="_blank" rel="external">poor man’s profiler</a></p>
-</blockquote>
-<p>Just as the name implies, this is an enhenced version of poor man’s profiler with the following new features added:</p>
-<ol>
-<li>support command line argument, which make it easier to use and easier to integrate to your program.</li>
-<li>support multi process profiling, which is good for PostgreSQL profiling.</li>
-<li>user can choose how many stack level to print, which make the result set shorter and easier to read.</li>
-<li>when stack level is set to 1 , instead of the stack ranking, the function ranking is printed</li>
-<li>the result set is neater and much more pretty.</li>
+        <iframe height="498" width="510" src="http://player.youku.com/embed/XMTg1NzAxNjM4NA==" frameborder="0" 'allowfullscreen'=""></iframe>
+
+<a id="more"></a>
+<h2 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h2><ol>
+<li>课程简介</li>
+<li>开发环境</li>
+<li>内核架构</li>
+<li>parser</li>
+<li>rewriter</li>
+<li>optimizer</li>
+<li>executor</li>
+<li>access</li>
+<li>storage</li>
+<li>自己动手开发新特性</li>
 </ol>
-<h2 id="INSTALL"><a href="#INSTALL" class="headerlink" title="INSTALL"></a>INSTALL</h2><p>Download it from <code>https://github.com/shenyuflying/yap.git</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/yap.git</div></pre></td></tr></table></figure></p>
-<p>Type <code>yap -h</code> to show the help message.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># ./yap -h</div><div class="line">================================================================</div><div class="line">                          YAP    ver0.1                         </div><div class="line">================================================================</div><div class="line">  yap -- yet another profiling tool based on poor man&apos;s profiler</div><div class="line">         to generate stack rank of your program.                </div><div class="line">                                                                </div><div class="line">                             yshen 2016 see http://shenyu.wiki  </div><div class="line">================================================================</div><div class="line">                                                         </div><div class="line">usage: yap options=values</div><div class="line">        -s | --samples=n      how many samples to collect</div><div class="line">        -t | --sleeptime=n    how many time to sleep during each sample</div><div class="line">        -f | --stackframe=n   how deep the stack frame to output</div><div class="line">        -p | --pid=pid        which pid to analyze</div><div class="line">        -n | --progname=name  which program to analyze, good for multi-process profiling</div><div class="line">        -h | --help           show this help</div></pre></td></tr></table></figure></p>
-<p>if the message is shown, the yap is ready to work.</p>
-<h2 id="HOW-TO-USE"><a href="#HOW-TO-USE" class="headerlink" title="HOW TO USE"></a>HOW TO USE</h2><p>You need at least specify a progname or a pid to let yap attach to your program.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div></pre></td></tr></table></figure></p>
-<p>will be enough for the yap to run. after you have choosen a program to profile, you will be run with the default configurations, and <code>yap</code> is start working.<br>the default configurations are<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">samples=100   # take 100 samples of your program</div><div class="line">sleeptime=0   # no sleep during each iteration</div><div class="line">stackframe=5  # the stack frame depth is 5</div></pre></td></tr></table></figure></p>
-<p>it will take a while and there will be a progress indicator on the screen, so take your time.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div><div class="line">1/100 completed.</div><div class="line">2/100 completed.</div><div class="line">3/100 completed.</div><div class="line">4/100 completed.</div><div class="line">5/100 completed.</div><div class="line">...</div><div class="line">100/100 complete.</div></pre></td></tr></table></figure></p>
-<p>when done, the stack ranking is printed.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">40 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	WaitLatch</div><div class="line">10 __select_nocancel	ServerLoop	PostmasterMain	main</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	SysLoggerMain</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	PgstatCollectorMain</div><div class="line">1</div></pre></td></tr></table></figure></p>
-<p>if you want to seek the function ranking rather than stack ranking, use <code>--stackframe=1</code> and re-run yap</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">60 __epoll_wait_nocancel</div><div class="line">10 __select_nocancel</div><div class="line"> 1</div></pre></td></tr></table></figure>
-<p>the function ranking is much sorter and easier to find the slowest functions.</p>
-<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ol>
-<li>shall be run in a time duration, add -b | –begin and -e | –end and -d | –duration</li>
-<li>shall be exit when the profiling program exit</li>
-<li>…</li>
-</ol>
-<p>report bugs to shenyufly@163.com</p>
+<hr>
+<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>课程目标：通过该课程了解PostgreSQL数据库的基本架构，各个模块的基本流程，具备基础的内核开发能力。掌握内核的学习方法。<br>课程对象：数据库内核研发人员，高年级学生。<br>先学知识：C语言，sql基础，linux。</p>
+<h3 id="历史与现状"><a href="#历史与现状" class="headerlink" title="历史与现状"></a>历史与现状</h3><p>A Brief History of PostgreSQL:<a href="https://www.postgresql.org/docs/9.6/static/history.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.6/static/history.html</a><br>官方ABOUT：<a href="https://www.postgresql.org/about/" target="_blank" rel="external">https://www.postgresql.org/about/</a><br>ReleaseNotes：<a href="https://www.postgresql.org/docs/9.6/static/release.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.6/static/release.html</a><br>数据库排行：<a href="http://db-engines.com/en/ranking" target="_blank" rel="external">http://db-engines.com/en/ranking</a></p>
+<p>与MySQL相比优势何在：<br>1.特性<br>2.性能<br>3.开源<br><a href="https://www.zhihu.com/question/20010554" target="_blank" rel="external">https://www.zhihu.com/question/20010554</a><br><a href="http://v.youku.com/v_show/id_XNTk4MTQwNTI0.html?from=s1.8-1-1.2&amp;spm=a2h0k.8191407.0.0" target="_blank" rel="external">http://v.youku.com/v_show/id_XNTk4MTQwNTI0.html?from=s1.8-1-1.2&amp;spm=a2h0k.8191407.0.0</a></p>
+<h3 id="国内搞pg的组织"><a href="#国内搞pg的组织" class="headerlink" title="国内搞pg的组织"></a>国内搞pg的组织</h3><p>阿里巴巴，腾讯，百度，华为，人大金仓，平安银行，国家电网，斯凯，去哪儿，同花顺，翰高，上容，武汉大学，人民大学，太阳塔，高德，沃趣，莲子数据。</p>
+<h3 id="国际搞pg的组织"><a href="#国际搞pg的组织" class="headerlink" title="国际搞pg的组织"></a>国际搞pg的组织</h3><p>EnterpriseDB，TeraData，EMC（Greeplum），Fujitsu，2ndQuadrant</p>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p><strong>网站</strong></p>
+<p>官网<a href="https://www.postgresql.org/" target="_blank" rel="external">https://www.postgresql.org/</a><br>github：<a href="https://git.postgresql.org/gitweb/" target="_blank" rel="external">https://git.postgresql.org/gitweb/</a><br>doxygen：<a href="https://doxygen.postgresql.org/" target="_blank" rel="external">https://doxygen.postgresql.org/</a><br>wiki：<a href="https://wiki.postgresql.org/wiki/Main_Page" target="_blank" rel="external">https://wiki.postgresql.org/wiki/Main_Page</a><br>FAQ：<a href="https://wiki.postgresql.org/wiki/Frequently_Asked_Questions" target="_blank" rel="external">https://wiki.postgresql.org/wiki/Frequently_Asked_Questions</a><br>TODO：<a href="https://wiki.postgresql.org/wiki/Todo" target="_blank" rel="external">https://wiki.postgresql.org/wiki/Todo</a><br>pg历年的会议资料：<a href="http://www.pgcon.org/" target="_blank" rel="external">http://www.pgcon.org/</a><br>hackers论坛：<a href="http://postgresql.nabble.com/" target="_blank" rel="external">http://postgresql.nabble.com/</a></p>
+<p><strong>博客</strong></p>
+<p>小宇的博客：<a href="http://www.shenyu.wiki/" target="_blank" rel="external">http://www.shenyu.wiki/</a><br>德哥：<a href="http://blog.163.com/digoal@126/blog/#m=0" target="_blank" rel="external">http://blog.163.com/digoal@126/blog/#m=0</a><br>国外：<a href="http://blog.pgaddict.com/" target="_blank" rel="external">http://blog.pgaddict.com/</a></p>
+<p><strong>书籍</strong></p>
+<p>《PostgreSQL修炼之道》<br>《数据库系统实现》<br>《PostgreSQL内核分析》<br>《数据查询优化器的艺术》<br>更多内容在这里：<a href="http://search.dangdang.com/?key=postgresql&amp;act=input" target="_blank" rel="external">http://search.dangdang.com/?key=postgresql&amp;act=input</a></p>
+<p><strong>论文</strong><br>《The design of POSTGRES》<br>更多内容在这里：<a href="https://www.postgresql.org/docs/9.6/static/history.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.6/static/history.html</a></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -340,13 +343,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></p>
+        <p><span>本文标题:</span><a href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">【小宇带你学PostgreSQL内核】第一课：课程简介</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-10-14, 07:59:13</p>
-        <p><span>最后更新:</span>2016-10-14, 08:13:55</p>
+        <p><span>发布时间:</span>2016-12-11, 09:53:45</p>
+        <p><span>最后更新:</span>2016-12-11, 10:18:05</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/10/14/yap-yet-another-program-profiling-tool/" title="yap--yet another program profiling tool">http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/" title="【小宇带你学PostgreSQL内核】第一课：课程简介">http://shenyu.wiki/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -358,16 +361,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/10/20/利用sed生成规范的c代码/">
-                    利用sed生成规范的c代码
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/10/13/PostgreSQL性能分析/">
-                    PostgreSQL性能分析
+                <a href="/2016/11/29/PostgreSQL内存盘性能测试/">
+                    PostgreSQL内存盘性能测试
                 </a>
             </div>
         
@@ -379,7 +376,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#INSTALL"><span class="toc-number">1.</span> <span class="toc-text">INSTALL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HOW-TO-USE"><span class="toc-number">2.</span> <span class="toc-text">HOW TO USE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TODO"><span class="toc-number">3.</span> <span class="toc-text">TODO</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#大纲"><span class="toc-number">1.</span> <span class="toc-text">大纲</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-number">2.</span> <span class="toc-text">1. 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#历史与现状"><span class="toc-number">2.1.</span> <span class="toc-text">历史与现状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#国内搞pg的组织"><span class="toc-number">2.2.</span> <span class="toc-text">国内搞pg的组织</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#国际搞pg的组织"><span class="toc-number">2.3.</span> <span class="toc-text">国际搞pg的组织</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#资源"><span class="toc-number">2.4.</span> <span class="toc-text">资源</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -415,7 +412,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"yap--yet another program profiling tool　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"【小宇带你学PostgreSQL内核】第一课：课程简介　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -431,7 +428,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/14/yap-yet-another-program-profiling-tool/" data-title="yap--yet another program profiling tool" data-url="http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/" data-title="【小宇带你学PostgreSQL内核】第一课：课程简介" data-url="http://shenyu.wiki/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -454,15 +451,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/20/利用sed生成规范的c代码/" title="上一篇: 利用sed生成规范的c代码">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/10/13/PostgreSQL性能分析/" title="下一篇: PostgreSQL性能分析">
+            <a href="/2016/11/29/PostgreSQL内存盘性能测试/" title="下一篇: PostgreSQL内存盘性能测试">
                 <i class="fa fa-angle-right"></i>
             </a>
         
