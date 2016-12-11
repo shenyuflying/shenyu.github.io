@@ -269,6 +269,66 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-【小宇带你学PostgreSQL内核】第二课：开发环境" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/" class="article-date">
+      <time datetime="2016-12-11T10:23:14.000Z" itemprop="datePublished">2016-12-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/">【小宇带你学PostgreSQL内核】第二课：开发环境</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <center><iframe height=498 width=510 src='http://player.youku.com/embed/XMTg1OTI5NTQ4NA==' frameborder=0 'allowfullscreen'></iframe></center>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+        <p class="article-more-link">
+          <a href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-【小宇带你学PostgreSQL内核】第一课：课程简介" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -856,79 +916,6 @@
       
         <p class="article-more-link">
           <a href="/2016/11/14/c和汇编混合编程/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-PostgreSQL中的spinlock实现的基本原理" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/" class="article-date">
-      <time datetime="2016-11-13T02:48:32.000Z" itemprop="datePublished">2016-11-13</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p>linux中锁实现方法有文件锁、mutex、semaphore等。在PostgreSQL设计过程中，考虑到mutex、semaphore具有一定的限制，为了性能和可移植性考虑，对于比较短时间的等待，spinlock性能更好。那么spinlock是怎么实现的呢？</p>
-</blockquote>
-<p>spinlock依赖于test and set，即先测试一个变量的值是否为0，这一步叫test；如果为0则现在没有加锁，那么接下来设置为1加锁，这一步叫set；如果加锁之后，接下来再次加锁test为1则用一个while循环不断等待，从而实现了加锁的功能。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">spin_lock</span><span class="params">(<span class="keyword">lock_t</span> *lock)</span></div><div class="line"></span>&#123;</div><div class="line">	<span class="keyword">while</span>(tas(lock)==<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>解锁相对简单，直接把变量设为0即可。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">spin_unlock</span><span class="params">(<span class="keyword">lock_t</span> *lock)</span></div><div class="line"></span>&#123;</div><div class="line">	*lock = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>首先需要我们实现一个满足上面要求的tas函数，即函数检查一个内存中的值，看是否为0，如果为0，那么set设置为1，并返回0。如果为1则直接返回1。由于并发原因，必须确保set的原子性，即set的指令必须全部一次执行成功，中间不能出现中断。比如：<br>要把寄存器al=1的值放入内存(%rcx)，并把内存(%rcx)放入寄存器al其实是一个exchange交换操作，一般需要3条指令，其中用到了一个临时寄存器，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mov (%rcx) ah</div><div class="line">mov al     (%rcx)</div><div class="line">mov ah     al</div></pre></td></tr></table></figure></p>
-<p>现在要求如上3条汇编具有原子性，即可以用一条汇编指令来实现，这个操作可以在汇编中用<code>lock xchg</code>来实现。</p>
-<p>现在我们查看在PostgreSQL中一段加锁的汇编代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">  40073e:   cmpb   $0x0,(%rcx)  ;test是不是为0</div><div class="line">  400741:   jne    400746 &lt;TAS_LOCK+0x20&gt; ;如果不是0，那么直接返回</div><div class="line">  400743:   lock xchg %al,(%rcx) ;如果是0，那么设置为1</div><div class="line">  400746:   mov    %eax,%ebx ;返回结果</div><div class="line">  400748:   movzbl %bl,%eax</div><div class="line">  40074b:   pop    %rbx</div><div class="line">  40074c:   pop    %rbp</div><div class="line">  40074d:   retq</div></pre></td></tr></table></figure></p>
-<p>按照其原理，通过对其进行反汇编，得到如下的c语言函数：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="number">__</span><span class="function">inline__ <span class="keyword">int</span></div><div class="line"><span class="title">tas</span><span class="params">(<span class="keyword">volatile</span> <span class="keyword">lock_t</span> *lock)</span></div><div class="line"></span>&#123;</div><div class="line">    <span class="keyword">register</span> <span class="keyword">lock_t</span> <span class="number">_</span>res = <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="number">__</span>asm__ <span class="number">__</span>volatile__(</div><div class="line">        <span class="string">"   cmpb    $0,%1   \n"</span></div><div class="line">        <span class="string">"   jne     1f      \n"</span></div><div class="line">        <span class="string">"   lock            \n"</span></div><div class="line">        <span class="string">"   xchgb   %0,%1   \n"</span></div><div class="line">        <span class="string">"1: \n"</span></div><div class="line">:       <span class="string">"+q"</span>(<span class="number">_</span>res), <span class="string">"+m"</span>(*lock)</div><div class="line">:       <span class="comment">/* no inputs */</span></div><div class="line">:       <span class="string">"memory"</span>, <span class="string">"cc"</span>);</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) <span class="number">_</span>res;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下面通过一段并发程序，来检验一下。下面的程序首先在共享内存中创建了一个变量count，接下来fork了两个进程分别对count递增了1000000次，在递增的时候用我们上面描述的spinlock来加锁保护。最后打出了结果，正确的结果是2000000.</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
