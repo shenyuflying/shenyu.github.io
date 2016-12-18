@@ -15,22 +15,16 @@
 
 
 
-<meta name="description" content="linux中锁实现方法有文件锁、mutex、semaphore等。在PostgreSQL设计过程中，考虑到mutex、semaphore具有一定的限制，为了性能和可移植性考虑，对于比较短时间的等待，spinlock性能更好。那么spinlock是怎么实现的呢？
-
-spinlock依赖于test and set，即先测试一个变量的值是否为0，这一步叫test；如果为0则现在没有加锁，那么接下来设置">
+<meta name="description" content="如果还想看到更多此类文章，请移步到小宇的博客。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PostgreSQL中的spinlock实现的基本原理">
-<meta property="og:url" content="http://shenyu.wiki/2016/11/13/PostgreSQL中的spinlock实现的基本原理/index.html">
+<meta property="og:title" content="【小宇带你学PostgreSQL内核】第三课：内核架构(下)">
+<meta property="og:url" content="http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="linux中锁实现方法有文件锁、mutex、semaphore等。在PostgreSQL设计过程中，考虑到mutex、semaphore具有一定的限制，为了性能和可移植性考虑，对于比较短时间的等待，spinlock性能更好。那么spinlock是怎么实现的呢？
-
-spinlock依赖于test and set，即先测试一个变量的值是否为0，这一步叫test；如果为0则现在没有加锁，那么接下来设置">
-<meta property="og:updated_time" content="2016-11-13T02:49:35.000Z">
+<meta property="og:description" content="如果还想看到更多此类文章，请移步到小宇的博客。">
+<meta property="og:updated_time" content="2016-12-18T09:46:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PostgreSQL中的spinlock实现的基本原理">
-<meta name="twitter:description" content="linux中锁实现方法有文件锁、mutex、semaphore等。在PostgreSQL设计过程中，考虑到mutex、semaphore具有一定的限制，为了性能和可移植性考虑，对于比较短时间的等待，spinlock性能更好。那么spinlock是怎么实现的呢？
-
-spinlock依赖于test and set，即先测试一个变量的值是否为0，这一步叫test；如果为0则现在没有加锁，那么接下来设置">
+<meta name="twitter:title" content="【小宇带你学PostgreSQL内核】第三课：内核架构(下)">
+<meta name="twitter:description" content="如果还想看到更多此类文章，请移步到小宇的博客。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -60,7 +54,7 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>PostgreSQL中的spinlock实现的基本原理 | 小宇的博客</title>
+<title>【小宇带你学PostgreSQL内核】第三课：内核架构(下) | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -271,11 +265,11 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-PostgreSQL中的spinlock实现的基本原理" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-【小宇带你学PostgreSQL内核】第三课：内核架构2" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/" class="article-date">
-      <time datetime="2016-11-13T02:48:32.000Z" itemprop="datePublished">2016-11-13</time>
+      <a href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/" class="article-date">
+      <time datetime="2016-12-18T16:23:14.000Z" itemprop="datePublished">2016-12-18</time>
 </a>
 
 
@@ -290,7 +284,7 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
         
   
     <h1 class="article-title" itemprop="name">
-      PostgreSQL中的spinlock实现的基本原理
+      【小宇带你学PostgreSQL内核】第三课：内核架构(下)
     </h1>
   
 
@@ -298,10 +292,14 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a>
+    </div>
+
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -311,19 +309,9 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>linux中锁实现方法有文件锁、mutex、semaphore等。在PostgreSQL设计过程中，考虑到mutex、semaphore具有一定的限制，为了性能和可移植性考虑，对于比较短时间的等待，spinlock性能更好。那么spinlock是怎么实现的呢？</p>
-</blockquote>
-<p>spinlock依赖于test and set，即先测试一个变量的值是否为0，这一步叫test；如果为0则现在没有加锁，那么接下来设置为1加锁，这一步叫set；如果加锁之后，接下来再次加锁test为1则用一个while循环不断等待，从而实现了加锁的功能。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">spin_lock</span><span class="params">(<span class="keyword">lock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">while</span>(tas(lock)==<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>解锁相对简单，直接把变量设为0即可。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">spin_unlock</span><span class="params">(<span class="keyword">lock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">	*lock = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>首先需要我们实现一个满足上面要求的tas函数，即函数检查一个内存中的值，看是否为0，如果为0，那么set设置为1，并返回0。如果为1则直接返回1。由于并发原因，必须确保set的原子性，即set的指令必须全部一次执行成功，中间不能出现中断。比如：<br>要把寄存器al=1的值放入内存(%rcx)，并把内存(%rcx)放入寄存器al其实是一个exchange交换操作，一般需要3条指令，其中用到了一个临时寄存器，比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mov (%rcx) ah</div><div class="line">mov al     (%rcx)</div><div class="line">mov ah     al</div></pre></td></tr></table></figure></p>
-<p>现在要求如上3条汇编具有原子性，即可以用一条汇编指令来实现，这个操作可以在汇编中用<code>lock xchg</code>来实现。</p>
-<p>现在我们查看在PostgreSQL中一段加锁的汇编代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">  40073e:   cmpb   $0x0,(%rcx)  ;test是不是为0</div><div class="line">  400741:   jne    400746 &lt;TAS_LOCK+0x20&gt; ;如果不是0，那么直接返回</div><div class="line">  400743:   lock xchg %al,(%rcx) ;如果是0，那么设置为1</div><div class="line">  400746:   mov    %eax,%ebx ;返回结果</div><div class="line">  400748:   movzbl %bl,%eax</div><div class="line">  40074b:   pop    %rbx</div><div class="line">  40074c:   pop    %rbp</div><div class="line">  40074d:   retq</div></pre></td></tr></table></figure></p>
-<p>按照其原理，通过对其进行反汇编，得到如下的c语言函数：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="number">__</span><span class="function">inline__ <span class="keyword">int</span></span></div><div class="line"><span class="title">tas</span><span class="params">(<span class="keyword">volatile</span> <span class="keyword">lock_t</span> *lock)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">register</span> <span class="keyword">lock_t</span> <span class="number">_</span>res = <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="number">__</span>asm__ <span class="number">__</span>volatile__(</div><div class="line">        <span class="string">"   cmpb    $0,%1   \n"</span></div><div class="line">        <span class="string">"   jne     1f      \n"</span></div><div class="line">        <span class="string">"   lock            \n"</span></div><div class="line">        <span class="string">"   xchgb   %0,%1   \n"</span></div><div class="line">        <span class="string">"1: \n"</span></div><div class="line">:       <span class="string">"+q"</span>(<span class="number">_</span>res), <span class="string">"+m"</span>(*lock)</div><div class="line">:       <span class="comment">/* no inputs */</span></div><div class="line">:       <span class="string">"memory"</span>, <span class="string">"cc"</span>);</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) <span class="number">_</span>res;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下面通过一段并发程序，来检验一下。下面的程序首先在共享内存中创建了一个变量count，接下来fork了两个进程分别对count递增了1000000次，在递增的时候用我们上面描述的spinlock来加锁保护。最后打出了结果，正确的结果是2000000.</p>
-<a id="more"></a>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/mman.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;errno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/wait.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="keyword">lock_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="number">__</span><span class="function">inline__ <span class="keyword">int</span></span></div><div class="line"><span class="title">tas</span><span class="params">(<span class="keyword">volatile</span> <span class="keyword">lock_t</span> *lock)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">register</span> <span class="keyword">lock_t</span> <span class="number">_</span>res = <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="number">__</span>asm__ <span class="number">__</span>volatile__(</div><div class="line">        <span class="string">"   cmpb    $0,%1   \n"</span></div><div class="line">        <span class="string">"   jne     1f      \n"</span></div><div class="line">        <span class="string">"   lock            \n"</span></div><div class="line">        <span class="string">"   xchgb   %0,%1   \n"</span></div><div class="line">        <span class="string">"1: \n"</span></div><div class="line">:       <span class="string">"+q"</span>(<span class="number">_</span>res), <span class="string">"+m"</span>(*lock)</div><div class="line">:       <span class="comment">/* no inputs */</span></div><div class="line">:       <span class="string">"memory"</span>, <span class="string">"cc"</span>);</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) <span class="number">_</span>res;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">spin_lock</span><span class="params">(<span class="keyword">lock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">while</span>(tas(lock)==<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">spin_unlock</span><span class="params">(<span class="keyword">lock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">	*lock = <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> *<span class="title">shmalloc</span><span class="params">(<span class="keyword">ssize_t</span> size)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">void</span> *mem = (<span class="keyword">void</span> *)mmap(<span class="literal">NULL</span>,size,PROT_READ|PROT_WRITE,MAP_SHARED|MAP_ANONYMOUS,<span class="number">-1</span>,<span class="number">0</span>);</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (mem == (<span class="keyword">void</span> *)<span class="number">-1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"mmap error: %s\n"</span>,strerror(errno));</div><div class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> *count = (<span class="keyword">int</span> *)shmalloc(<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</div><div class="line">	<span class="keyword">lock_t</span> *lock = (<span class="keyword">lock_t</span> *)shmalloc(<span class="keyword">sizeof</span>(<span class="keyword">lock_t</span>));</div><div class="line">	*lock = <span class="number">0</span>;</div><div class="line"></div><div class="line">	*count = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="keyword">pid_t</span> pid = fork();</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (pid &lt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"fork failed!\n"</span>);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (pid == <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* child */</span></div><div class="line">		<span class="keyword">int</span> i;</div><div class="line">		<span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;<span class="number">1000000</span>; i++)</div><div class="line">		&#123;</div><div class="line">			spin_lock(lock);</div><div class="line">				(*count)++;</div><div class="line">			spin_unlock(lock);</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (pid &gt; <span class="number">0</span>)</div><div class="line">	&#123;	</div><div class="line">		<span class="comment">/* parent */</span></div><div class="line">		<span class="keyword">int</span> i;</div><div class="line">		<span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;<span class="number">1000000</span>; i++)</div><div class="line">		&#123;</div><div class="line">			spin_lock(lock);</div><div class="line">				(*count)++;</div><div class="line">			spin_unlock(lock);</div><div class="line">		&#125;</div><div class="line">		wait(<span class="literal">NULL</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d\n"</span>,*count);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> $ ./tas </div><div class="line">2000000</div></pre></td></tr></table></figure>
+        <center><iframe height="498" width="510" src="http://player.youku.com/embed/XMTg3MDkyMzY4OA==" frameborder="0" 'allowfullscreen'=""></iframe></center>
+
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -332,13 +320,13 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></p>
+        <p><span>本文标题:</span><a href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/">【小宇带你学PostgreSQL内核】第三课：内核架构(下)</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-11-13, 02:48:32</p>
-        <p><span>最后更新:</span>2016-11-13, 02:49:35</p>
+        <p><span>发布时间:</span>2016-12-18, 16:23:14</p>
+        <p><span>最后更新:</span>2016-12-18, 09:46:05</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/" title="PostgreSQL中的spinlock实现的基本原理">http://shenyu.wiki/2016/11/13/PostgreSQL中的spinlock实现的基本原理/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/13/PostgreSQL中的spinlock实现的基本原理/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/" title="【小宇带你学PostgreSQL内核】第三课：内核架构(下)">http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -350,16 +338,10 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/11/14/c和汇编混合编程/">
-                    c和汇编混合编程
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/11/12/linux中进程共享内存的2种方法/">
-                    linux中进程共享内存的2种方法
+                <a href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/">
+                    【小宇带你学PostgreSQL内核】第三课：内核架构(上)
                 </a>
             </div>
         
@@ -407,7 +389,7 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"PostgreSQL中的spinlock实现的基本原理　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"【小宇带你学PostgreSQL内核】第三课：内核架构(下)　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -423,7 +405,7 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/13/PostgreSQL中的spinlock实现的基本原理/" data-title="PostgreSQL中的spinlock实现的基本原理" data-url="http://shenyu.wiki/2016/11/13/PostgreSQL中的spinlock实现的基本原理/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/" data-title="【小宇带你学PostgreSQL内核】第三课：内核架构(下)" data-url="http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -446,15 +428,13 @@ spinlock依赖于test and set，即先测试一个变量的值是否为0，这�
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/11/14/c和汇编混合编程/" title="上一篇: c和汇编混合编程">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/11/12/linux中进程共享内存的2种方法/" title="下一篇: linux中进程共享内存的2种方法">
+            <a href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/" title="下一篇: 【小宇带你学PostgreSQL内核】第三课：内核架构(上)">
                 <i class="fa fa-angle-right"></i>
             </a>
         

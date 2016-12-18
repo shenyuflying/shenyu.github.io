@@ -269,6 +269,74 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-深入理解PostgreSQL查询优化引擎" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/21/深入理解PostgreSQL查询优化引擎/" class="article-date">
+      <time datetime="2016-11-21T05:57:19.000Z" itemprop="datePublished">2016-11-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p><img src="http://static.zybuluo.com/shenyuflying/jvqhy0z9ktshjd06tcvfifcm/%E5%B9%BB%E7%81%AF%E7%89%871.png" alt="幻灯片1.png-34.1kB"><br><img src="http://static.zybuluo.com/shenyuflying/q0yatpul7e0m3iiunk9j389t/%E5%B9%BB%E7%81%AF%E7%89%872.png" alt="幻灯片2.png-52.9kB"><br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/slides/">slides</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/database/">database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/11/21/深入理解PostgreSQL查询优化引擎/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-linux把文件放置到剪贴板" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -878,83 +946,6 @@
       
         <p class="article-more-link">
           <a href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-PostgreSQL本地化过程及维护" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/03/PostgreSQL本地化过程及维护/" class="article-date">
-      <time datetime="2016-11-03T07:47:59.000Z" itemprop="datePublished">2016-11-03</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p>PostgreSQL如果要支持本地化，那么./configure的时候要加上–enable-nls构建选项。加了该选项之后通过设置相应的locale之后，PostgreSQL显示的信息就可以是中文了。那么其中的过程是什么呢？如何在添加了新的程序或加了新的翻译字符串之后维护本地化内容呢？</p>
-</blockquote>
-<p>[TOC]</p>
-<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>.po文件： po，Portable Object，里面记录了翻译内容。<br>.mo文件： mo，Machine Object，其实是一个二进制文件，用来提供给程序使用。<br>xgettext：一个工具，根据c文件生成po文件<br>msgfmt： 一个工具，根据po文件生成mo文件<br>msgmerge：更新po文件<br>nls.mk：翻译包的配置，比如翻译哪些c文件</p>
-<h2 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">        xgettext            人工翻译        msgfmt          INSTALL</div><div class="line">.c文件-----------&gt;.pot文件----------&gt;.po----------&gt;.mo------------&gt;./bin/po/zh/LC_MESSAGES/.mo</div><div class="line"></div><div class="line">         gcc                              INSTALL</div><div class="line">.c文件-----------&gt;可执行文件--------------------------------------&gt;./bin</div></pre></td></tr></table></figure>
-<p>基本过程如上图，首先需要xgettext工具根据.c文件生成.pot文件，接下来需要人工翻译。翻译过后用msgfmt工具把翻译好的.po文件生成.mo文件。最后把.mo文件放到制定位置即可。但是不需要我们自己直接调这些工具来完成本地化的工作，其过程都写在了<code>nls-global.mk</code>文件里面。我们只要<code>make init-po</code>、<code>make update-po</code>、<code>make install-po</code>这几个步骤即可。</p>
-<p>最后生成的目录结构如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── psql.c</div><div class="line">...</div><div class="line">├── Makefile</div><div class="line">├── nls.mk</div><div class="line">├── po</div><div class="line">│   ├── cs.mo</div><div class="line">│   ├── cs.po</div><div class="line">...</div><div class="line">│   ├── zh_CN.mo</div><div class="line">│   ├── zh_CN.po</div><div class="line">│   ├── zh_TW.mo</div><div class="line">│   └── zh_TW.po</div><div class="line"></div><div class="line">├── prompt.c</div><div class="line">...</div><div class="line"></div><div class="line">1 directory, 65 files</div></pre></td></tr></table></figure></p>
-<h2 id="本地化详细过程"><a href="#本地化详细过程" class="headerlink" title="本地化详细过程"></a>本地化详细过程</h2><p>./configure的时候加上–enable-nls构建选项之后，构建过程会发生如下变化：</p>
-<ol>
-<li>gcc就会有-DENABLE_NLS的宏定义。从而gettext相关的代码就会被编译进去。</li>
-<li>make就会处理相关国际化的内容。相关过程包含了nls.mk和nls-global.mk文件里面。</li>
-</ol>
-<p>每个工具比如src/bin/psql目录面都有一个nls.mk文件用来说明目录下对应工具的翻译包的生成规则，另外src文件夹下面还有一个nls-global.mk文件里面写了如何利用gettext相关工具生成翻译和安装翻译包。下面看一下他们中的内容。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLS/">NLS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/l10n/">l10n</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/11/03/PostgreSQL本地化过程及维护/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
