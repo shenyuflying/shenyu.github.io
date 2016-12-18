@@ -15,57 +15,16 @@
 
 
 
-<meta name="description" content="linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。
-
-目前脚本能够监控如下内容
-
-平均负载
-空闲内存
-已用内存
-可用内存
-缓存中的脏页面
-硬盘使用率
-进程占用CPU百分比
-等等（可以很方便的添加别的监控参数）
-
-用法1$./mon">
+<meta name="description" content="如果还想看到更多此类文章，请移步到小宇的博客。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux性能曲线工具">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/11/linux监控脚本-绘图/index.html">
+<meta property="og:title" content="【小宇带你学PostgreSQL内核】第三课：内核架构">
+<meta property="og:url" content="http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。
-
-目前脚本能够监控如下内容
-
-平均负载
-空闲内存
-已用内存
-可用内存
-缓存中的脏页面
-硬盘使用率
-进程占用CPU百分比
-等等（可以很方便的添加别的监控参数）
-
-用法1$./mon">
-<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/r2rjbiq08oop1et5wi2f6uve/image_1aupv45rv67o149rtt1cjk1io29.png">
-<meta property="og:updated_time" content="2016-10-11T13:37:40.000Z">
+<meta property="og:description" content="如果还想看到更多此类文章，请移步到小宇的博客。">
+<meta property="og:updated_time" content="2016-12-18T04:26:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux性能曲线工具">
-<meta name="twitter:description" content="linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。
-
-目前脚本能够监控如下内容
-
-平均负载
-空闲内存
-已用内存
-可用内存
-缓存中的脏页面
-硬盘使用率
-进程占用CPU百分比
-等等（可以很方便的添加别的监控参数）
-
-用法1$./mon">
-<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/r2rjbiq08oop1et5wi2f6uve/image_1aupv45rv67o149rtt1cjk1io29.png">
+<meta name="twitter:title" content="【小宇带你学PostgreSQL内核】第三课：内核架构">
+<meta name="twitter:description" content="如果还想看到更多此类文章，请移步到小宇的博客。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -95,7 +54,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>linux性能曲线工具 | 小宇的博客</title>
+<title>【小宇带你学PostgreSQL内核】第三课：内核架构 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -306,11 +265,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-linux监控脚本-绘图" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-【小宇带你学PostgreSQL内核】第三课：内核架构" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/11/linux监控脚本-绘图/" class="article-date">
-      <time datetime="2016-10-11T13:36:18.000Z" itemprop="datePublished">2016-10-11</time>
+      <a href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/" class="article-date">
+      <time datetime="2016-12-18T10:23:14.000Z" itemprop="datePublished">2016-12-18</time>
 </a>
 
 
@@ -325,7 +284,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      linux性能曲线工具
+      【小宇带你学PostgreSQL内核】第三课：内核架构
     </h1>
   
 
@@ -333,10 +292,14 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a>
+    </div>
+
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -346,27 +309,10 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。</p>
-</blockquote>
-<p>目前脚本能够监控如下内容</p>
-<ol>
-<li>平均负载</li>
-<li>空闲内存</li>
-<li>已用内存</li>
-<li>可用内存</li>
-<li>缓存中的脏页面</li>
-<li>硬盘使用率</li>
-<li>进程占用CPU百分比</li>
-<li>等等（可以很方便的添加别的监控参数）</li>
-</ol>
-<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$./monitor.sh  [程序名]</div></pre></td></tr></table></figure>
-<p>脚本输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">------------time---------|-load-|-m_used-|-m_aval-|-m_ditry-|-sda--|-dm-0--|-dm-1--</div><div class="line">2016-10-11_21:26:07	0.34	1223	6272	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:08	0.34	1224	6271	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:09	0.34	1227	6269	0	0.50	0.48	0.00	</div><div class="line">2</div></pre></td></tr></table></figure></p>
-<p>再用gnuplot绘图工具来绘制曲线，后期我把绘图再加到脚本中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$gnuplot</div><div class="line">set xdata time </div><div class="line">set timefmt &quot;%Y-%m-%d_%H:%M:%S&quot;</div><div class="line">plot &apos;monitor.log&apos; using 1:2 with linespoints linestyle 1</div></pre></td></tr></table></figure>
-<p>比如下图绘制了我机器3分钟时间内的load average<br><img src="http://static.zybuluo.com/shenyuflying/r2rjbiq08oop1et5wi2f6uve/image_1aupv45rv67o149rtt1cjk1io29.png" alt=""></p>
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><a id="more"></a>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># A system monitoring tool</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># which can generate results as a table </span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">#   yshen 2016</span></div><div class="line"><span class="comment">#</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#global configuration</span></div><div class="line">INTERVAL=1</div><div class="line">OUTFILE=<span class="string">"monitor.log"</span></div><div class="line"></div><div class="line"><span class="comment">#monitoring configuration</span></div><div class="line">MONITOR_LOAD=1</div><div class="line">MONITOR_MEM=1</div><div class="line">MONITOR_IO=1</div><div class="line">MONITOR_PROCESS=1</div><div class="line">PRO_NAME=<span class="string">"Xorg"</span></div><div class="line"></div><div class="line"><span class="comment">#internal variables</span></div><div class="line">time=<span class="string">""</span></div><div class="line">result=<span class="string">""</span></div><div class="line">loops=0</div><div class="line"></div><div class="line"><span class="comment">#monitoring functions</span></div><div class="line"><span class="function"><span class="title">monitor_load</span></span>() &#123;</div><div class="line">	load_avg=$(uptime | awk <span class="string">'&#123;print $9&#125;'</span> | sed <span class="string">'s/,$//g'</span>)</div><div class="line">	col=<span class="string">"<span class="variable">$col</span>|-load-"</span></div><div class="line">	result=<span class="string">"<span class="variable">$result</span><span class="variable">$load_avg</span>\t"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="title">monitor_mem</span></span>() &#123;</div><div class="line">	mem_used=$(free -m|sed -n <span class="string">"2, 1p"</span>  | awk <span class="string">'&#123;print $3&#125;'</span>)</div><div class="line">	mem_free=$(free -m|sed -n <span class="string">"2, 1p"</span>  | awk <span class="string">'&#123;print $4&#125;'</span>)</div><div class="line">	mem_cache=$(free -m|sed -n <span class="string">"2, 1p"</span>  | awk <span class="string">'&#123;print $6&#125;'</span>)</div><div class="line">	mem_avali=$(free -m|sed -n <span class="string">"2, 1p"</span>  | awk <span class="string">'&#123;print $7&#125;'</span>)</div><div class="line">	mem_dirty_kb=$(cat /proc/meminfo  | grep Dirty | awk <span class="string">'&#123;print $2&#125;'</span>) <span class="comment">#in kb</span></div><div class="line">	mem_dirty=$((mem_dirty_kb/1024)) <span class="comment">#in mb</span></div><div class="line">	<span class="comment">#col="$col|-m_used-|-m_free-|--m_cache--|-m_aval-|"</span></div><div class="line">	col=<span class="string">"<span class="variable">$col</span>|-m_used-|-m_aval-|-m_ditry-"</span></div><div class="line">	result=<span class="string">"<span class="variable">$result</span><span class="variable">$mem_used</span>\t<span class="variable">$mem_avali</span>\t<span class="variable">$mem_dirty</span>\t"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="title">monitor_io</span></span>() &#123;</div><div class="line">	dev_count=$(iostat -xmd | wc <span class="_">-l</span>)</div><div class="line">	dev_count=$((dev_count - 4))</div><div class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="variable">$dev_count</span>); <span class="keyword">do</span></div><div class="line">		line=$((i+3))</div><div class="line">		dev_util=$(iostat -xmd | sed -n <span class="string">"<span class="variable">$line</span>,1p"</span>| awk <span class="string">'&#123;print $14&#125;'</span>)</div><div class="line">		dev_name=$(iostat -xmd | sed -n <span class="string">"<span class="variable">$line</span>,1p"</span>| awk <span class="string">'&#123;print $1&#125;'</span>)</div><div class="line">		col=<span class="string">"<span class="variable">$col</span>|-<span class="variable">$dev_name</span>--"</span></div><div class="line">		result=<span class="string">"<span class="variable">$result</span><span class="variable">$dev_util</span>\t"</span></div><div class="line">	<span class="keyword">done</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="title">monitor_process</span></span>() &#123;</div><div class="line">	process_id=$( ps aux | grep <span class="variable">$PRO_NAME</span> | sed -n <span class="string">"1,1p"</span> | awk <span class="string">'&#123;print $2&#125;'</span>)</div><div class="line">	process_cpu=$(top -b -p 3303 -n1 | sed -n <span class="string">"8,1p"</span> | awk <span class="string">'&#123;print $9&#125;'</span>)</div><div class="line">	col=<span class="string">"<span class="variable">$col</span>|-%CPU-"</span></div><div class="line">	result=<span class="string">"<span class="variable">$result</span><span class="variable">$process_cpu</span>\t"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">#main entry point</span></div><div class="line"></div><div class="line"><span class="comment">#the first argument is process name to monitor</span></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> <span class="_">-eq</span> 0 ] ; <span class="keyword">then</span></div><div class="line">	<span class="comment">#no arg, turn off monitor process</span></div><div class="line">	MONITOR_PROCESS=0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> <span class="_">-eq</span> 1 ] ; <span class="keyword">then</span></div><div class="line">	process_exist=$(ps aux | grep <span class="variable">$PRO_NAME</span> | wc <span class="_">-l</span>)</div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$process_exist</span> <span class="_">-eq</span> 1 ] ; <span class="keyword">then</span></div><div class="line">		MONITOR_PROCESS=0</div><div class="line">	<span class="keyword">fi</span>	</div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$process_exist</span> <span class="_">-eq</span> 2 ] ; <span class="keyword">then</span></div><div class="line">		PRO_NAME=<span class="variable">$1</span></div><div class="line">	<span class="keyword">fi</span>	</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> [ 1 <span class="_">-eq</span> 1 ] ; <span class="keyword">do</span></div><div class="line">	result=<span class="string">""</span></div><div class="line">	col=<span class="string">""</span></div><div class="line"></div><div class="line">	<span class="comment"># sleep until next integer seconds</span></div><div class="line">	sleep=$(date <span class="string">'+%s.%N'</span> | awk <span class="string">"&#123;print <span class="variable">$INTERVAL</span> - (\$1 % <span class="variable">$INTERVAL</span>)&#125;"</span>)</div><div class="line">	sleep <span class="variable">$sleep</span></div><div class="line">	</div><div class="line">	time=$(date <span class="string">'+%F_%k:%M:%S.%N'</span>)</div><div class="line">	<span class="comment">#time=$(date '+%F_%k:%M:%S')</span></div><div class="line">	result=<span class="string">"<span class="variable">$result</span><span class="variable">$time</span>\t"</span></div><div class="line">	<span class="comment">#        2016-10-11_17:45:34.002592500</span></div><div class="line">	col=<span class="string">"<span class="variable">$col</span>------------time-------------"</span></div><div class="line">	<span class="comment"># do the work</span></div><div class="line">	</div><div class="line">	<span class="comment">## COL1 monitoring the load average</span></div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$MONITOR_LOAD</span> <span class="_">-eq</span> 1 ]</div><div class="line">	<span class="keyword">then</span></div><div class="line">		monitor_load</div><div class="line">	<span class="keyword">fi</span></div><div class="line"></div><div class="line">	<span class="comment">## COL1 monitoring the load average</span></div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$MONITOR_MEM</span> <span class="_">-eq</span> 1 ]</div><div class="line">	<span class="keyword">then</span></div><div class="line">		monitor_mem</div><div class="line">	<span class="keyword">fi</span></div><div class="line"></div><div class="line">	<span class="comment">## COL1 monitoring the load average</span></div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$MONITOR_IO</span> <span class="_">-eq</span> 1 ]</div><div class="line">	<span class="keyword">then</span></div><div class="line">		monitor_io</div><div class="line">	<span class="keyword">fi</span></div><div class="line">	<span class="comment">## COL1 monitoring the load average</span></div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$MONITOR_PROCESS</span> <span class="_">-eq</span> 1 ]</div><div class="line">	<span class="keyword">then</span></div><div class="line">		monitor_process</div><div class="line">	<span class="keyword">fi</span></div><div class="line">	<span class="comment">## extra COLs add below</span></div><div class="line"></div><div class="line">	<span class="comment"># do the print</span></div><div class="line">    <span class="comment">## on the first iteration print the col names</span></div><div class="line">	<span class="keyword">if</span> [ <span class="variable">$loops</span> <span class="_">-eq</span> 0 ]</div><div class="line">	<span class="keyword">then</span></div><div class="line">		<span class="built_in">echo</span> <span class="variable">$col</span> &gt;&gt; <span class="variable">$OUTFILE</span></div><div class="line">		<span class="built_in">echo</span> <span class="variable">$col</span></div><div class="line">	<span class="keyword">fi</span></div><div class="line"></div><div class="line">	<span class="built_in">echo</span> <span class="variable">$result</span> &gt;&gt; <span class="variable">$OUTFILE</span></div><div class="line">	<span class="built_in">echo</span> <span class="variable">$result</span></div><div class="line"></div><div class="line">	loops=$((1))</div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+        <iframe height="498" width="510" src="http://player.youku.com/embed/XMTg3MDUzODQwMA==" frameborder="0" 'allowfullscreen'=""></iframe>
+
+
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -375,13 +321,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></p>
+        <p><span>本文标题:</span><a href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/">【小宇带你学PostgreSQL内核】第三课：内核架构</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-10-11, 13:36:18</p>
-        <p><span>最后更新:</span>2016-10-11, 13:37:40</p>
+        <p><span>发布时间:</span>2016-12-18, 10:23:14</p>
+        <p><span>最后更新:</span>2016-12-18, 04:26:52</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/10/11/linux监控脚本-绘图/" title="linux性能曲线工具">http://shenyu.wiki/2016/10/11/linux监控脚本-绘图/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/11/linux监控脚本-绘图/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/" title="【小宇带你学PostgreSQL内核】第三课：内核架构">http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -393,16 +339,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">
-                    PostgreSQL日志分析工具——pgBadger
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/10/11/数据库性能测试标准TPC/">
-                    数据库性能测试标准TPC
+                <a href="/2016/12/18/PostgreSQL-internal-roadmap/">
+                    PostgresSQL-internal-roadmap
                 </a>
             </div>
         
@@ -414,7 +354,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码"><span class="toc-number">2.</span> <span class="toc-text">源码</span></a></li></ol>
+            
         
     </div>
     <style>
@@ -450,7 +390,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"linux性能曲线工具　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"【小宇带你学PostgreSQL内核】第三课：内核架构　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -466,7 +406,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/11/linux监控脚本-绘图/" data-title="linux性能曲线工具" data-url="http://shenyu.wiki/2016/10/11/linux监控脚本-绘图/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/" data-title="【小宇带你学PostgreSQL内核】第三课：内核架构" data-url="http://shenyu.wiki/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -489,15 +429,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/" title="上一篇: PostgreSQL日志分析工具——pgBadger">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/10/11/数据库性能测试标准TPC/" title="下一篇: 数据库性能测试标准TPC">
+            <a href="/2016/12/18/PostgreSQL-internal-roadmap/" title="下一篇: PostgresSQL-internal-roadmap">
                 <i class="fa fa-angle-right"></i>
             </a>
         

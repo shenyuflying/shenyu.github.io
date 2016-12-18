@@ -269,6 +269,162 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-linux监控脚本-绘图" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/11/linux监控脚本-绘图/" class="article-date">
+      <time datetime="2016-10-11T13:36:18.000Z" itemprop="datePublished">2016-10-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <blockquote>
+<p>linux下有很多监控工具，如top，free，vmstat等。有一大痛点就是各种工具生成的结果格式不一致，较长一段时间内监控数据量大，人工阅读非常困难。所以写了一个脚本，把各种监控参数输出为一个表格，最后再画出图形。</p>
+</blockquote>
+<p>目前脚本能够监控如下内容</p>
+<ol>
+<li>平均负载</li>
+<li>空闲内存</li>
+<li>已用内存</li>
+<li>可用内存</li>
+<li>缓存中的脏页面</li>
+<li>硬盘使用率</li>
+<li>进程占用CPU百分比</li>
+<li>等等（可以很方便的添加别的监控参数）</li>
+</ol>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$./monitor.sh  [程序名]</div></pre></td></tr></table></figure>
+<p>脚本输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">------------time---------|-load-|-m_used-|-m_aval-|-m_ditry-|-sda--|-dm-0--|-dm-1--</div><div class="line">2016-10-11_21:26:07	0.34	1223	6272	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:08	0.34	1224	6271	0	0.50	0.48	0.00	</div><div class="line">2016-10-11_21:26:09	0.34	1227	6269	0	0.50	0.48	0.00	</div><div class="line">2</div></pre></td></tr></table></figure></p>
+<p>再用gnuplot绘图工具来绘制曲线，后期我把绘图再加到脚本中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$gnuplot</div><div class="line">set xdata time </div><div class="line">set timefmt &quot;%Y-%m-%d_%H:%M:%S&quot;</div><div class="line">plot &apos;monitor.log&apos; using 1:2 with linespoints linestyle 1</div></pre></td></tr></table></figure>
+<p>比如下图绘制了我机器3分钟时间内的load average<br><img src="http://static.zybuluo.com/shenyuflying/r2rjbiq08oop1et5wi2f6uve/image_1aupv45rv67o149rtt1cjk1io29.png" alt=""></p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/10/11/linux监控脚本-绘图/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-数据库性能测试标准TPC" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/11/数据库性能测试标准TPC/" class="article-date">
+      <time datetime="2016-10-11T07:31:30.000Z" itemprop="datePublished">2016-10-11</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>经常有人在自己机器上跑了一个简单的查询，就发布到网上说哪个数据性能如何如何。数据库性能的好坏影响因素很多，比如业务特点、数据量、测试时间、硬件配置等等。那么有没有一个标准来度量数据库性能的好呢？</p>
+</blockquote>
+<p>有这么一个组织：TPC，即事务处理性能委员位TPC(Transaction Processing Performance Council)，成立于88年，制定了一系列用来测试数据库性能的标准，在业内广泛应用。<br>TPC成员有很多软硬件厂商组成，比如IBM，INTEL传统的硬件厂商；还有ORALCE、SAP、REDHAT等软件厂商等。国内的HUAWEI也在其中。可以说TPC组织覆盖了数据库的整个生态系统。<br>他们的官网是：<a href="http://www.tpc.org" target="_blank" rel="external">http://www.tpc.org</a></p>
+<p>TPC有很多测试标准，见下图。</p>
+<p><img src="http://static.zybuluo.com/shenyuflying/le1aa8mmq6jnh0191fscinj7/image_1aup9fil01m0qsda13k0mi51jmp9.png" alt="TPC测试标准"></p>
+<p>其中最有名的是TPC-C和TPC-H标准。TPC-C标准是TPC推出的最早的一个标准，主要用来测试交易处理的的场景。TPC-H标准主要用来测试决策支持场景。</p>
+<h2 id="TPC-C"><a href="#TPC-C" class="headerlink" title="TPC-C"></a>TPC-C</h2><p>TPC-C全称为TPC Benchmark C，主要用来测试交易处理场景下数据库的性能。该测试标准模拟了一个批发商管理订单的场景。包括了输入订单，发货，收钱，查询订单状态。性能指标有2个分别是：</p>
+<ul>
+<li>new-order txn rate (tpmC)</li>
+<li>price/performance ($/tpmC)</li>
+</ul>
+<p>根据字面意思不难理解，tmpC是每分钟处理订单的数量，$/tmpC是一个经济指标说的是每tmpC花费。</p>
+<h2 id="TPC-H"><a href="#TPC-H" class="headerlink" title="TPC-H"></a>TPC-H</h2><p>TPC-H全称The TPC Benchmark™H ，主要用来测试决策支持场景下数据库的性能。该测试标准模拟了商业环境中一些即席查询（Ad-hoc queries）和并发修改。这些场景都需要访问大量的数据，执行的查询非常复杂。是不是可以理解成为OLAP场景测试？</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-好书推荐：《操作系统设计与实现》" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -790,148 +946,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux-shell/">linux shell</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-好书推荐：《软技能-代码之外的生存指南》" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/" class="article-date">
-      <time datetime="2016-10-04T17:50:42.000Z" itemprop="datePublished">2016-10-04</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p><img src="http://static.zybuluo.com/shenyuflying/phjbqy6j0tco0bvbtc3h3q45/2016-10-04%2017-26-44%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>是在知乎上看到大家说这本书非常值得一读，在当当上买到这本书一个月有余，平时工作比较忙，陆陆续续的读了一部分，今天才利用国庆假期读完。</p>
-<p>正如书名所说，这本书涵盖了除如何编程以外的各个方面，从职业规划，自我营销，如何学习，提高效率到理财、健身、心态等等。相比于一些励志、心理学方面的书籍，更加贴近于程序员的生活，因为作者本身就是一个非常成功的程序员。</p>
-<p>在读这本书关于自我营销这一章的过程中，对我的直接影响就是我开始写博客了。我注册了<a href="http://www.shenyu.wiki" target="_blank" rel="external">域名</a>，快速学习并掌握了一个博客框架hexo，学习了markdown标记语言和cmdmarkdown跨平台markdown编辑器，在github上架设了我的第一个个人博客。当然其中走了一段弯路，想用树莓派+wordpress+花生棒搭建本地的博客，但是由于运营商限制80端口以及网速原因放弃了。你能想象这都是在一个月中利用业余时间完成的么？</p>
-<p>在读这本书关于健身这一章的过程中，我体重一个月内下降了3斤。</p>
-<p>该书的别的章节，比如职业规划，如何学习，健身，理财等等，对于程序员来说也非常重要。</p>
-<p>这本书值得反复读，把其中有价值的思想和方法应用到自己的学习、工作生活之中。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/读书/">读书</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书/">读书</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-颐和园" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/04/颐和园/" class="article-date">
-      <time datetime="2016-10-04T12:47:20.000Z" itemprop="datePublished">2016-10-04</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>颐和园，中国清朝时期皇家园林，前身为清漪园，坐落在北京西郊，距城区十五公里，占地约二百九十公顷，与圆明园毗邻。它是以昆明湖、万寿山为基址，以杭州西湖为蓝本，汲取江南园林的设计手法而建成的一座大型山水园林，也是保存最完整的一座皇家行宫御苑，被誉为“皇家园林博物馆”，也是国家重点旅游景点。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/y5a04va003m6b4cwu9agky5v/2016-10-04%2012-37-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="昆明湖"><br>$$昆明湖$$</p>
-<p>昆明湖是颐和园的主要湖泊，占全园面积的四分之三，约220公顷。南部的前湖区碧波荡漾，西望起伏、北望楼阁成群；湖中有一道西堤，堤上桃柳成行；</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/98ubpp8932fg35oovjeuz5e5/2016-10-04%2012-35-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$十七孔桥$$<br>十七孔桥横卧湖上，湖中3岛上也有形式各异的古典建筑。昆明湖是清代皇家诸园中最大的湖泊，湖中一道长堤──西堤，自西北逶迤向南。西堤及其支堤把湖面划分为三个大小不等的水域，每个水域各有一个湖心岛。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/r17fgepk5zbfc0cd5oyly2xy/2016-10-04%2012-38-18%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$万寿山$$</p>
-<p>万寿山属燕山余脉，高58.59米。建筑群依山而筑，万寿山前山，以八面三层四重檐的佛香阁为中心，组成巨大的主体建筑群。</p>
-<p>2016-10-3</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/旅行/">旅行</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
     </div>
 
       
