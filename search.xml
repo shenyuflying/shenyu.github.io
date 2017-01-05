@@ -7,7 +7,7 @@
       <title><![CDATA[git统计代码贡献]]></title>
       <url>http://shenyu.wiki/2017/01/05/git%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%B4%A1%E7%8C%AE/</url>
       <content type="html"><![CDATA[<blockquote>
-<p>辛苦了一年，到年终终结的时候啦。想统计一下今年贡献了多少代码。那么怎么用git来统计某个作者贡献代码行数呢？</p>
+<p>辛苦了一年，到年终总结的时候啦。想统计一下今年贡献了多少代码。那么怎么用git来统计某个作者贡献代码行数呢？</p>
 </blockquote>
 <p>思路是采用git log打出来每次提交的信息。可以加上<code>--author</code>参数来指明是哪个作者的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git log   --pretty=format:&apos;%an %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&apos; --abbrev-commit --date=relative --shortstat --author=&quot;Shen&quot;</div></pre></td></tr></table></figure></p>
 <p>打出来的结果如下所示：</p>
