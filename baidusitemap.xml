@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2017/01/05/git%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%B4%A1%E7%8C%AE/</loc>
+    <lastmod>2017-01-05T09:09:55.000Z</lastmod>
+    <data>
+        <display>
+        <title>git统计代码贡献</title>
+        <pubTime>2017-01-05T09:09:02.000Z</pubTime>
+        
+        <tag>git</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://shenyu.wiki/2016/12/29/GDB%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2%E5%A4%A7PK/</loc>
     <lastmod>2016-12-29T12:08:01.000Z</lastmod>
     <data>
@@ -806,12 +823,12 @@
 
     
   <url>
-    <loc>http://shenyu.wiki/2014/02/04/%E5%B2%B3%E9%BA%93%E4%B9%A6%E9%99%A2/</loc>
+    <loc>http://shenyu.wiki/2016/03/08/%E5%85%B0%E5%B7%9E/</loc>
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     <data>
         <display>
-        <title>岳麓书院</title>
-        <pubTime>2014-02-04T16:29:01.000Z</pubTime>
+        <title>兰州 Lanzhou</title>
+        <pubTime>2016-03-08T15:54:09.000Z</pubTime>
         
         <tag>旅行</tag>
          
@@ -923,25 +940,6 @@
 
     
   <url>
-    <loc>http://shenyu.wiki/2016/09/17/%E5%A5%A5%E8%BF%90%E4%BC%9A%E6%88%90%E7%BB%A9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
-    <data>
-        <display>
-        <title>奥运会成绩管理系统</title>
-        <pubTime>2016-09-17T15:55:08.000Z</pubTime>
-        
-        <tag>c</tag>
-         
-        <tag>编程题</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://shenyu.wiki/2016/10/04/hexo%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E4%BF%AE%E6%94%B9%E4%BE%A7%E8%BE%B9%E6%A0%8F/</loc>
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     <data>
@@ -1017,16 +1015,34 @@
 
     
   <url>
-    <loc>http://shenyu.wiki/2016/09/17/linux-shell-%E5%88%87%E6%8D%A2%E7%A8%8B%E5%BA%8F/</loc>
+    <loc>http://shenyu.wiki/2014/02/04/%E5%B2%B3%E9%BA%93%E4%B9%A6%E9%99%A2/</loc>
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     <data>
         <display>
-        <title>在linux shell 下切换程序</title>
-        <pubTime>2016-09-17T17:14:37.000Z</pubTime>
+        <title>岳麓书院</title>
+        <pubTime>2014-02-04T16:29:01.000Z</pubTime>
+        
+        <tag>旅行</tag>
+         
+         
+           
+             
+              <breadCrumb title="旅行" url="http://shenyu.wiki/categories/%E6%97%85%E8%A1%8C/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://shenyu.wiki/2016/10/05/ssh%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E9%99%86linux%E4%B8%BB%E6%9C%BA/</loc>
+    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
+    <data>
+        <display>
+        <title>ssh免密码登陆linux主机</title>
+        <pubTime>2016-10-05T10:07:14.000Z</pubTime>
         
         <tag>linux</tag>
-         
-        <tag>shell</tag>
          
          
            
@@ -1051,43 +1067,6 @@
          
          
            
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://shenyu.wiki/2016/10/05/ssh%E5%85%8D%E5%AF%86%E7%A0%81%E7%99%BB%E9%99%86linux%E4%B8%BB%E6%9C%BA/</loc>
-    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
-    <data>
-        <display>
-        <title>ssh免密码登陆linux主机</title>
-        <pubTime>2016-10-05T10:07:14.000Z</pubTime>
-        
-        <tag>linux</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://shenyu.wiki/2016/03/08/%E5%85%B0%E5%B7%9E/</loc>
-    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
-    <data>
-        <display>
-        <title>兰州 Lanzhou</title>
-        <pubTime>2016-03-08T15:54:09.000Z</pubTime>
-        
-        <tag>旅行</tag>
-         
-         
-           
-             
-              <breadCrumb title="旅行" url="http://shenyu.wiki/categories/%E6%97%85%E8%A1%8C/"/>
-          
         </display>
     </data>
     </url>
@@ -1170,6 +1149,44 @@
              
               <breadCrumb title="旅行" url="http://shenyu.wiki/categories/%E6%97%85%E8%A1%8C/"/>
           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://shenyu.wiki/2016/09/17/linux-shell-%E5%88%87%E6%8D%A2%E7%A8%8B%E5%BA%8F/</loc>
+    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
+    <data>
+        <display>
+        <title>在linux shell 下切换程序</title>
+        <pubTime>2016-09-17T17:14:37.000Z</pubTime>
+        
+        <tag>linux</tag>
+         
+        <tag>shell</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://shenyu.wiki/2016/09/17/%E5%A5%A5%E8%BF%90%E4%BC%9A%E6%88%90%E7%BB%A9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
+    <data>
+        <display>
+        <title>奥运会成绩管理系统</title>
+        <pubTime>2016-09-17T15:55:08.000Z</pubTime>
+        
+        <tag>c</tag>
+         
+        <tag>编程题</tag>
+         
+         
+           
         </display>
     </data>
     </url>
