@@ -4,6 +4,15 @@
   
     
     <entry>
+      <title><![CDATA[【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）]]></title>
+      <url>http://shenyu.wiki/2017/01/08/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%BA%94%E8%AF%BE%EF%BC%9Arewriter%E5%88%86%E6%9E%90%E5%92%8C%E9%87%8D%E5%86%99%EF%BC%88%E4%B8%8A%EF%BC%89/</url>
+      <content type="html"><![CDATA[<center><iframe height="498" width="510" src="http://player.youku.com/embed/XMTk0NDk1OTQ2MA==" frameborder="0" 'allowfullscreen'=""></iframe></center>
+
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[git统计代码贡献]]></title>
       <url>http://shenyu.wiki/2017/01/05/git%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%B4%A1%E7%8C%AE/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -15,6 +24,16 @@
 
 <p>能够看到每次提交的代码变更行数，接下来祭出grep和awk神器来做下统计吧！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git log   --pretty=format:&apos;%Cred%h%Creset %an-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&apos; --abbrev-commit --date=relative --shortstat --author=&quot;Shen&quot; |grep &quot;insertions&quot; |awk &apos;&#123;sum += $4 + $6&#125; END &#123;print sum&#125;&apos;</div><div class="line">7185</div></pre></td></tr></table></figure></p>
 <p>在这个分支上贡献了7185行代码，再接再厉！</p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[【小宇带你学PostgreSQL内核】第四课：parser语法分析]]></title>
+      <url>http://shenyu.wiki/2017/01/01/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E5%9B%9B%E8%AF%BE%EF%BC%9Aparser%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/</url>
+      <content type="html"><![CDATA[<center><iframe height="498" width="510" src="http://player.youku.com/embed/XMTg4MjEzMzk2NA==" frameborder="0" 'allowfullscreen'=""></iframe></center>
+
+
 <p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 ]]></content>
     </entry>
@@ -66,7 +85,6 @@
       <title><![CDATA[【小宇带你学PostgreSQL内核】第三课：内核架构(上)]]></title>
       <url>http://shenyu.wiki/2016/12/18/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%B8%89%E8%AF%BE%EF%BC%9A%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%841/</url>
       <content type="html"><![CDATA[<center><iframe height="498" width="510" src="http://player.youku.com/embed/XMTg3MDUzODQwMA==" frameborder="0" 'allowfullscreen'=""></iframe></center>
-
 
 <p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 ]]></content>
