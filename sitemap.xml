@@ -2,23 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://shenyu.wiki/about/index.html</loc>
-    
-    <lastmod>2017-01-14T02:46:04.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://shenyu.wiki/tags/index.html</loc>
     
-    <lastmod>2017-01-14T02:44:39.000Z</lastmod>
+    <lastmod>2017-01-14T03:12:01.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://shenyu.wiki/2017/01/13/PostgreSQL%E4%B8%AD%E7%9A%84PL-SQL%E5%AE%9E%E7%8E%B0/</loc>
     
-    <lastmod>2017-01-13T01:24:14.000Z</lastmod>
+    <lastmod>2017-01-14T03:09:17.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/about/index.html</loc>
+    
+    <lastmod>2017-01-14T02:46:04.000Z</lastmod>
     
   </url>
   
