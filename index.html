@@ -273,7 +273,7 @@
   
     <div class="article-meta">
       <a href="/2017/01/15/linux中的硬链接和软链接/" class="article-date">
-      <time datetime="2017-01-15T03:30:31.980Z" itemprop="datePublished">2017-01-15</time>
+      <time datetime="2017-01-15T03:34:26.836Z" itemprop="datePublished">2017-01-15</time>
 </a>
 
 
@@ -288,7 +288,7 @@
       
           
         <hr>
-<p>title: linux中的硬链接和软链接<br>comments: true<br>date: 2016-10-10 06:03:07<br>tags: [“操作系统”,Linux,Linux编程]</p>
+<p>title: linux中的硬链接和软链接<br>comments: true<br>date: 2016-10-10 06:03:07<br>tags: [操作系统, Linux, Linux编程]</p>
 <h2 id="categories-技术分享"><a href="#categories-技术分享" class="headerlink" title="categories: [技术分享]"></a>categories: [技术分享]</h2><h2 id="建立硬链接和软链接"><a href="#建立硬链接和软链接" class="headerlink" title="建立硬链接和软链接"></a>建立硬链接和软链接</h2><p>在linux中我们通过ln命令来建立硬链接和软链接，默认是建立硬链接，加上-s参数那么建立的就是软链接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;Hello world&quot; &gt; a</div><div class="line">$ ln a a_hard_link</div><div class="line">$ ln -s a a_soft_link</div></pre></td></tr></table></figure></p>
 <p>建立好之后，用ls命令看一下，记得加上-i这样我们就可以看到inode号了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ls -ali</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
 <p><strong>inode</strong><br>科普一下：inode全称是index node即索引节点。可见inode中并没有存放文件的实际内容，而是存放了索引。这个索引指向的是磁盘中存放文件内容的物理位置。<br><strong>目录</strong><br>在linux中目录也有一个inode，inode指向记录目录实际内容的磁盘物理位置。</p>
