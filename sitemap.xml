@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2016/11/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%BC%95%E6%93%8E/</loc>
+    
+    <lastmod>2017-01-15T03:30:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/</loc>
+    
+    <lastmod>2017-01-15T03:29:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2016/11/09/PostgreSQL-ODBC-driver-internal/</loc>
+    
+    <lastmod>2017-01-15T03:28:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/</loc>
+    
+    <lastmod>2017-01-15T03:28:24.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/01/15/linux%E4%B8%AD%E7%9A%84%E7%A1%AC%E9%93%BE%E6%8E%A5%E5%92%8C%E8%BD%AF%E9%93%BE%E6%8E%A5/</loc>
     
     <lastmod>2017-01-15T03:23:16.000Z</lastmod>
@@ -96,13 +124,6 @@
     <loc>http://shenyu.wiki/2016/10/11/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E6%A0%87%E5%87%86TPC/</loc>
     
     <lastmod>2017-01-15T03:16:46.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/2016/11/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%BC%95%E6%93%8E/</loc>
-    
-    <lastmod>2017-01-15T03:15:55.000Z</lastmod>
     
   </url>
   
@@ -226,13 +247,6 @@
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/2016/10/14/yap-yet-another-program-profiling-tool/</loc>
-    
-    <lastmod>2017-01-14T09:16:41.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://shenyu.wiki/2016/10/29/x86-64%E6%B1%87%E7%BC%96%E4%B8%8E%E8%B0%83%E8%AF%95/</loc>
     
     <lastmod>2017-01-14T09:15:50.000Z</lastmod>
@@ -317,13 +331,6 @@
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/2016/11/09/PostgreSQL-ODBC-driver-internal/</loc>
-    
-    <lastmod>2017-01-14T09:08:16.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://shenyu.wiki/2016/12/18/PostgreSQL-internal-roadmap/</loc>
     
     <lastmod>2017-01-14T09:08:05.000Z</lastmod>
@@ -334,13 +341,6 @@
     <loc>http://shenyu.wiki/2016/10/02/PostgreSQL-count-%E4%BC%98%E5%8C%96/</loc>
     
     <lastmod>2017-01-14T09:07:53.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/</loc>
-    
-    <lastmod>2017-01-14T09:07:34.000Z</lastmod>
     
   </url>
   
