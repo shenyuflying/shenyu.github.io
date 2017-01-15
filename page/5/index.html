@@ -269,11 +269,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-好书推荐：《操作系统设计与实现》" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-linux中的硬链接和软链接" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/10/好书推荐：《操作系统设计与实现》/" class="article-date">
-      <time datetime="2016-10-10T11:54:32.000Z" itemprop="datePublished">2016-10-10</time>
+      <a href="/2016/10/10/linux中的硬链接和软链接/" class="article-date">
+      <time datetime="2016-10-10T06:03:07.000Z" itemprop="datePublished">2016-10-10</time>
 </a>
 
 
@@ -288,7 +288,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a>
+      <a class="article-title" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a>
     </h1>
   
 
@@ -298,8 +298,14 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png" alt=""></p>
-<p>这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。</p>
+        <h2 id="建立硬链接和软链接"><a href="#建立硬链接和软链接" class="headerlink" title="建立硬链接和软链接"></a>建立硬链接和软链接</h2><p>在linux中我们通过ln命令来建立硬链接和软链接，默认是建立硬链接，加上-s参数那么建立的就是软链接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;Hello world&quot; &gt; a</div><div class="line">$ ln a a_hard_link</div><div class="line">$ ln -s a a_soft_link</div></pre></td></tr></table></figure></p>
+<p>建立好之后，用ls命令看一下，记得加上-i这样我们就可以看到inode号了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ls -ali</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p><strong>inode</strong><br>科普一下：inode全称是index node即索引节点。可见inode中并没有存放文件的实际内容，而是存放了索引。这个索引指向的是磁盘中存放文件内容的物理位置。<br><strong>目录</strong><br>在linux中目录也有一个inode，inode指向记录目录实际内容的磁盘物理位置。</p>
+<h2 id="什么是硬链接和软链接"><a href="#什么是硬链接和软链接" class="headerlink" title="什么是硬链接和软链接"></a>什么是硬链接和软链接</h2><p>再回到我们的例子里，ls的结果第一列是该文件的inode号，可以看到硬链接的inode号和文件原来的inode号是一样的。说明指向的物理位置是一样的。<br>我们看软链接的inode号不同，说明是一个新的文件，该文件指向的是另外的一个物理位置。该物理位置里面存放着链接目标的路径。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>让我们删除连接目标文件a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ rm a</div><div class="line">$ ls -ali</div><div class="line">总用量 12</div><div class="line">19796573 drwxrwxr-x  2 yshen yshen 4096 10月 10 11:35 .</div><div class="line">58720267 drwxrwxr-x 43 yshen yshen 4096 10月 10 11:33 ..</div><div class="line">19796575 -rw-rw-r--  1 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p>硬链接和软链接现在还能访问么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cat a_hard_link </div><div class="line">Hello world</div><div class="line">$ cat a_soft_link </div><div class="line">cat: a_soft_link: 没有那个文件或目录</div></pre></td></tr></table></figure></p>
+<p>硬链接还能访问，软链接现在已经失效了！根据定义我们不难找出原因：<br>(1)硬链接指向的是物理位置和连接对象指向的物理位置一样，该物理位置有一个引用计数（ls的第三列），删除链接对象后，引用计数从原来的2变为1，所以物理上文件并没有删除，如果为0的话采用unlink删除。所以硬链接依然可以访问。<br>(2)软链接其实是一个文件，文件指向的路径已经失效了，所以会显示没有那个文件或目录。</p>
+<p>我们总结一下区别：<br>(1) 链接目标失效之后，硬链接依然可以访问。软链接不能访问。<br>(2) 硬链接只能指向和链接目标同一个分区，软链接没有限制，甚至可以指向网络地址。</p>
 
       
     </div>
@@ -308,13 +314,13 @@
       
       
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/爱好/">爱好</a>
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
     </div>
 
 
       
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书/">读书</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
     </div>
 
       
