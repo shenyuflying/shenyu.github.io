@@ -220,7 +220,7 @@ a {
 }
 #container #mobile-nav #header .header-menu {
   height: auto;
-  margin: 10px;
+  margin: 30px;
 }
 #container #mobile-nav #header .header-menu ul {
   text-align: center;
@@ -746,7 +746,7 @@ a {
   line-height: 30px;
 }
 #header .header-nav .social {
-  margin-top: 30px;
+  margin-top: 10px;
   text-align: center;
   font-family: Arial;
 }
