@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/message/index.html</loc>
+    
+    <lastmod>2017-01-16T01:52:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/map/index.html</loc>
     
-    <lastmod>2017-01-16T01:38:32.000Z</lastmod>
+    <lastmod>2017-01-16T01:52:08.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://shenyu.wiki/tags/index.html</loc>
     
-    <lastmod>2017-01-16T01:34:24.000Z</lastmod>
+    <lastmod>2017-01-16T01:51:44.000Z</lastmod>
     
   </url>
   
@@ -521,13 +528,6 @@
   
   <url>
     <loc>http://shenyu.wiki/googlebe1133fd56386bb0.html</loc>
-    
-    <lastmod>2016-10-05T10:28:39.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/message/index.html</loc>
     
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     
