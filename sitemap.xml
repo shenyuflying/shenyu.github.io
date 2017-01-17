@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://shenyu.wiki/message/index.html</loc>
+    <loc>http://shenyu.wiki/map/index.html</loc>
     
-    <lastmod>2017-01-16T01:52:37.000Z</lastmod>
+    <lastmod>2017-01-17T09:59:59.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/map/index.html</loc>
+    <loc>http://shenyu.wiki/2017/01/16/hexo%E5%8D%9A%E5%AE%A2%E5%A2%9E%E5%8A%A0%E8%8F%9C%E5%8D%95%E6%A0%8F%E7%9B%AE/</loc>
     
-    <lastmod>2017-01-16T01:52:08.000Z</lastmod>
+    <lastmod>2017-01-16T03:33:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/message/index.html</loc>
+    
+    <lastmod>2017-01-16T01:52:37.000Z</lastmod>
     
   </url>
   
