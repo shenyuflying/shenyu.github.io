@@ -15,25 +15,39 @@
 
 
 
-<meta name="description" content="利用go语言内置的各种网络包可以方便的进行web编程。本文章利用了csdn的开放API实现读取最新文章的需求。演示了go语言发起http get请求和json的umarshing特性。
+<meta name="description" content="修改hosts来访问谷歌标签（空格分隔）： blog public
 
-简单的http GET请求go语言内置了net/http包，采用http.Get能够方便的发起GET请求
-12345678910111213141516171819202122package mainimpor">
+
+想用google查东西，可以通过修改hosts方式,非常简单。
+
+用root用户执行
+1234git clone https://github.com/racaljk/hostscp /etc/hosts /etc/hosts.bakcat hosts/hosts &amp;gt; /etc/hostsrm -rf hosts
+htt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="golang web编程之——读取csdn最新文章">
-<meta property="og:url" content="http://shenyu.wiki/2016/10/29/golang-web编程之——读取csdn最新文章/index.html">
+<meta property="og:title" content="修改hosts来访问谷歌">
+<meta property="og:url" content="http://shenyu.wiki/2017/01/18/修改hosts来访问谷歌/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="利用go语言内置的各种网络包可以方便的进行web编程。本文章利用了csdn的开放API实现读取最新文章的需求。演示了go语言发起http get请求和json的umarshing特性。
+<meta property="og:description" content="修改hosts来访问谷歌标签（空格分隔）： blog public
 
-简单的http GET请求go语言内置了net/http包，采用http.Get能够方便的发起GET请求
-12345678910111213141516171819202122package mainimpor">
-<meta property="og:updated_time" content="2017-01-14T09:01:01.000Z">
+
+想用google查东西，可以通过修改hosts方式,非常简单。
+
+用root用户执行
+1234git clone https://github.com/racaljk/hostscp /etc/hosts /etc/hosts.bakcat hosts/hosts &amp;gt; /etc/hostsrm -rf hosts
+htt">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/5jgl6gv0e53fdfne1o0ofyjh/image_1b6o85n6c14021lv0s2bh0b190c9.png">
+<meta property="og:updated_time" content="2017-01-18T07:43:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="golang web编程之——读取csdn最新文章">
-<meta name="twitter:description" content="利用go语言内置的各种网络包可以方便的进行web编程。本文章利用了csdn的开放API实现读取最新文章的需求。演示了go语言发起http get请求和json的umarshing特性。
+<meta name="twitter:title" content="修改hosts来访问谷歌">
+<meta name="twitter:description" content="修改hosts来访问谷歌标签（空格分隔）： blog public
 
-简单的http GET请求go语言内置了net/http包，采用http.Get能够方便的发起GET请求
-12345678910111213141516171819202122package mainimpor">
+
+想用google查东西，可以通过修改hosts方式,非常简单。
+
+用root用户执行
+1234git clone https://github.com/racaljk/hostscp /etc/hosts /etc/hosts.bakcat hosts/hosts &amp;gt; /etc/hostsrm -rf hosts
+htt">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/5jgl6gv0e53fdfne1o0ofyjh/image_1b6o85n6c14021lv0s2bh0b190c9.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -63,7 +77,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>golang web编程之——读取csdn最新文章 | 小宇的博客</title>
+<title>修改hosts来访问谷歌 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -282,11 +296,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-golang-web编程之——读取csdn最新文章" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-修改hosts来访问谷歌" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/29/golang-web编程之——读取csdn最新文章/" class="article-date">
-      <time datetime="2016-10-29T06:35:08.000Z" itemprop="datePublished">2016-10-29</time>
+      <a href="/2017/01/18/修改hosts来访问谷歌/" class="article-date">
+      <time datetime="2017-01-18T07:41:42.000Z" itemprop="datePublished">2017-01-18</time>
 </a>
 
 
@@ -301,7 +315,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      golang web编程之——读取csdn最新文章
+      修改hosts来访问谷歌
     </h1>
   
 
@@ -310,15 +324,11 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    <a class="article-category-link" href="/categories/其他/">其他</a>
     </div>
 
 
         
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
-    </div>
-
         <div class="clearfix"></div>
       </div>
       
@@ -326,17 +336,18 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>利用go语言内置的各种网络包可以方便的进行web编程。本文章利用了csdn的<a href="http://open.csdn.net/wiki/apis" target="_blank" rel="external">开放API</a>实现读取最新文章的需求。演示了go语言发起http get请求和json的umarshing特性。</p>
+        <h1 id="修改hosts来访问谷歌"><a href="#修改hosts来访问谷歌" class="headerlink" title="修改hosts来访问谷歌"></a>修改hosts来访问谷歌</h1><p>标签（空格分隔）： blog public</p>
+<hr>
+<blockquote>
+<p>想用google查东西，可以通过修改hosts方式,非常简单。</p>
 </blockquote>
-<h2 id="简单的http-GET请求"><a href="#简单的http-GET请求" class="headerlink" title="简单的http GET请求"></a>简单的http GET请求</h2><p>go语言内置了<code>net/http</code>包，采用<code>http.Get</code>能够方便的发起GET请求</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> main</div><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"fmt"</span></div><div class="line">	<span class="string">"io/ioutil"</span></div><div class="line">	<span class="string">"log"</span></div><div class="line">	<span class="string">"net/http"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line"></div><div class="line">	resp, err := http.Get(<span class="string">"http://api.csdn.net/blog/getnewarticlelist?client_id=????&amp;page=1&amp;size=10"</span>)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(err)</div><div class="line">	&#125;</div><div class="line">	contents, err := ioutil.ReadAll(resp.Body)</div><div class="line">	resp.Body.Close()</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(err)</div><div class="line">	&#125;</div><div class="line">	fmt.Printf(<span class="string">"%s"</span>, contents)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>看到返回的内容为json格式。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;page&quot;:1,&quot;count&quot;:12733,&quot;size&quot;:10,&quot;list&quot;:[&#123;&quot;ArticleId&quot;:52963517,&quot;BlogId&quot;:5022393,&quot;UserName&quot;:&quot;u013410747&quot;,&quot;Title&quot;:&quot;linux修改默认的编辑器&quot;,&quot;Description&quot;:&quot;sudo select-editor    选择vim 搞定。。&quot;,&quot;PostTime&quot;:&quot;\/Date(1477712141000)\/&quot;,&quot;UpdateTime&quot;:&quot;\/Date(1477712177908)\/&quot;,&quot;Digg&quot;:0,&quot;Bury&quot;:0,&quot;ChannelId&quot;:2,&quot;Type&quot;:1,&quot;Status&quot;:0,&quot;ViewCount&quot;:0,&quot;CommentCount&quot;:0,&quot;CommentAuth&quot;:2,&quot;IsTop&quot;:false,&quot;Level&quot;:0,&quot;OutlinkCount&quot;:0,&quot;Note&quot;:null,&quot;IP&quot;:null,&quot;Categories&quot;:null,&quot;Tags&quot;:[],&quot;ColumnAlias&quot;:null,&quot;ColumnTitle&quot;:null,&quot;MarkDownContent&quot;:null,&quot;MarkDownDirectory&quot;:null,&quot;ArticleEditType&quot;:0,&quot;ArticleMore&quot;:null&#125;,...umnAlias&quot;:null,&quot;ColumnTitle&quot;:null,&quot;MarkDownContent&quot;:null,&quot;MarkDownDirectory&quot;:null,&quot;ArticleEditType&quot;:0,&quot;ArticleMore&quot;:null&#125;]&#125;成功: 进程退出代码 0.</div></pre></td></tr></table></figure>
-<h2 id="JSON转为内部结构体"><a href="#JSON转为内部结构体" class="headerlink" title="JSON转为内部结构体"></a>JSON转为内部结构体</h2><p>那么如何把json格式的内容转为golang的内部结构体呢？这需要利用<code>json.Unmarshal</code></p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> main</div><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"encoding/json"</span></div><div class="line">	<span class="string">"fmt"</span></div><div class="line">	<span class="string">"io/ioutil"</span></div><div class="line">	<span class="string">"log"</span></div><div class="line">	<span class="string">"net/http"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="keyword">type</span> Article <span class="keyword">struct</span> &#123;</div><div class="line">	ArticleId   <span class="keyword">int</span></div><div class="line">	BlogId      <span class="keyword">int</span></div><div class="line">	UserName    <span class="keyword">string</span></div><div class="line">	Title       <span class="keyword">string</span></div><div class="line">	Description <span class="keyword">string</span></div><div class="line">	PostTime    <span class="keyword">string</span></div><div class="line">	UpdateTime  <span class="keyword">string</span></div><div class="line">	ViewCount    <span class="keyword">int</span></div><div class="line">	CommentCount <span class="keyword">int</span></div><div class="line">	Categories  <span class="keyword">int</span></div><div class="line">	ColumnAlias <span class="keyword">bool</span></div><div class="line">	Url         <span class="keyword">string</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">type</span> Articles <span class="keyword">struct</span> &#123;</div><div class="line">	Page  <span class="keyword">int</span> <span class="string">`json:"page,int"`</span></div><div class="line">	Count <span class="keyword">int</span></div><div class="line">	Size  <span class="keyword">int</span></div><div class="line">	List  []*Article</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	resp, err := http.Get(<span class="string">"http://api.csdn.net/blog/getnewarticlelist?client_id=????&amp;page=0&amp;size=20"</span>)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(err)</div><div class="line">	&#125;</div><div class="line">	str, err := ioutil.ReadAll(resp.Body)</div><div class="line">	resp.Body.Close()</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(err)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">var</span> contents Articles</div><div class="line">	<span class="keyword">if</span> err := json.Unmarshal(str, &amp;contents); err != <span class="literal">nil</span> &#123;</div><div class="line">		log.Fatal(<span class="string">"Json unmarshing failed: "</span>, err)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> contents.List &#123;</div><div class="line">		fmt.Printf(<span class="string">"%v. %v\n"</span>, k, v.Title)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>最后，我们完成了用csdn的<a href="http://open.csdn.net/wiki/apis" target="_blank" rel="external">开放API</a>实现读取最新文章的需求。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">0. 1048. Find Coins (25)解题报告</div><div class="line">1. 1049. Counting Ones (30)解题报告</div><div class="line">2. java实习第二天</div><div class="line">3. 1060. 爱丁顿数(25)</div><div class="line">4. 剑指offer-数组中出现次数超过一半的数字</div><div class="line">5. jsonp跨域访问案例</div><div class="line">6. framework jar包MAKEFILE示例</div><div class="line">7. Unity3d 乱序之惑</div><div class="line">8. CodeForces 445C DZY Loves Physics</div><div class="line">9. LeetCode #424: Longest Repeating Character Replacement</div><div class="line">10. 面板显示private变量用标签[SerializeField]</div><div class="line">11. PostgreSQL问题解决--连接数过多</div><div class="line">12. 多维高斯分布及多维条件高斯分布</div><div class="line">13. 王朝  都要学C</div><div class="line">14. CharacterController.Move 实现角色移动</div><div class="line">15. bootargs</div><div class="line">16. 不用输入法输自己的名字!!!!</div><div class="line">17. mybatis mbg自动生成的selectByExample按条件查询不出来值。</div><div class="line">18. 系统乔迁留念贴</div><div class="line">19. java中Proxy(代理与动态代理)</div></pre></td></tr></table></figure>
+<p>用root用户执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/racaljk/hosts</div><div class="line">cp /etc/hosts /etc/hosts.bak</div><div class="line">cat hosts/hosts &gt; /etc/hosts</div><div class="line">rm -rf hosts</div></pre></td></tr></table></figure>
+<p><a href="https://github.com/racaljk/hosts这个上面有人在维护最新的hosts。如果hosts过期，可以通过这个脚本定时执行，来确保总是最新的。" target="_blank" rel="external">https://github.com/racaljk/hosts这个上面有人在维护最新的hosts。如果hosts过期，可以通过这个脚本定时执行，来确保总是最新的。</a></p>
+<center><img src="http://static.zybuluo.com/shenyuflying/5jgl6gv0e53fdfne1o0ofyjh/image_1b6o85n6c14021lv0s2bh0b190c9.png" alt="image_1b6o85n6c14021lv0s2bh0b190c9.png-212.2kB"></center>
+
+<p>这样就可以来搜索需要的东西。比如我的博客就可以通过google搜到哦。</p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -345,13 +356,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></p>
+        <p><span>本文标题:</span><a href="/2017/01/18/修改hosts来访问谷歌/">修改hosts来访问谷歌</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-10-29, 06:35:08</p>
-        <p><span>最后更新:</span>2017-01-14, 09:01:01</p>
+        <p><span>发布时间:</span>2017-01-18, 07:41:42</p>
+        <p><span>最后更新:</span>2017-01-18, 07:43:40</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/10/29/golang-web编程之——读取csdn最新文章/" title="golang web编程之——读取csdn最新文章">http://shenyu.wiki/2016/10/29/golang-web编程之——读取csdn最新文章/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/10/29/golang-web编程之——读取csdn最新文章/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/18/修改hosts来访问谷歌/" title="修改hosts来访问谷歌">http://shenyu.wiki/2017/01/18/修改hosts来访问谷歌/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/01/18/修改hosts来访问谷歌/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -363,16 +374,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/10/29/x86-64汇编与调试/">
-                    x86_64汇编与调试
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/10/27/PostgreSQL中的字符编码/">
-                    PostgreSQL中的字符编码
+                <a href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/">
+                    如果你要给学生一些学习建议，你会说些什么
                 </a>
             </div>
         
@@ -384,7 +389,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的http-GET请求"><span class="toc-number">1.</span> <span class="toc-text">简单的http GET请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JSON转为内部结构体"><span class="toc-number">2.</span> <span class="toc-text">JSON转为内部结构体</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#修改hosts来访问谷歌"><span class="toc-number">1.</span> <span class="toc-text">修改hosts来访问谷歌</span></a></li></ol>
         
     </div>
     <style>
@@ -420,7 +425,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"golang web编程之——读取csdn最新文章　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"修改hosts来访问谷歌　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -436,7 +441,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/29/golang-web编程之——读取csdn最新文章/" data-title="golang web编程之——读取csdn最新文章" data-url="http://shenyu.wiki/2016/10/29/golang-web编程之——读取csdn最新文章/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/01/18/修改hosts来访问谷歌/" data-title="修改hosts来访问谷歌" data-url="http://shenyu.wiki/2017/01/18/修改hosts来访问谷歌/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -459,15 +464,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/10/29/x86-64汇编与调试/" title="上一篇: x86_64汇编与调试">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/10/27/PostgreSQL中的字符编码/" title="下一篇: PostgreSQL中的字符编码">
+            <a href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/" title="下一篇: 如果你要给学生一些学习建议，你会说些什么">
                 <i class="fa fa-angle-right"></i>
             </a>
         
