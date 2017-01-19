@@ -15,136 +15,54 @@
 
 
 
-<meta name="description" content="技术分享数据库
-基础知识
-PostgreSQL
-PostgreSQL使用
-运维
-调优
-
-
-PostgreSQL内核
-架构
-语言层
-[优化层]
-[执行层]
-[存取层]
-[存储层]
-备份还原
-PLSQL
-本地化
-
-
-PostgreSQL接口
-[ODBC]
-[libpq]
-
-
-[新特性开发]
-
-
-MySQL
-Oracle
-Oracle使用
-对象类型
-
-
-
-
-
-操作系统
-基础知识
-Linux
-Linux使">
+<meta name="description" content="An Introduction to unixODBC
+  
+  
+  
+  
+  code{white-space: pre;}
+  
+  
+  
+    var link = document.createElement( &apos;link&apos; );
+    link.rel = &apos;stylesheet&apos;;
+    link.type = &apos;text/css&apos;;
+    l">
 <meta property="og:type" content="website">
-<meta property="og:title" content="导航">
-<meta property="og:url" content="http://shenyu.wiki/map/index.html">
+<meta property="og:title" content="小宇的博客">
+<meta property="og:url" content="http://shenyu.wiki/uploads/an-introduction-to-odbc.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="技术分享数据库
-基础知识
-PostgreSQL
-PostgreSQL使用
-运维
-调优
-
-
-PostgreSQL内核
-架构
-语言层
-[优化层]
-[执行层]
-[存取层]
-[存储层]
-备份还原
-PLSQL
-本地化
-
-
-PostgreSQL接口
-[ODBC]
-[libpq]
-
-
-[新特性开发]
-
-
-MySQL
-Oracle
-Oracle使用
-对象类型
-
-
-
-
-
-操作系统
-基础知识
-Linux
-Linux使">
-<meta property="og:updated_time" content="2017-01-19T01:51:35.000Z">
+<meta property="og:description" content="An Introduction to unixODBC
+  
+  
+  
+  
+  code{white-space: pre;}
+  
+  
+  
+    var link = document.createElement( &apos;link&apos; );
+    link.rel = &apos;stylesheet&apos;;
+    link.type = &apos;text/css&apos;;
+    l">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/pwwxor5dwltbe6lmjx61ayqd/image_1b6lsvbtf29rafmjhu17hf1ptn9.png">
+<meta property="og:updated_time" content="2017-01-19T01:50:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="导航">
-<meta name="twitter:description" content="技术分享数据库
-基础知识
-PostgreSQL
-PostgreSQL使用
-运维
-调优
-
-
-PostgreSQL内核
-架构
-语言层
-[优化层]
-[执行层]
-[存取层]
-[存储层]
-备份还原
-PLSQL
-本地化
-
-
-PostgreSQL接口
-[ODBC]
-[libpq]
-
-
-[新特性开发]
-
-
-MySQL
-Oracle
-Oracle使用
-对象类型
-
-
-
-
-
-操作系统
-基础知识
-Linux
-Linux使">
+<meta name="twitter:title" content="小宇的博客">
+<meta name="twitter:description" content="An Introduction to unixODBC
+  
+  
+  
+  
+  code{white-space: pre;}
+  
+  
+  
+    var link = document.createElement( &apos;link&apos; );
+    link.rel = &apos;stylesheet&apos;;
+    link.type = &apos;text/css&apos;;
+    l">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/pwwxor5dwltbe6lmjx61ayqd/image_1b6lsvbtf29rafmjhu17hf1ptn9.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -174,7 +92,7 @@ Linux使">
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>导航 | 小宇的博客</title>
+<title>小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -396,8 +314,8 @@ Linux使">
       <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/map/index.html" class="article-date">
-      <time datetime="2017-01-16T01:33:22.000Z" itemprop="datePublished">2017-01-16</time>
+      <a href="/uploads/an-introduction-to-odbc.html" class="article-date">
+      <time datetime="2017-01-19T01:50:09.000Z" itemprop="datePublished">2017-01-19</time>
 </a>
 
 
@@ -407,24 +325,6 @@ Linux使">
     
       <input type="hidden" class="isFancy" />
     
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      导航
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-        <div class="clearfix"></div>
-      </div>
-      
     
     <div class="article-entry" itemprop="articleBody">
       
@@ -448,102 +348,117 @@ Linux使">
 
 
           
-        <h2 id="技术分享"><a href="#技术分享" class="headerlink" title="技术分享"></a>技术分享</h2><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><ul>
-<li><a href="http://shenyu.wiki/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">基础知识</a></li>
-<li><a href="http://shenyu.wiki/tags/PostgreSQL/">PostgreSQL</a><ul>
-<li><a href="http://shenyu.wiki/tags/PostgreSQL/">PostgreSQL使用</a><ul>
-<li><a href="">运维</a></li>
-<li><a href="http://shenyu.wiki/tags/调优/">调优</a></li>
+        <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Shen Yu">
+  <title>An Introduction to unixODBC</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="http://lab.hakim.se/reveal-js/reveal.js/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">An Introduction to unixODBC</h1>
+  <h2 class="author">Shen Yu</h2>
+  <h3 class="date">2017.1</h3>
+</section>
+
+<section><section id="what" class="titleslide slide level1"><h1>what?</h1></section><section id="什么是odbc" class="slide level2">
+<h1>什么是ODBC?</h1>
+<p>ODBC -- Open Database Connectivity ODBC是MICROSOFT提出的数据库访问接口标准 ODBC规范后来被X/OPEN和ISO/IEC采纳，作为SQL标准的一部分</p>
+</section><section id="odbc有什么组成" class="slide level2">
+<h1>ODBC有什么组成</h1>
+<center>
+<img src="http://static.zybuluo.com/shenyuflying/pwwxor5dwltbe6lmjx61ayqd/image_1b6lsvbtf29rafmjhu17hf1ptn9.png" alt="image_1b6lsvbtf29rafmjhu17hf1ptn9.png-115.8kB">
+</center>
+<ul>
+<li>应用程序（APP）</li>
+<li>驱动程序管理器（odbcad32，UnixODBC（这个也可以在windows上使用））</li>
+<li>驱动程序（postgresql ODBC Driver）</li>
+<li>数据库服务服务器 （postgresql）</li>
 </ul>
-</li>
-<li><a href="http://shenyu.wiki/tags/PostgreSQL/">PostgreSQL内核</a><ul>
-<li><a href="http://shenyu.wiki/tags/架构/">架构</a></li>
-<li><a href="http://shenyu.wiki/tags/语言层/">语言层</a></li>
-<li>[优化层]</li>
-<li>[执行层]</li>
-<li>[存取层]</li>
-<li>[存储层]</li>
-<li><a href="http://shenyu.wiki/tags/备份还原/">备份还原</a></li>
-<li><a href="http://shenyu.wiki/tags/PLSQL/">PLSQL</a></li>
-<li><a href="http://shenyu.wiki/tags/本地化/">本地化</a></li>
+</section></section>
+<section><section id="why" class="titleslide slide level1"><h1>why?</h1></section><section id="为什么用odbc" class="slide level2">
+<h1>为什么用ODBC?</h1>
+<p>API——为应用提供一致的开发接口 应用一次开发，方便更换为不同类型的数据库</p>
+</section></section>
+<section><section id="where-如何获取" class="titleslide slide level1"><h1>where? 如何获取?</h1></section><section id="unixodbc" class="slide level2">
+<h1>unixODBC</h1>
+<ol type="1">
+<li>官网: http://www.unixodbc.org/ 源码可以在这里下载，另外还有很多文档</li>
+<li>在线手册:Microsoft ODBC 3.0 Programmers Reference Volume 1 and 2 https://msdn.microsoft.com/en-us/library/ms714177.aspx</li>
+<li>API reference https://msdn.microsoft.com/en-us/library/ms714562(v=vs.85).aspx</li>
+<li>EASYSOFT http://www.easysoft.com/developer/interfaces/odbc/index.html 很多关于ODBC的文章</li>
+<li>内网wiki: http://192.168.4.28/wiki/ODBC</li>
+</ol>
+</section><section id="postgresql-odbc-driver" class="slide level2">
+<h1>PostgreSQL ODBC driver</h1>
+<ol type="1">
+<li>https://odbc.postgresql.org/</li>
+<li>https://git.postgresql.org/gitweb/?p=psqlodbc.git</li>
+</ol>
+</section></section>
+<section><section id="how-如何使用" class="titleslide slide level1"><h1>how? 如何使用</h1></section><section id="注册驱动文件" class="slide level2">
+<h1>注册驱动文件</h1>
+<ul>
+<li>windows上是在注册表里添加内容</li>
+<li>Linux上是在odbcinst.ini里添加内容</li>
 </ul>
-</li>
-<li><a href="http://shenyu.wiki/tags/接口/">PostgreSQL接口</a><ul>
-<li>[ODBC]</li>
-<li>[libpq]</li>
+</section><section id="注册dsn" class="slide level2">
+<h1>注册DSN</h1>
+<ul>
+<li>Windows上是通过驱动管理器去做</li>
+<li>Linux上是通过odbc.ini</li>
 </ul>
-</li>
-<li>[新特性开发]</li>
+</section><section id="测试连接" class="slide level2">
+<h1>测试连接</h1>
+<ul>
+<li>Windows上通过界面</li>
+<li>Linux上通过UnixODBC自带的isql</li>
 </ul>
-</li>
-<li><a href="http://shenyu.wiki/tags/MySQL/">MySQL</a></li>
-<li><a href="">Oracle</a><ul>
-<li><a href="">Oracle使用</a><ul>
-<li><a href="">对象类型</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h3><ul>
-<li>基础知识</li>
-<li><a href="http://shenyu.wiki/tags/Linux/">Linux</a><ul>
-<li><a href="http://shenyu.wiki/tags/Linux使用/">Linux使用</a></li>
-<li><a href="http://shenyu.wiki/tags/Linux编程/">Linux编程</a></li>
-<li><a href="http://shenyu.wiki/tags/Linux内核/">Linux内核</a></li>
-</ul>
-</li>
-<li>Minix</li>
-</ul>
-<h3 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h3><ul>
-<li>基础知识</li>
-<li>[ceph]</li>
-<li>[freenas]</li>
-</ul>
-<h3 id="编程语言"><a href="#编程语言" class="headerlink" title="编程语言"></a>编程语言</h3><ul>
-<li><a href="http://shenyu.wiki/tags/c/">c</a></li>
-<li>c++</li>
-<li><a href="http://shenyu.wiki/tags/golang/">golang</a></li>
-<li><a href="http://shenyu.wiki/tags/assembly/">assembly</a></li>
-<li><a href="http://shenyu.wiki/tags/shell/">Shell</a><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3></li>
-<li><a href="http://shenyu.wiki/tags/gdb/">gdb</a></li>
-<li><a href="http://shenyu.wiki/tags/git/">git</a></li>
-<li><a href="http://shenyu.wiki/tags/vim/">vim</a></li>
-<li><a href="http://shenyu.wiki/tags/sed/">sed</a></li>
-<li><a href="">wget</a><h3 id="网站"><a href="#网站" class="headerlink" title="网站"></a>网站</h3></li>
-<li><a href="http://shenyu.wiki/tags/hexo/">hexo</a></li>
-<li>mathjax</li>
-</ul>
-<h2 id="视频"><a href="#视频" class="headerlink" title="视频"></a>视频</h2><ul>
-<li><a href="http://shenyu.wiki/tags/%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8/">小宇带你学PostgreSQL内核</a></li>
-<li><a href="">汇编调试方法</a></li>
-<li><a href="">PostgreSQL逻辑备份还原设计与实现</a></li>
-</ul>
-<h2 id="Presentations"><a href="#Presentations" class="headerlink" title="Presentations"></a>Presentations</h2><ul>
-<li><a href="http://shenyu.wiki/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC Driver internal</a></li>
-<li><a href="">PostgreSQL logical backup &amp; restore</a></li>
-<li><a href="">汇编与调试</a></li>
-<li><a href="/uploads/an-introduction-to-odbc.html">An introduction to ODBC</a></li>
-<li><a href="http://shenyu.wiki/2016/11/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%BC%95%E6%93%8E/">PostgreSQL查询优化引擎</a></li>
-</ul>
-<h2 id="开源社区"><a href="#开源社区" class="headerlink" title="开源社区"></a>开源社区</h2><ul>
-<li><a href="https://github.com/shenyuflying/pgNodeGraph" target="_blank" rel="external">pgNodeGraph</a></li>
-<li><a href="https://github.com/shenyuflying/yap" target="_blank" rel="external">yap</a></li>
-<li><a href="https://github.com/shenyuflying/indent" target="_blank" rel="external">indent</a></li>
-</ul>
-<h2 id="爱好"><a href="#爱好" class="headerlink" title="爱好"></a>爱好</h2><ul>
-<li><a href="http://shenyu.wiki/tags/%E6%97%85%E8%A1%8C/">旅行</a></li>
-<li><a href="http://shenyu.wiki/tags/%E8%AF%BB%E4%B9%A6/">读书</a></li>
-<li><a href="http://shenyu.wiki/tags/文章/">文章</a></li>
-<li>音乐</li>
-<li>电影</li>
-<li>电视剧</li>
-<li>名言</li>
-<li>数码</li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li>TODO</li>
-</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
 
       
     </div>
@@ -572,7 +487,7 @@ Linux使">
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"导航　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -584,6 +499,27 @@ Linux使">
 
 
 
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="uploads/an-introduction-to-odbc.html" data-title="" data-url="http://shenyu.wiki/uploads/an-introduction-to-odbc.html"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
 
 
 
