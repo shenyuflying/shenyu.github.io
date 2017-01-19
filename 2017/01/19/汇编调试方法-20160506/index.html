@@ -15,18 +15,31 @@
 
 
 
-<meta name="description" content="为什么要使用链接库？大概有如下几个原因：1.利用前人为我们写好的库，比如数学库libm.so，免去再造轮子的困扰。2.充分使得程序的模块化，方便开发和后期升级。 3. 减小可执行文件的体积。链接库分为静态链接库、动态链接库。动态链接库还有不同的使用形式。那么他们的区别是什么？在什么情况下使用？编程时需要考虑那些方面呢？">
+<meta name="description" content="计算机基本架构、汇编基础知识、C语言与汇编、GDB汇编调试。带你进入C语言的底层世界。
+
+
+
+2016年5月6日
+如果还想看到更多此类文章，请移步到小宇的博客。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解静态链接库和动态链接库">
-<meta property="og:url" content="http://shenyu.wiki/2016/11/21/深入理解静态链接库和动态链接库/index.html">
+<meta property="og:title" content="汇编调试方法-20160506">
+<meta property="og:url" content="http://shenyu.wiki/2017/01/19/汇编调试方法-20160506/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="为什么要使用链接库？大概有如下几个原因：1.利用前人为我们写好的库，比如数学库libm.so，免去再造轮子的困扰。2.充分使得程序的模块化，方便开发和后期升级。 3. 减小可执行文件的体积。链接库分为静态链接库、动态链接库。动态链接库还有不同的使用形式。那么他们的区别是什么？在什么情况下使用？编程时需要考虑那些方面呢？">
-<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/15eza7grqujx34uglno2tsif/image_1b23ic9nf1gl52cfqnv1dhjmao9.png">
-<meta property="og:updated_time" content="2017-01-15T03:14:59.000Z">
+<meta property="og:description" content="计算机基本架构、汇编基础知识、C语言与汇编、GDB汇编调试。带你进入C语言的底层世界。
+
+
+
+2016年5月6日
+如果还想看到更多此类文章，请移步到小宇的博客。">
+<meta property="og:updated_time" content="2017-01-19T12:12:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解静态链接库和动态链接库">
-<meta name="twitter:description" content="为什么要使用链接库？大概有如下几个原因：1.利用前人为我们写好的库，比如数学库libm.so，免去再造轮子的困扰。2.充分使得程序的模块化，方便开发和后期升级。 3. 减小可执行文件的体积。链接库分为静态链接库、动态链接库。动态链接库还有不同的使用形式。那么他们的区别是什么？在什么情况下使用？编程时需要考虑那些方面呢？">
-<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/15eza7grqujx34uglno2tsif/image_1b23ic9nf1gl52cfqnv1dhjmao9.png">
+<meta name="twitter:title" content="汇编调试方法-20160506">
+<meta name="twitter:description" content="计算机基本架构、汇编基础知识、C语言与汇编、GDB汇编调试。带你进入C语言的底层世界。
+
+
+
+2016年5月6日
+如果还想看到更多此类文章，请移步到小宇的博客。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -56,7 +69,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>深入理解静态链接库和动态链接库 | 小宇的博客</title>
+<title>汇编调试方法-20160506 | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -275,11 +288,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-深入理解静态链接库和动态链接库" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-汇编调试方法-20160506" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/21/深入理解静态链接库和动态链接库/" class="article-date">
-      <time datetime="2016-11-21T14:21:46.000Z" itemprop="datePublished">2016-11-21</time>
+      <a href="/2017/01/19/汇编调试方法-20160506/" class="article-date">
+      <time datetime="2017-01-19T11:07:51.000Z" itemprop="datePublished">2017-01-19</time>
 </a>
 
 
@@ -294,7 +307,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      深入理解静态链接库和动态链接库
+      汇编调试方法-20160506
     </h1>
   
 
@@ -302,16 +315,8 @@
       
       <div class="article-info article-info-post">
         
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
 
         
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
-    </div>
-
         <div class="clearfix"></div>
       </div>
       
@@ -320,36 +325,12 @@
       
           
         <blockquote>
-<p>为什么要使用链接库？大概有如下几个原因：1.利用前人为我们写好的库，比如数学库libm.so，免去再造轮子的困扰。2.充分使得程序的模块化，方便开发和后期升级。 3. 减小可执行文件的体积。链接库分为静态链接库、动态链接库。动态链接库还有不同的使用形式。那么他们的区别是什么？在什么情况下使用？编程时需要考虑那些方面呢？</p>
+<p>计算机基本架构、汇编基础知识、C语言与汇编、GDB汇编调试。带你进入C语言的底层世界。</p>
 </blockquote>
-<a id="more"></a>
-<h2 id="静态库-static-linking-library"><a href="#静态库-static-linking-library" class="headerlink" title="静态库 static linking library"></a>静态库 static linking library</h2><p>静态库一般命名为<code>libxxx.a</code>，其中<code>xxx</code>是库的名字。利用静态库方式编译生成的可执行程序的体积一般比较大一些。因为整个静态库的内容都会被链接到代码中。由此，我们可以发现他的优点，即编译后的科执行程序不依赖任何外部的库文件。这点可以很好的保证程序的可部署性，因为不用再考虑库的兼容性和依赖性。其缺点也是显而易见，即对库做的修改，必须重新编译整个可执行程序。升级也需要替换整个可执行程序。对于一些不间断运行程序，比如数据库软件，升级后需要重启。<br>无论静态库还是动态库，都是利用<code>gcc</code>生成的。<code>gcc</code>经过<code>预处理</code>、<code>编译</code>、<code>链接</code>三个步骤生成可执行文件，静态库的生成只需要前两步，gcc的<code>-c</code>选项就是让gcc只做<code>预处理</code>、<code>编译</code>两步。通过这两步由<code>libmy.c</code>生成了<code>libmy.o</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gcc -c libmy.c</div></pre></td></tr></table></figure></p>
-<p>接下来就是用<code>ar</code>命令把一个或几个<code>.o</code>文件放到一个<code>.a</code>文件中。<br><code>-c</code>：创建一个a文件<br><code>-r</code>：加入新的o文件时候，如果重名，就采取替换的方法<br><code>-s</code>：加入一个o文件的索引<br><code>-v</code>：输出详细的过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ar -crsv libmy.a libmy.o</div></pre></td></tr></table></figure></p>
-<p>下一步就是先编译main.c文件，然后把生成的main.o文件和libmy.a库文件链接到一起。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gcc -c main.c</div><div class="line">$ gcc main.o -o main -L. -lmy</div></pre></td></tr></table></figure></p>
-<p>把上述过程写成<code>Makefile</code>文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ cat Makefile </div><div class="line">all:main</div><div class="line"></div><div class="line">main: main.o libmy.a</div><div class="line">	gcc main.o -o main -L. -lmy</div><div class="line">libmy.a: libmy.o</div><div class="line">	ar -crsv libmy.a libmy.o</div><div class="line">libmy.o: libmy.c</div><div class="line">	gcc -c libmy.c</div><div class="line">clean:</div><div class="line">	-rm *.o *.a</div></pre></td></tr></table></figure></p>
-<p>下面我们看看<code>nm</code>生成的可执行程序的内容。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ nm main | grep add</div><div class="line">0000000000400551 T add</div></pre></td></tr></table></figure>
-<p><code>add</code>函数别标记为<code>T</code>：该符号在text section文本段中，说明该函数的内容已经在可执行程序中了。<br>接下来用<code>objdump</code>来看一下链接库中的<code>add</code>函数内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ objdump -S main</div><div class="line">0000000000400551 &lt;add&gt;:</div><div class="line">  400551:       55                      push   %rbp</div><div class="line">  400552:       48 89 e5                mov    %rsp,%rbp</div><div class="line">  400555:       89 7d fc                mov    %edi,-0x4(%rbp)</div><div class="line">  400558:       89 75 f8                mov    %esi,-0x8(%rbp)</div><div class="line">  40055b:       8b 55 fc                mov    -0x4(%rbp),%edx</div><div class="line">  40055e:       8b 45 f8                mov    -0x8(%rbp),%eax</div><div class="line">  400561:       01 d0                   add    %edx,%eax</div><div class="line">  400563:       5d                      pop    %rbp</div><div class="line">  400564:       c3                      retq   </div><div class="line">  400565:       66 2e 0f 1f 84 00 00    nopw   %cs:0x0(%rax,%rax,1)</div><div class="line">  40056c:       00 00 00 </div><div class="line">  40056f:       90                      nop</div></pre></td></tr></table></figure>
-<p>链接库libmy.a已经完全到可执行程序main中，运行时不需要再依赖libmy.a了。add的地址是<code>400551</code>函数的实际地址，运行时add的地址就是这个。下面我们用<code>gdb</code>调试一把：<br><img src="http://static.zybuluo.com/shenyuflying/15eza7grqujx34uglno2tsif/image_1b23ic9nf1gl52cfqnv1dhjmao9.png" alt="image_1b23ic9nf1gl52cfqnv1dhjmao9.png-48kB"></p>
-<h2 id="动态链接库-dynamic-linking-library"><a href="#动态链接库-dynamic-linking-library" class="headerlink" title="动态链接库 dynamic linking library"></a>动态链接库 dynamic linking library</h2><p>和静态库不同，正如其名字所说，动态库在编译的时候并没有编译到目标代码中，而是在程序执行的时候才打开库文件并载入库文件中的相应函数。因此，该种方法生成的可执行程序比较小。同时，在程序有bug时，定位到某个库文件，只需要替换相应的so文件就可以了。不需要替换整个科执行程序。但是缺点也是显而易见，在程序部署的时候必须确保环境的库文件版本正确，否则程序无法运行。<br>在编译动态库时，需要加上如下参数：</p>
-<p><code>-fPIC</code>：生成位置无关代码（position-independent code）。在PIC代码中，所有的地址是通过一个global offset table(GOT)的偏移量访问的。这种特性正好服务于动态库，因为其载入的地址不是确定的。<br><code>-shared</code>：生成共享目标文件，支持动态连接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gcc -fPIC -shared -o libmy.so libmy.c</div></pre></td></tr></table></figure></p>
-<p>动态链接库的加载方式有2中，即在编译时指定和运行时指定。</p>
-<h3 id="编译时指定"><a href="#编译时指定" class="headerlink" title="编译时指定"></a>编译时指定</h3><p>这种方式，是在<code>gcc</code>编译时指定<code>-lxxx</code>库文件。程序在运行时，查找系统中的相关库文件，并由操作系统加载想干的库文件。这种方式不用在编码过程中做出特殊处理，在编程方面和静态库类似。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gcc main.o -o main -L. -lmy</div></pre></td></tr></table></figure>
-<p>把上述内容写成<code>Makefile</code>文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cat Makefile</div><div class="line">all:main</div><div class="line"></div><div class="line">main: main.c libmy.so</div><div class="line">    gcc main.c -o main -L. -lmy</div><div class="line">libmy.so: libmy.c</div><div class="line">    gcc -fPIC -shared -o libmy.so libmy.c</div><div class="line">clean:</div><div class="line">    -rm *.o *.so main</div></pre></td></tr></table></figure></p>
-<p>如果操作系统在加载动态库的过程中，没有找到相关文件，那么会报错。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">./main: error while loading shared libraries: libmy.so: cannot open shared object file: No such file or directory</div></pre></td></tr></table></figure></p>
-<p>这时候需要你把库文件放到正确的位置，比如<code>/usr/lib</code>下面。或者指定<code>LD_LIBRARY_PATH</code>环境变量。之后，用<code>ldd</code>命令查看是否找到了库文件，以及库文件的路径是否正确。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ldd ./main</div><div class="line">	linux-vdso.so.1 =&gt;  (0x00007ffe2db85000)</div><div class="line">	libmy.so =&gt; ./libmy.so (0x00007f3d5a6a8000)</div><div class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f3d5a2b8000)</div><div class="line">	/lib64/ld-linux-x86-64.so.2 (0x0000555f008f0000)</div></pre></td></tr></table></figure></p>
-<p>下面我们用<code>nm</code>来看一下main的内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ nm main | grep add</div><div class="line">                 U add</div></pre></td></tr></table></figure></p>
-<p>add函数被标记为<code>U</code>，即Undefined未定义。说明main可执行文件中没有add的二进制代码。那么在运行时如何找到add的地址呢？我们分析一下汇编语言：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">00000000004006c6 &lt;main&gt;:</div><div class="line">  4006c6:   55                      push   %rbp</div><div class="line">  4006c7:   48 89 e5                mov    %rsp,%rbp</div><div class="line">  4006ca:   be 01 00 00 00          mov    $0x1,%esi</div><div class="line">  4006cf:   bf 01 00 00 00          mov    $0x1,%edi</div><div class="line">  4006d4:   e8 b7 fe ff ff          callq  400590 &lt;add@plt&gt;</div><div class="line">  4006d9:   89 c6                   mov    %eax,%esi</div><div class="line">  4006db:   bf 84 07 40 00          mov    $0x400784,%edi</div><div class="line">  4006e0:   b8 00 00 00 00          mov    $0x0,%eax</div><div class="line">  4006e5:   e8 b6 fe ff ff          callq  4005a0 &lt;printf@plt&gt;</div><div class="line">  4006ea:   b8 00 00 00 00          mov    $0x0,%eax</div><div class="line">  4006ef:   5d                      pop    %rbp</div><div class="line">  4006f0:   c3                      retq</div><div class="line">  4006f1:   66 2e 0f 1f 84 00 00    nopw   %cs:0x0(%rax,%rax,1)</div><div class="line">  4006f8:   00 00 00 </div><div class="line">  4006fb:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)</div></pre></td></tr></table></figure>
-<p>看到程序在准备好参数之后执行了<code>callq  400590 &lt;add@plt&gt;</code>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">0000000000400590 &lt;add@plt&gt;:</div><div class="line">  400590:   ff 25 82 0a 20 00       jmpq   *0x200a82(%rip)      </div><div class="line">  400596:   68 00 00 00 00          pushq  $0x0</div><div class="line">  40059b:   e9 e0 ff ff ff          jmpq   400580 &lt;_init+0x20&gt;</div></pre></td></tr></table></figure></p>
-<p>接下来实际上是调用<code>libc</code>的<code>_dl_runtime_resolve_sse</code>把函数<code>add</code>的地址解析出来并保存到<code>plt</code>中。下次运行到这里直接可以jmpq到add函数的地址，不用再次解析地址了。关于这个过程之后再开贴讨论。<br>可以看出来，动态链接库的地址一般都很大。</p>
-<h3 id="运行时指定"><a href="#运行时指定" class="headerlink" title="运行时指定"></a>运行时指定</h3><p>这种方法是最复杂的也是最灵活的。因为动态链接库是在程序运行之后才加载的。这样能够在程序不中断的情况下替换动态链接库。这个特性非常适合数据库等需要长时间运行的软件。升级的时候，不需要停机，只需替换动态链接库文件，然后让程序再次载入即可。同时因为是在运行时指定动态链接库的位置，需要在程序编码中处理动态链接库的加载。<br>在编码过程中需要加上<code>dlfcn.h</code>头文件，该文件提供了一系列操作动态链接库的函数，比如：</p>
-<p><code>dlopen</code>：打开<code>.so</code>库文件，并返回一个<code>handle</code>用于以下函数<br><code>dlsym</code>：在库文件中根据<code>函数名</code>找到函数地址并返回<br><code>dlclose</code>：关闭库文件<br>我们就用这几个函数来完成动态链接库的加载。在编译的时候需要在gcc后面加上<code>-ldl</code>已加载libdl.so库。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;dlfcn.h&gt;</span> <span class="comment">/* dlopen dlsym dlclose dlerror */</span></span></div><div class="line"></div><div class="line"><span class="comment">/* import from libmy.so */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LIBMY <span class="meta-string">"./libmy.so"</span></span></div><div class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*add_fp)</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">void</span> *handle = <span class="literal">NULL</span>;</div><div class="line">    add_fp add = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">char</span> *error = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    handle = dlopen(LIBMY, RTLD_LAZY);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (handle == <span class="literal">NULL</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"erro opening %s\n"</span>, LIBMY);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    dlerror(); <span class="comment">/* clear any existing error */</span></div><div class="line"></div><div class="line">    add = (add_fp)dlsym(handle,<span class="string">"add"</span>);</div><div class="line"></div><div class="line">    error = dlerror();</div><div class="line">    <span class="keyword">if</span> (error != <span class="literal">NULL</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"error dlsym: %s\n"</span>, error);</div><div class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,(*add)(<span class="number">1</span>,<span class="number">1</span>));</div><div class="line">    dlclose(handle);</div><div class="line"></div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>把上述内容写成<code>Makefile</code>文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ cat Makefile </div><div class="line">all:main</div><div class="line"></div><div class="line">main: main.c</div><div class="line">	gcc main.c -ldl -o main</div><div class="line">clean:</div><div class="line">	-rm main</div></pre></td></tr></table></figure></p>
-<p>该方法，<code>ldd</code>是看不到需要那些库文件的。如果需要的库文件不存在，程序在运行时才会报错。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ldd ./main</div><div class="line">	linux-vdso.so.1 =&gt;  (0x00007fffaebf1000)</div><div class="line">	libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fa182e3f000)</div><div class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fa182a76000)</div><div class="line">	/lib64/ld-linux-x86-64.so.2 (0x0000559bfc525000)</div></pre></td></tr></table></figure></p>
+<center><iframe height="498" width="510" src="http://player.youku.com/embed/XMjQxMTgzNzM2NA==" frameborder="0" 'allowfullscreen'=""></iframe></center>
+
+<p>2016年5月6日</p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -358,13 +339,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/11/21/深入理解静态链接库和动态链接库/">深入理解静态链接库和动态链接库</a></p>
+        <p><span>本文标题:</span><a href="/2017/01/19/汇编调试方法-20160506/">汇编调试方法-20160506</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2016-11-21, 14:21:46</p>
-        <p><span>最后更新:</span>2017-01-15, 03:14:59</p>
+        <p><span>发布时间:</span>2017-01-19, 11:07:51</p>
+        <p><span>最后更新:</span>2017-01-19, 12:12:59</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/11/21/深入理解静态链接库和动态链接库/" title="深入理解静态链接库和动态链接库">http://shenyu.wiki/2016/11/21/深入理解静态链接库和动态链接库/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/21/深入理解静态链接库和动态链接库/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/19/汇编调试方法-20160506/" title="汇编调试方法-20160506">http://shenyu.wiki/2017/01/19/汇编调试方法-20160506/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/01/19/汇编调试方法-20160506/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -377,15 +358,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/11/26/缓冲区溢出的那些事儿/">
-                    缓冲区溢出的那些事儿
+                <a href="/2017/01/19/汇编调试方法-20160526/">
+                    汇编调试方法-20160526
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">
-                    深入理解PostgreSQL查询优化引擎
+                <a href="/2017/01/18/修改hosts来访问谷歌/">
+                    修改hosts来访问谷歌
                 </a>
             </div>
         
@@ -397,7 +378,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#静态库-static-linking-library"><span class="toc-number">1.</span> <span class="toc-text">静态库 static linking library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态链接库-dynamic-linking-library"><span class="toc-number">2.</span> <span class="toc-text">动态链接库 dynamic linking library</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译时指定"><span class="toc-number">2.1.</span> <span class="toc-text">编译时指定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行时指定"><span class="toc-number">2.2.</span> <span class="toc-text">运行时指定</span></a></li></ol></li></ol>
+            
         
     </div>
     <style>
@@ -433,7 +414,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"深入理解静态链接库和动态链接库　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"汇编调试方法-20160506　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -449,7 +430,7 @@
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/21/深入理解静态链接库和动态链接库/" data-title="深入理解静态链接库和动态链接库" data-url="http://shenyu.wiki/2016/11/21/深入理解静态链接库和动态链接库/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/01/19/汇编调试方法-20160506/" data-title="汇编调试方法-20160506" data-url="http://shenyu.wiki/2017/01/19/汇编调试方法-20160506/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -472,7 +453,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/11/26/缓冲区溢出的那些事儿/" title="上一篇: 缓冲区溢出的那些事儿">
+            <a href="/2017/01/19/汇编调试方法-20160526/" title="上一篇: 汇编调试方法-20160526">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -480,7 +461,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/11/21/深入理解PostgreSQL查询优化引擎/" title="下一篇: 深入理解PostgreSQL查询优化引擎">
+            <a href="/2017/01/18/修改hosts来访问谷歌/" title="下一篇: 修改hosts来访问谷歌">
                 <i class="fa fa-angle-right"></i>
             </a>
         

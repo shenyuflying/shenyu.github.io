@@ -277,6 +277,150 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-ssh免密码登陆linux主机" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/05/ssh免密码登陆linux主机/" class="article-date">
+      <time datetime="2016-10-05T10:07:14.000Z" itemprop="datePublished">2016-10-05</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>比如想登陆一台服务器但是每次都需要输密码，这时候我们可以用ssh的authorized_keys文件来记录允许登陆的主机。</p>
+</blockquote>
+<h2 id="配置hosts"><a href="#配置hosts" class="headerlink" title="配置hosts"></a>配置hosts</h2><p>比如我们有2台主机，分别是host1和host2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat /etc/hosts</div><div class="line">192.168.0.101 host1</div><div class="line">192.168.0.102 host2</div></pre></td></tr></table></figure></p>
+<h2 id="生成key"><a href="#生成key" class="headerlink" title="生成key"></a>生成key</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh-keygen -t dsa -f ~/.ssh/id_dsa -N &quot;&quot;</div><div class="line">Generating public/private dsa key pair.</div><div class="line">Your identification has been saved in /root/.ssh/id_dsa.</div><div class="line">Your public key has been saved in /root/.ssh/id_dsa.pub.</div><div class="line">The key fingerprint is:</div><div class="line">91:09:5c:82:5a:6a:50:08:4e:b2:0c:62:de:cc:74:44 root@host1.clusterlabs.org</div><div class="line">The key&apos;s randomart image is:</div><div class="line">+--[ DSA 1024]----+</div><div class="line">|==.ooEo..        |</div><div class="line">|X O + .o o       |</div><div class="line">| * A    +        |</div><div class="line">|  +      .       |</div><div class="line">| .      S        |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">+-----------------+</div></pre></td></tr></table></figure>
+<h2 id="新建authorized-keys文件"><a href="#新建authorized-keys文件" class="headerlink" title="新建authorized_keys文件"></a>新建authorized_keys文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# cp ~/.ssh/id_dsa.pub ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
+<h2 id="把authorized-keys文件部署到远程主机"><a href="#把authorized-keys文件部署到远程主机" class="headerlink" title="把authorized_keys文件部署到远程主机"></a>把authorized_keys文件部署到远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# scp -r ~/.ssh/authorized_keys host2:～/.ssh/</div></pre></td></tr></table></figure>
+<h2 id="免密码登陆远程主机"><a href="#免密码登陆远程主机" class="headerlink" title="免密码登陆远程主机"></a>免密码登陆远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh host2</div></pre></td></tr></table></figure>
+<p>其实就是把本机生成的*.pub文件内容copy到另外一台主机~/.ssh/authorized_keys文件里面就ok！</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-linux查找文件内容" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/04/linux查找文件内容/" class="article-date">
+      <time datetime="2016-10-04T18:55:36.000Z" itemprop="datePublished">2016-10-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>有时候我们需要在一堆文件中查找包含<code>某单词</code>的文件。比如在一堆源码文件中找出来调用一个函数的地方。</p>
+</blockquote>
+<p>可以用find，xargs，grep三个命令联合起来实现。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find ./ -type f -name *.c | xargs grep <span class="string">"word"</span></div></pre></td></tr></table></figure></p>
+<p>find找出当前目录下所有.c的普通文件<br>xargs将文件名变成参数传入到grep<br>grep打开该文件并找出文件中包含word的行</p>
+<h2 id="一个脚本"><a href="#一个脚本" class="headerlink" title="一个脚本"></a>一个脚本</h2><p>为了方便使用，避免每次都输入很长的命令，写出了下面一个脚本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash                                                                 </span></div><div class="line"><span class="comment">#递归查找当前目录文件中的内容</span></div><div class="line"><span class="comment">#参数1： 文件后缀，可以省略</span></div><div class="line"><span class="comment">#参数2： 要查找的字符串</span></div><div class="line"></div><div class="line">F_ARG_SUFFIX=<span class="string">""</span></div><div class="line">F_ARG_PATTEN=<span class="string">""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 0 ] ; <span class="keyword">then</span></div><div class="line">    <span class="built_in">echo</span> <span class="string">"usage: f [file suffix] pattern"</span></div><div class="line">    <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 1 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$1</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> == 2 ] ; <span class="keyword">then</span></div><div class="line">    F_ARG_SUFFIX=<span class="string">"-name *.<span class="variable">$1</span>"</span></div><div class="line">    F_ARG_PATTEN=<span class="string">"<span class="variable">$2</span>"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">find ./ -type f <span class="variable">$F_ARG_NAME</span> | xargs grep <span class="variable">$F_ARG_PATTEN</span></div></pre></td></tr></table></figure></p>
+<p>保存在/bin目录下，并加上可执行权限</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>比如找出postgreSQL源码中, c语言文件使用到heap_open函数的地方：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ f c heap_open</div><div class="line">./backend/commands/tablecmds.c:         rel = heap_openrv(rv, AccessExclusiveLock);</div><div class="line">./backend/commands/tablecmds.c:                         rel = heap_open(childrelid, NoLock);</div><div class="line">...</div><div class="line"></div><div class="line">$ f c heap_open | wc <span class="_">-l</span></div><div class="line">587</div></pre></td></tr></table></figure></p>
+<p>一共使用了587次，很多啊！</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-好书推荐：《软技能-代码之外的生存指南》" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -863,152 +1007,6 @@
       
         <p class="article-more-link">
           <a href="/2016/09/17/贪吃蛇-基于SDL/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-c语言转汇编语言shell脚本" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/17/c语言转汇编语言shell脚本/" class="article-date">
-      <time datetime="2016-09-17T17:58:57.000Z" itemprop="datePublished">2016-09-17</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>最近在学习汇编，为了方便写了一个shell脚本，用来把c语言转换为汇编语言。很方便。</p>
-<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash  </div><div class="line">if [  &quot;$#&quot; = &quot;0&quot; ] ; then</div><div class="line">        echo &apos;help: c2asm FILENAME&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line"></div><div class="line"></div><div class="line">if [ -f &quot;$1&quot; ] ; then</div><div class="line">        echo &apos;check file ok!&apos;  </div><div class="line">else</div><div class="line">        echo &apos;c2asm: file not exist&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line">echo &apos;generating asm file...&apos;  </div><div class="line">gcc -O0 -S &quot;$1&quot;</div><div class="line">tmp=$1</div><div class="line">asmfile=$&#123;tmp%%.c&#125;.s;</div><div class="line"></div><div class="line">echo &quot;asm file generated: $asmfile&quot;  </div><div class="line">echo &apos;==================asm====================&apos;  </div><div class="line">cat &quot;$asmfile&quot; | grep -v &apos;\.&apos;</div><div class="line">echo &apos;==================c======================&apos;  </div><div class="line">cat &quot;$1&quot;</div><div class="line">echo &apos;==================END====================&apos;  </div><div class="line">echo &apos;done&apos;</div></pre></td></tr></table></figure>
-<h2 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">check file ok!</div><div class="line">generating asm file...</div><div class="line">asm file generated: main.s</div><div class="line">==================asm====================</div><div class="line">main:</div><div class="line">	pushq	%rbp</div><div class="line">	movq	%rsp, %rbp</div><div class="line">	movl	$1, -8(%rbp)</div><div class="line">	movl	$1, -4(%rbp)</div><div class="line">	movl	-8(%rbp), %edx</div><div class="line">	movl	-4(%rbp), %eax</div><div class="line">	addl	%edx, %eax</div><div class="line">	popq	%rbp</div><div class="line">	ret</div><div class="line">==================c======================</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a,b;</div><div class="line">	a = 1;</div><div class="line">	b = 1;</div><div class="line">	return a+b;</div><div class="line"></div><div class="line">&#125;</div><div class="line">==================END====================</div><div class="line">done</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-linux-shell聊天室" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/17/linux-shell聊天室/" class="article-date">
-      <time datetime="2016-09-17T17:38:43.000Z" itemprop="datePublished">2016-09-17</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>里程碑0：</p>
-<p>1、基于C/S架构的聊天室，分为客户端和服务器。<br>2、客户端登陆时输入服务器IP、port、 昵称不能重复</p>
-<p>里程碑1：</p>
-<p>3、可以群发消息或指定接收人<br>4、admin账号可以踢人<br>5、新加入用户可以看到聊天历史记录</p>
-<p>里程碑2：</p>
-<p>5、可以互传文件<br>6、保存聊天信息</p>
-<p>里程碑3：</p>
-<p>7、第一次登录时，需要注册。</p>
-<h2 id="技术设计"><a href="#技术设计" class="headerlink" title="技术设计"></a>技术设计</h2><p>1、在shell下的图形库：curses<br>2、多线程：pthread<br>3、网络：socket<br>4、消息结构：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> msg_st  </div><div class="line">&#123;  </div><div class="line">    <span class="keyword">char</span> name[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> to[<span class="number">256</span>];  </div><div class="line">    <span class="keyword">char</span> data[<span class="number">4096</span>];  </div><div class="line">    <span class="keyword">char</span> cmd[<span class="number">256</span>];  </div><div class="line"><span class="comment">/*</div><div class="line"> * 其中，关于cmd内容：</div><div class="line"> * login 登陆</div><div class="line"> * offline 服务器即将踢人</div><div class="line"> * user 服务发送的用户列表，数据在data里</div><div class="line"> * chat 表示这是一条消息，数据在data里</div><div class="line"> */</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>5、服务器用了epoll来监听多个fd</p>
-<h2 id="登陆界面"><a href="#登陆界面" class="headerlink" title="登陆界面"></a>登陆界面</h2><p><img src="http://img.blog.csdn.net/20141228204352953?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="登陆界面"></p>
-<h2 id="聊天界面"><a href="#聊天界面" class="headerlink" title="聊天界面"></a>聊天界面</h2><p><img src="http://img.blog.csdn.net/20141228193822585?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="聊天界面"></p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/09/17/linux-shell聊天室/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
