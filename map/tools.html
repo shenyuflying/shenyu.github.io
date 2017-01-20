@@ -15,43 +15,31 @@
 
 
 
-<meta name="description" content="视频
-小宇带你学PostgreSQL内核 1 2 3 4 5 6
-汇编调试方法 1 2
-[PostgreSQL逻辑备份还原设计与实现]
-
- Presentations
-PostgreSQL ODBC Driver internal
-PostgreSQL logical backup &amp;amp; restore
-An introduction to ODBC
-PostgreSQL查询优化引擎">
+<meta name="description" content="工具
+gdb
+git
+vim
+sed
+wget">
 <meta property="og:type" content="website">
 <meta property="og:title" content="导航">
-<meta property="og:url" content="http://shenyu.wiki/map/index.html">
+<meta property="og:url" content="http://shenyu.wiki/map/tools.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="视频
-小宇带你学PostgreSQL内核 1 2 3 4 5 6
-汇编调试方法 1 2
-[PostgreSQL逻辑备份还原设计与实现]
-
- Presentations
-PostgreSQL ODBC Driver internal
-PostgreSQL logical backup &amp;amp; restore
-An introduction to ODBC
-PostgreSQL查询优化引擎">
-<meta property="og:updated_time" content="2017-01-20T04:37:15.000Z">
+<meta property="og:description" content="工具
+gdb
+git
+vim
+sed
+wget">
+<meta property="og:updated_time" content="2017-01-20T04:35:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="导航">
-<meta name="twitter:description" content="视频
-小宇带你学PostgreSQL内核 1 2 3 4 5 6
-汇编调试方法 1 2
-[PostgreSQL逻辑备份还原设计与实现]
-
- Presentations
-PostgreSQL ODBC Driver internal
-PostgreSQL logical backup &amp;amp; restore
-An introduction to ODBC
-PostgreSQL查询优化引擎">
+<meta name="twitter:description" content="工具
+gdb
+git
+vim
+sed
+wget">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
@@ -307,7 +295,7 @@ PostgreSQL查询优化引擎">
       <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/map/index.html" class="article-date">
+      <a href="/map/tools.html" class="article-date">
       <time datetime="2017-01-16T01:33:22.000Z" itemprop="datePublished">2017-01-16</time>
 </a>
 
@@ -359,42 +347,12 @@ PostgreSQL查询优化引擎">
 
 
           
-        <h2 id="视频"><a href="#视频" class="headerlink" title=" 视频"></a><i class="icon-youtube-play"></i> 视频</h2><ul>
-<li><a href="/tags/%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8/">小宇带你学PostgreSQL内核</a> <a href="/2016/12/11/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%B8%80%E8%AF%BE%EF%BC%9A%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B/">1</a> <a href="/2016/12/11/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%BA%8C%E8%AF%BE%EF%BC%9A%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">2</a> <a href="/2016/12/18/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%B8%89%E8%AF%BE%EF%BC%9A%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%841/">3</a> <a href="/2016/12/18/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%B8%89%E8%AF%BE%EF%BC%9A%E5%86%85%E6%A0%B8%E6%9E%B6%E6%9E%842/">4</a> <a href="/2017/01/01/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E5%9B%9B%E8%AF%BE%EF%BC%9Aparser%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">5</a> <a href="/2017/01/08/%E3%80%90%E5%B0%8F%E5%AE%87%E5%B8%A6%E4%BD%A0%E5%AD%A6PostgreSQL%E5%86%85%E6%A0%B8%E3%80%91%E7%AC%AC%E4%BA%94%E8%AF%BE%EF%BC%9Arewriter%E5%88%86%E6%9E%90%E5%92%8C%E9%87%8D%E5%86%99%EF%BC%88%E4%B8%8A%EF%BC%89/">6</a></li>
-<li><a href="tags/汇编调试方法/">汇编调试方法</a> <a href="/2017/01/19/汇编调试方法-20160506/">1</a> <a href="/2017/01/19/汇编调试方法-20160526/">2</a></li>
-<li>[PostgreSQL逻辑备份还原设计与实现]</li>
-</ul>
-<h2 id="Presentations"><a href="#Presentations" class="headerlink" title=" Presentations"></a><i class="icon-group"></i> Presentations</h2><ul>
-<li><a href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC Driver internal</a></li>
-<li><a href="/uploads/pg-logical-backup-restore.html">PostgreSQL logical backup &amp; restore</a></li>
-<li><a href="/uploads/an-introduction-to-odbc.html">An introduction to ODBC</a></li>
-<li><a href="/2016/11/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%BC%95%E6%93%8E/">PostgreSQL查询优化引擎</a></li>
-</ul>
-<h2 id="开源社区"><a href="#开源社区" class="headerlink" title=" 开源社区"></a><i class="icon-github"></i> 开源社区</h2><ul>
-<li><a href="https://github.com/shenyuflying/pgNodeGraph" target="_blank" rel="external">pgNodeGraph</a></li>
-<li><a href="https://github.com/shenyuflying/yap" target="_blank" rel="external">yap</a></li>
-<li><a href="https://github.com/shenyuflying/indent" target="_blank" rel="external">indent</a></li>
-</ul>
-<h2 id="爱好"><a href="#爱好" class="headerlink" title=" 爱好"></a><i class="icon-heart"></i> 爱好</h2><ul>
-<li><a href="/tags/%E6%97%85%E8%A1%8C/">旅行</a></li>
-<li><a href="/tags/%E8%AF%BB%E4%B9%A6/">读书</a></li>
-<li><a href="/tags/文章/">文章</a></li>
-<li>音乐</li>
-<li>电影</li>
-<li>电视剧</li>
-<li>名言</li>
-<li>数码</li>
-</ul>
-<h2 id="技术分享"><a href="#技术分享" class="headerlink" title=" 技术分享"></a><i class="icon-file-text"></i> 技术分享</h2><ul>
-<li><a href="/map/database.html">数据库</a></li>
-<li><a href="/map/os.html">操作系统</a></li>
-<li><a href="/map/storage.html">存储</a></li>
-<li><a href="/map/programming.html">编程</a></li>
-<li><a href="/map/tools.html">工具</a></li>
-<li><a href="/map/web.html">web</a></li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title=" 其他"></a><i class="icon-plus-sign"></i> 其他</h2><ul>
-<li>TODO</li>
+        <h2 id="工具"><a href="#工具" class="headerlink" title=" 工具"></a><i class="icon-cogs"></i> 工具</h2><ul>
+<li><a href="/tags/gdb/">gdb</a></li>
+<li><a href="/tags/git/">git</a></li>
+<li><a href="/tags/vim/">vim</a></li>
+<li><a href="/tags/sed/">sed</a></li>
+<li><a href="">wget</a></li>
 </ul>
 
       

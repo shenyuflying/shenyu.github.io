@@ -2,16 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://shenyu.wiki/map/postgresql.html</loc>
+    <loc>http://shenyu.wiki/map/web.html</loc>
     
-    <lastmod>2017-01-20T04:08:34.000Z</lastmod>
+    <lastmod>2017-01-20T04:38:24.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://shenyu.wiki/map/index.html</loc>
     
-    <lastmod>2017-01-20T03:53:31.000Z</lastmod>
+    <lastmod>2017-01-20T04:37:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/tools.html</loc>
+    
+    <lastmod>2017-01-20T04:35:23.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/storage.html</loc>
+    
+    <lastmod>2017-01-20T04:31:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/os.html</loc>
+    
+    <lastmod>2017-01-20T04:30:23.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/database.html</loc>
+    
+    <lastmod>2017-01-20T04:30:10.000Z</lastmod>
     
   </url>
   
