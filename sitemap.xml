@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/map/programming.html</loc>
+    
+    <lastmod>2017-01-20T05:03:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/map/web.html</loc>
     
     <lastmod>2017-01-20T04:38:24.000Z</lastmod>
