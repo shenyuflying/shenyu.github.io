@@ -29,7 +29,7 @@ define(function (){
 
     var $itemHasChild = $("#toc .toc-item:has(> .toc-child)");
     var $titleHasChild = $itemHasChild.children(".toc-link");
-    $itemHasChild.prepend("<i class='fa fa-caret-down'></i><i class='fa fa-caret-right'></i>");
+    $itemHasChild.prepend("<i class='icon-caret-down'></i><i class='icon-caret-right'></i>");
 
     var clickIcon = function(){
         $("#toc .toc-item > i").click(function(){
@@ -55,8 +55,8 @@ define(function (){
     }()
 
     var clickTocTitle = function(){
-        var $iconToExpand = $(".toc-item > .fa-caret-right");
-        var $iconToFold = $(".toc-item > .fa-caret-down");
+        var $iconToExpand = $(".toc-item > .icon-caret-right");
+        var $iconToFold = $(".toc-item > .icon-caret-down");
         var $subToc = $titleHasChild.next(".toc-child");
         $iconToExpand.addClass("hide");
 
