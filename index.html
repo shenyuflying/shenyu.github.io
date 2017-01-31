@@ -314,10 +314,21 @@
 <p>在工作中经常需要临时试验一小段代码，比如想要知道sizeof(int)的大小是多少？对于C语言这样的编译型语言来说，需要进行<code>编辑</code>,<code>编译</code>,<code>运行</code>等等系列操作，如果出现错误就需要重新来过，非常的耗费时间。针对这个痛点，借鉴一些解释型语言能够逐行运行的特点，输入一行就能马上看到输出，写了<code>codeRunner</code>这个程序，用C语言模仿解释型语言逐行运行的这种特性，方便临时开发调试。</p>
 </blockquote>
 <p>代码已经开源在了<a href="https://github.com/shenyuflying/codeRunner" target="_blank" rel="external">github</a>上，有兴趣的同学可以试用一下。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/codeRunner</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/codeRunner</div><div class="line">cd codeRunner</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
 <p>默认是安装在了<code>/usr/local/bin/codeRunner</code>这里。</p>
-<p><img src="/uploads/codeRunner-eg1.gif" alt=""></p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+<p>一个小例子：</p>
+<center><img src="/uploads/codeRunner-eg1.gif" alt=""></center>
+
+<p>另外，codeRunner还支持循环等等各种C语言的数据类型、流程控制等等。</p>
+<center><img src="/uploads/codeRunner-eg2.gif" alt=""></center>
+
+<p>下面一个例子输出乘法口诀表：</p>
+<center><img src="/uploads/codeRunner-eg3.gif" alt=""></center>
+
+<p>如果有错误，会马上提示，纠正错误之后，可以再次运行：</p>
+<center><img src="/uploads/codeRunner-eg4.gif" alt=""></center>
+
+<p>还有更复杂的用法，比如通过<code>程序模板</code>来支持<code>函数</code>等等。详细的用法可以看README哦。</p>
 
       
     </div>
