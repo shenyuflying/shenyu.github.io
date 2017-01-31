@@ -4,6 +4,20 @@
   
     
     <entry>
+      <title><![CDATA[过年在家写了一个蛮有趣的小程序：codeRunner]]></title>
+      <url>http://shenyu.wiki/2017/01/31/%E8%BF%87%E5%B9%B4%E5%9C%A8%E5%AE%B6%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E8%9B%AE%E6%9C%89%E8%B6%A3%E7%9A%84%E5%B0%8F%E7%A8%8B%E5%BA%8F%EF%BC%9AcodeRunner/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>在工作中经常需要临时试验一小段代码，比如想要知道sizeof(int)的大小是多少？对于C语言这样的编译型语言来说，需要进行<code>编辑</code>,<code>编译</code>,<code>运行</code>等等系列操作，如果出现错误就需要重新来过，非常的耗费时间。针对这个痛点，借鉴一些解释型语言能够逐行运行的特点，输入一行就能马上看到输出，写了<code>codeRunner</code>这个程序，用C语言模仿解释型语言逐行运行的这种特性，方便临时开发调试。</p>
+</blockquote>
+<p>代码已经开源在了<a href="https://github.com/shenyuflying/codeRunner" target="_blank" rel="external">github</a>上，有兴趣的同学可以试用一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/codeRunner</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+<p>默认是安装在了<code>/usr/local/bin/codeRunner</code>这里。</p>
+<p><img src="/uploads/codeRunner-eg1.gif" alt=""></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[The best career advice I’ve received]]></title>
       <url>http://shenyu.wiki/2017/01/22/The-best-career-advice-I%E2%80%99ve-received/</url>
       <content type="html"><![CDATA[<h1 id="The-best-career-advice-I’ve-received"><a href="#The-best-career-advice-I’ve-received" class="headerlink" title="The best career advice I’ve received"></a>The best career advice I’ve received</h1><p>Posted at October 15, 2013 by Nicholas C. Zakas</p>

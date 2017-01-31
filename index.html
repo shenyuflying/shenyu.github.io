@@ -281,6 +281,77 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-过年在家写了一个蛮有趣的小程序：codeRunner" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/" class="article-date">
+      <time datetime="2017-01-31T12:20:30.000Z" itemprop="datePublished">2017-01-31</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/">过年在家写了一个蛮有趣的小程序：codeRunner</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>在工作中经常需要临时试验一小段代码，比如想要知道sizeof(int)的大小是多少？对于C语言这样的编译型语言来说，需要进行<code>编辑</code>,<code>编译</code>,<code>运行</code>等等系列操作，如果出现错误就需要重新来过，非常的耗费时间。针对这个痛点，借鉴一些解释型语言能够逐行运行的特点，输入一行就能马上看到输出，写了<code>codeRunner</code>这个程序，用C语言模仿解释型语言逐行运行的这种特性，方便临时开发调试。</p>
+</blockquote>
+<p>代码已经开源在了<a href="https://github.com/shenyuflying/codeRunner" target="_blank" rel="external">github</a>上，有兴趣的同学可以试用一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/codeRunner</div><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+<p>默认是安装在了<code>/usr/local/bin/codeRunner</code>这里。</p>
+<p><img src="/uploads/codeRunner-eg1.gif" alt=""></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程/">编程</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-The-best-career-advice-I’ve-received" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -990,79 +1061,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言层/">语言层</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-git统计代码贡献" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/01/05/git统计代码贡献/" class="article-date">
-      <time datetime="2017-01-05T09:09:02.000Z" itemprop="datePublished">2017-01-05</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/05/git统计代码贡献/">git统计代码贡献</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>辛苦了一年，到年终总结的时候啦。想统计一下今年贡献了多少代码。那么怎么用git来统计某个作者贡献代码行数呢？</p>
-</blockquote>
-<p>思路是采用git log打出来每次提交的信息。可以加上<code>--author</code>参数来指明是哪个作者的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git log   --pretty=format:&apos;%an %Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&apos; --abbrev-commit --date=relative --shortstat --author=&quot;Shen&quot;</div></pre></td></tr></table></figure></p>
-<p>打出来的结果如下所示：</p>
-<center> <img src="http://static.zybuluo.com/shenyuflying/x2n5fklgimkamh9mulxlcj61/image_1b5jmt36dc6f1tj412mi173i1kcr9.png" alt="image_1b5jmt36dc6f1tj412mi173i1kcr9.png-116.2kB"> </center>
-
-<p>能够看到每次提交的代码变更行数，接下来祭出grep和awk神器来做下统计吧！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git log   --pretty=format:&apos;%Cred%h%Creset %an-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&apos; --abbrev-commit --date=relative --shortstat --author=&quot;Shen&quot; |grep &quot;insertions&quot; |awk &apos;&#123;sum += $4 + $6&#125; END &#123;print sum&#125;&apos;</div><div class="line">7185</div></pre></td></tr></table></figure></p>
-<p>在这个分支上贡献了7185行代码，再接再厉！</p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
     </div>
 
       
