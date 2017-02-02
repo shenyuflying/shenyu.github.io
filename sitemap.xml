@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/music/index.html</loc>
+    
+    <lastmod>2017-02-02T06:29:21.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/tools.html</loc>
+    
+    <lastmod>2017-02-01T05:23:31.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/map/index.html</loc>
     
     <lastmod>2017-01-31T13:34:51.000Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>http://shenyu.wiki/2017/01/22/The-best-career-advice-I%E2%80%99ve-received/</loc>
     
     <lastmod>2017-01-22T01:20:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/map/tools.html</loc>
-    
-    <lastmod>2017-01-20T08:53:58.000Z</lastmod>
     
   </url>
   
