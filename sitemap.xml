@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/map/index.html</loc>
+    
+    <lastmod>2017-02-02T08:14:19.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/music/index.html</loc>
     
-    <lastmod>2017-02-02T06:29:21.000Z</lastmod>
+    <lastmod>2017-02-02T08:13:22.000Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>http://shenyu.wiki/map/tools.html</loc>
     
     <lastmod>2017-02-01T05:23:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/map/index.html</loc>
-    
-    <lastmod>2017-01-31T13:34:51.000Z</lastmod>
     
   </url>
   
