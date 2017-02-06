@@ -281,6 +281,218 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-好书推荐：《操作系统设计与实现》" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/10/好书推荐：《操作系统设计与实现》/" class="article-date">
+      <time datetime="2016-10-10T11:54:32.000Z" itemprop="datePublished">2016-10-10</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><img src="http://static.zybuluo.com/shenyuflying/9zirytck87tjzui21z89irin/QQ%E6%88%AA%E5%9B%BE20161010194316.png" alt=""></p>
+<p>这本书带领你从理论到设计再到编码，一步步深入讲解了进程、内存管理、文件系统等内容。第一次读本书是在研究生期间，最近又拿出来看了一遍，又有很多收获。其中有些设计、编程思想十分经典，值得反复阅读。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/爱好/">爱好</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书/">读书</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-linux中的硬链接和软链接" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/10/linux中的硬链接和软链接/" class="article-date">
+      <time datetime="2016-10-10T06:03:07.000Z" itemprop="datePublished">2016-10-10</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="建立硬链接和软链接"><a href="#建立硬链接和软链接" class="headerlink" title="建立硬链接和软链接"></a>建立硬链接和软链接</h2><p>在linux中我们通过ln命令来建立硬链接和软链接，默认是建立硬链接，加上-s参数那么建立的就是软链接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;Hello world&quot; &gt; a</div><div class="line">$ ln a a_hard_link</div><div class="line">$ ln -s a a_soft_link</div></pre></td></tr></table></figure></p>
+<p>建立好之后，用ls命令看一下，记得加上-i这样我们就可以看到inode号了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ls -ali</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p><strong>inode</strong><br>科普一下：inode全称是index node即索引节点。可见inode中并没有存放文件的实际内容，而是存放了索引。这个索引指向的是磁盘中存放文件内容的物理位置。<br><strong>目录</strong><br>在linux中目录也有一个inode，inode指向记录目录实际内容的磁盘物理位置。</p>
+<h2 id="什么是硬链接和软链接"><a href="#什么是硬链接和软链接" class="headerlink" title="什么是硬链接和软链接"></a>什么是硬链接和软链接</h2><p>再回到我们的例子里，ls的结果第一列是该文件的inode号，可以看到硬链接的inode号和文件原来的inode号是一样的。说明指向的物理位置是一样的。<br>我们看软链接的inode号不同，说明是一个新的文件，该文件指向的是另外的一个物理位置。该物理位置里面存放着链接目标的路径。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>让我们删除连接目标文件a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ rm a</div><div class="line">$ ls -ali</div><div class="line">总用量 12</div><div class="line">19796573 drwxrwxr-x  2 yshen yshen 4096 10月 10 11:35 .</div><div class="line">58720267 drwxrwxr-x 43 yshen yshen 4096 10月 10 11:33 ..</div><div class="line">19796575 -rw-rw-r--  1 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p>硬链接和软链接现在还能访问么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cat a_hard_link </div><div class="line">Hello world</div><div class="line">$ cat a_soft_link </div><div class="line">cat: a_soft_link: 没有那个文件或目录</div></pre></td></tr></table></figure></p>
+<p>硬链接还能访问，软链接现在已经失效了！根据定义我们不难找出原因：<br>(1)硬链接指向的是物理位置和连接对象指向的物理位置一样，该物理位置有一个引用计数（ls的第三列），删除链接对象后，引用计数从原来的2变为1，所以物理上文件并没有删除，如果为0的话采用unlink删除。所以硬链接依然可以访问。<br>(2)软链接其实是一个文件，文件指向的路径已经失效了，所以会显示没有那个文件或目录。</p>
+<p>我们总结一下区别：<br>(1) 链接目标失效之后，硬链接依然可以访问。软链接不能访问。<br>(2) 硬链接只能指向和链接目标同一个分区，软链接没有限制，甚至可以指向网络地址。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-linux中的僵尸进程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/09/linux中的僵尸进程/" class="article-date">
+      <time datetime="2016-10-09T07:13:11.000Z" itemprop="datePublished">2016-10-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <blockquote>
+<p>如果一个进程已经退出或者被杀死，但是它的父进程尚未执行wait操作，那么该进程进入僵尸(zombie)状态。这种进程不再参与调度，它的内存也会被释放，但系统不会把它从进程表中删除(top 命令中显示状态为Z)。僵尸在进程等待父进程回收它的退出状态。</p>
+</blockquote>
+<p>这篇文章会告诉你：</p>
+<ol>
+<li>僵尸进程产生原理。</li>
+<li>如何产生僵尸进程。</li>
+<li>如何回收僵尸进程。</li>
+</ol>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/10/09/linux中的僵尸进程/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-字符串中特殊字符转义——php中urlencode-urldecode的c语言版本" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -775,248 +987,9 @@
 
 
   
-    <article id="post-hexo静态博客修改侧边栏" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/04/hexo静态博客修改侧边栏/" class="article-date">
-      <time datetime="2016-10-04T11:53:33.000Z" itemprop="datePublished">2016-10-04</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>hexo主题默认的侧边栏只有<code>首页</code>、<code>归档</code>、<code>标签</code>这几项。调研了几个比较优秀的博客之后发现，还需要添加<code>关于</code>、<code>搜索</code>、<code>阅读</code>、<code>旅行</code>等等几个侧边栏项目，那么如何在博客里面添加新的侧边栏项目呢？</p>
-</blockquote>
-<h2 id="添加关于、留言项目"><a href="#添加关于、留言项目" class="headerlink" title="添加关于、留言项目"></a>添加关于、留言项目</h2><p>关于、留言这两个项目实际上是利用了hexo的page页面功能。</p>
-<h3 id="Step1-新建关于页面"><a href="#Step1-新建关于页面" class="headerlink" title="Step1 新建关于页面"></a>Step1 新建关于页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo new page about</div><div class="line">INFO  Created: ~/blog/source/about/index.md</div></pre></td></tr></table></figure>
-<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: about</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: false   添加这行关闭评论</div><div class="line">---</div><div class="line">here is something about me</div></pre></td></tr></table></figure></p>
-<h3 id="Step2-新建留言页面"><a href="#Step2-新建留言页面" class="headerlink" title="Step2 新建留言页面"></a>Step2 新建留言页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page message</div></pre></td></tr></table></figure>
-<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: message</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: true   打开评论</div><div class="line">---</div><div class="line">有事请留言</div></pre></td></tr></table></figure></p>
-<h3 id="Step3-把关于、留言添加到侧边栏中"><a href="#Step3-把关于、留言添加到侧边栏中" class="headerlink" title="Step3 把关于、留言添加到侧边栏中"></a>Step3 把关于、留言添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message #添加这一行</div><div class="line">  about: /about     #添加这一行</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user     #添加这一行</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment #添加这一行</div></pre></td></tr></table></figure></p>
-<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
-<h3 id="Step4-生成"><a href="#Step4-生成" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
-<p>我们看到，生成了关于、评论的页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/public/about/index.html</div><div class="line">/public/message/index.html</div></pre></td></tr></table></figure></p>
-<h2 id="添加阅读、旅行项目"><a href="#添加阅读、旅行项目" class="headerlink" title="添加阅读、旅行项目"></a>添加阅读、旅行项目</h2><p>阅读、旅行这两个项目实际上是利用了hexo主题的categories分类功能。</p>
-<h3 id="Step1-模板添加分类categories"><a href="#Step1-模板添加分类categories" class="headerlink" title="Step1  模板添加分类categories"></a>Step1  模板添加分类categories</h3><p>打开<code>./scaffolds/post.md</code>添加一行<code>categories:</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: &#123;&#123; title &#125;&#125;</div><div class="line">date: &#123;&#123; date &#125;&#125;</div><div class="line">tags:</div><div class="line">categories:</div><div class="line">comments: true</div><div class="line">---</div></pre></td></tr></table></figure></p>
-<h3 id="Step2-把分类添加到侧边栏中"><a href="#Step2-把分类添加到侧边栏中" class="headerlink" title="Step2 把分类添加到侧边栏中"></a>Step2 把分类添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message</div><div class="line">  about: /about</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment</div></pre></td></tr></table></figure></p>
-<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
-<h3 id="Step3-新建文章"><a href="#Step3-新建文章" class="headerlink" title="Step3 新建文章"></a>Step3 新建文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo new &quot;我推荐的编程书籍&quot;</div><div class="line">INFO  Created: ~/blog/source/_posts/我推荐的编程书籍.md</div><div class="line">$ vim ./source/_posts/我推荐的编程书籍.md</div></pre></td></tr></table></figure>
-<p>新建的文章自动添加了categories标签。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 我推荐的编程书籍</div><div class="line">comments: true</div><div class="line">date: 2016-10-04 11:19:10</div><div class="line">tags: 阅读</div><div class="line">categories:</div><div class="line">---</div><div class="line">## 《代码大全》 Code Complete</div><div class="line">。。。该书籍的介绍。。。</div></pre></td></tr></table></figure></p>
-<h3 id="Step4-生成-1"><a href="#Step4-生成-1" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
-<p>我们看到，生成了书籍分类的页面index.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/yshen/blog/public/categories/书籍/index.html</div></pre></td></tr></table></figure></p>
-<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p>最后，看一下最终效果：<br><img src="http://static.zybuluo.com/shenyuflying/nsteo6fk5y9ss50gz1z22gny/side_bar.png" alt="效果图"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网站/">网站</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-wget下载网站供离线浏览" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/02/wget下载网站供离线浏览/" class="article-date">
-      <time datetime="2016-10-02T16:44:45.000Z" itemprop="datePublished">2016-10-02</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
-</blockquote>
-<p>看wget的man说明，可以发现wget有几个特点：</p>
-<ol>
-<li>非交互式，可以工作在后台。</li>
-<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
-<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
-</ol>
-<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
-<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
-<p>上面用到的wget网站下载选择解释：</p>
-<pre><code>--recursive: 下载整个网站
---domains shenyu.wiki: 不要下载指定域名之外的网页。
---no-parent: 仅仅下载当前目录结构下的文件。
---page-requisites: 现在网页包括的所有内容(images, CSS and so on).
---html-extension: 将网页保存为html文件。
---convert-links: 将连接转换为本地连接
---restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
---no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
-</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wget/">wget</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-二进制文件-十六进制文件-互转" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/02/二进制文件-十六进制文件-互转/" class="article-date">
-      <time datetime="2016-10-02T13:06:30.000Z" itemprop="datePublished">2016-10-02</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 编译</div><div class="line">$ gcc c2bs.c -o c2bs</div><div class="line"></div><div class="line"># 帮助</div><div class="line">$ ./c2bs2</div><div class="line">convert to binary or strings.</div><div class="line">will read from stdin and write to stdout</div><div class="line">usage: ./c2bs2 [options]</div><div class="line">[options]</div><div class="line">    -b convert to binary</div><div class="line">    -s convert to string</div><div class="line"></div><div class="line"># 二进制可执行文件转16进制字符串</div><div class="line">$ cat ./c2bs | ./c2bs -c &gt; c2bs.hex </div><div class="line">$ head c2bs.hex</div><div class="line">7f454c4602010100000000000000000002003e000100000020064000000000004000000000000000a0110000000000000000000040003800090040001e001b000600000005000000400000000000000040004000000000004000400000000000f801000000000000f8010000000...</div><div class="line"></div><div class="line"># 十六进制字符串再转回到二进制</div><div class="line">$ cat ./c2bs.hex | ./c2bs -b &gt; c2bs</div></pre></td></tr></table></figure>
-<p> 源码如下，需要注意的是，都用了不带符号的unsigned char类型，这个很关键，想想为什么？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> talbe[<span class="string">'f'</span>+<span class="number">1</span>];</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in_2[<span class="number">3</span>]=&#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (argc == <span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"convert to binary or strings.\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"will read from stdin and write to stdout\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"usage: %s [options]\n"</span></div><div class="line">			<span class="string">"[options]\n"</span></div><div class="line">			<span class="string">"    -b convert to binary\n"</span></div><div class="line">			<span class="string">"    -s convert to string\n"</span>,argv[<span class="number">0</span>]);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">switch</span>(argv[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> <span class="string">'s'</span>:</div><div class="line">			<span class="keyword">while</span>( fread(&amp;in,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%02x"</span>,in);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		<span class="keyword">break</span>;</div><div class="line">		</div><div class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</div><div class="line"></div><div class="line">			talbe[<span class="string">'0'</span>]=<span class="number">0</span>;	</div><div class="line">			talbe[<span class="string">'1'</span>]=<span class="number">1</span>;	</div><div class="line">			talbe[<span class="string">'2'</span>]=<span class="number">2</span>;	</div><div class="line">			talbe[<span class="string">'3'</span>]=<span class="number">3</span>;	</div><div class="line">			talbe[<span class="string">'4'</span>]=<span class="number">4</span>;	</div><div class="line">			talbe[<span class="string">'5'</span>]=<span class="number">5</span>;	</div><div class="line">			talbe[<span class="string">'6'</span>]=<span class="number">6</span>;	</div><div class="line">			talbe[<span class="string">'7'</span>]=<span class="number">7</span>;	</div><div class="line">			talbe[<span class="string">'8'</span>]=<span class="number">8</span>;	</div><div class="line">			talbe[<span class="string">'9'</span>]=<span class="number">9</span>;	</div><div class="line">			talbe[<span class="string">'a'</span>]=<span class="number">10</span>;	</div><div class="line">			talbe[<span class="string">'b'</span>]=<span class="number">11</span>;	</div><div class="line">			talbe[<span class="string">'c'</span>]=<span class="number">12</span>;	</div><div class="line">			talbe[<span class="string">'d'</span>]=<span class="number">13</span>;	</div><div class="line">			talbe[<span class="string">'e'</span>]=<span class="number">14</span>;	</div><div class="line">			talbe[<span class="string">'f'</span>]=<span class="number">15</span>;	</div><div class="line">			<span class="keyword">while</span>( fread(in_2,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="number">2</span>,<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">unsigned</span> <span class="keyword">char</span> out;</div><div class="line">				out = <span class="number">16</span>*talbe[in_2[<span class="number">0</span>]] + talbe[in_2[<span class="number">1</span>]]; </div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%c"</span>,out);</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"unknown parameter %s"</span>,argv[<span class="number">1</span>]);</div><div class="line">		<span class="keyword">break</span>;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
     </nav>
   
 </div>

@@ -13,6 +13,24 @@
     </entry>
     
     <entry>
+      <title><![CDATA[How to setup postgresql ODBC]]></title>
+      <url>http://shenyu.wiki/2017/02/06/how-to-setup-postgresql-odbc/</url>
+      <content type="html"><![CDATA[<iframe src=" http://shenyu.wiki/uploads/how-to-setup-postgresql-odbc.html" width="800" height="600"> </iframe>
+
+
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[An introduction to ODBC]]></title>
+      <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
+      <content type="html"><![CDATA[<iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe>
+
+
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[过年在家写了一个蛮有趣的小程序：codeRunner]]></title>
       <url>http://shenyu.wiki/2017/01/31/%E8%BF%87%E5%B9%B4%E5%9C%A8%E5%AE%B6%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E8%9B%AE%E6%9C%89%E8%B6%A3%E7%9A%84%E5%B0%8F%E7%A8%8B%E5%BA%8F%EF%BC%9AcodeRunner/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -332,6 +350,15 @@
 <p>能够看到每次提交的代码变更行数，接下来祭出grep和awk神器来做下统计吧！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git log   --pretty=format:&apos;%Cred%h%Creset %an-%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&apos; --abbrev-commit --date=relative --shortstat --author=&quot;Shen&quot; |grep &quot;insertions&quot; |awk &apos;&#123;sum += $4 + $6&#125; END &#123;print sum&#125;&apos;</div><div class="line">7185</div></pre></td></tr></table></figure></p>
 <p>在这个分支上贡献了7185行代码，再接再厉！</p>
 <p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[PostgreSQL logical backup & restore]]></title>
+      <url>http://shenyu.wiki/2017/01/02/pg-logical-backup-restore/</url>
+      <content type="html"><![CDATA[<iframe src="http://shenyu.wiki/uploads/pg-logical-backup-restore.html" width="800" height="600"> </iframe>
+
+
 ]]></content>
     </entry>
     

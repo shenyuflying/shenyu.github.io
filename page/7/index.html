@@ -281,6 +281,245 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-hexo静态博客修改侧边栏" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/04/hexo静态博客修改侧边栏/" class="article-date">
+      <time datetime="2016-10-04T11:53:33.000Z" itemprop="datePublished">2016-10-04</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>hexo主题默认的侧边栏只有<code>首页</code>、<code>归档</code>、<code>标签</code>这几项。调研了几个比较优秀的博客之后发现，还需要添加<code>关于</code>、<code>搜索</code>、<code>阅读</code>、<code>旅行</code>等等几个侧边栏项目，那么如何在博客里面添加新的侧边栏项目呢？</p>
+</blockquote>
+<h2 id="添加关于、留言项目"><a href="#添加关于、留言项目" class="headerlink" title="添加关于、留言项目"></a>添加关于、留言项目</h2><p>关于、留言这两个项目实际上是利用了hexo的page页面功能。</p>
+<h3 id="Step1-新建关于页面"><a href="#Step1-新建关于页面" class="headerlink" title="Step1 新建关于页面"></a>Step1 新建关于页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hexo new page about</div><div class="line">INFO  Created: ~/blog/source/about/index.md</div></pre></td></tr></table></figure>
+<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: about</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: false   添加这行关闭评论</div><div class="line">---</div><div class="line">here is something about me</div></pre></td></tr></table></figure></p>
+<h3 id="Step2-新建留言页面"><a href="#Step2-新建留言页面" class="headerlink" title="Step2 新建留言页面"></a>Step2 新建留言页面</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page message</div></pre></td></tr></table></figure>
+<p>打开修改为如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: message</div><div class="line">date: 2016-09-17 13:21:20</div><div class="line">comments: true   打开评论</div><div class="line">---</div><div class="line">有事请留言</div></pre></td></tr></table></figure></p>
+<h3 id="Step3-把关于、留言添加到侧边栏中"><a href="#Step3-把关于、留言添加到侧边栏中" class="headerlink" title="Step3 把关于、留言添加到侧边栏中"></a>Step3 把关于、留言添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message #添加这一行</div><div class="line">  about: /about     #添加这一行</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user     #添加这一行</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment #添加这一行</div></pre></td></tr></table></figure></p>
+<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
+<h3 id="Step4-生成"><a href="#Step4-生成" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
+<p>我们看到，生成了关于、评论的页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/public/about/index.html</div><div class="line">/public/message/index.html</div></pre></td></tr></table></figure></p>
+<h2 id="添加阅读、旅行项目"><a href="#添加阅读、旅行项目" class="headerlink" title="添加阅读、旅行项目"></a>添加阅读、旅行项目</h2><p>阅读、旅行这两个项目实际上是利用了hexo主题的categories分类功能。</p>
+<h3 id="Step1-模板添加分类categories"><a href="#Step1-模板添加分类categories" class="headerlink" title="Step1  模板添加分类categories"></a>Step1  模板添加分类categories</h3><p>打开<code>./scaffolds/post.md</code>添加一行<code>categories:</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: &#123;&#123; title &#125;&#125;</div><div class="line">date: &#123;&#123; date &#125;&#125;</div><div class="line">tags:</div><div class="line">categories:</div><div class="line">comments: true</div><div class="line">---</div></pre></td></tr></table></figure></p>
+<h3 id="Step2-把分类添加到侧边栏中"><a href="#Step2-把分类添加到侧边栏中" class="headerlink" title="Step2 把分类添加到侧边栏中"></a>Step2 把分类添加到侧边栏中</h3><p>打开主题配置文件<code>./themes/next/_config.yml</code>，可以看到侧边栏Menu Settings有两项：<br>第一项是menu，控制侧边栏显示的项目；<br>第二项是menu_icons，控制显示项目的图标；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: /</div><div class="line">  books: /categories/阅读</div><div class="line">  travel: /categories/旅行</div><div class="line">  archives: /archives</div><div class="line">  tags: /tags</div><div class="line">  message: /message</div><div class="line">  about: /about</div><div class="line"></div><div class="line">menu_icons:</div><div class="line">  enable: true</div><div class="line">  home: home</div><div class="line">  about: user</div><div class="line">  categories: th</div><div class="line">  books: book</div><div class="line">  travel: plane</div><div class="line">  tags: tags</div><div class="line">  archives: archive</div><div class="line">  commonweal: heartbeat</div><div class="line">  message: comment</div></pre></td></tr></table></figure></p>
+<p>添加我们需要的阅读、旅行两个项目。<br>然后配置项目的图标，可以参考<a href="http://fontawesome.io/icons/" target="_blank" rel="external">http://fontawesome.io/icons/</a></p>
+<h3 id="Step3-新建文章"><a href="#Step3-新建文章" class="headerlink" title="Step3 新建文章"></a>Step3 新建文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexo new &quot;我推荐的编程书籍&quot;</div><div class="line">INFO  Created: ~/blog/source/_posts/我推荐的编程书籍.md</div><div class="line">$ vim ./source/_posts/我推荐的编程书籍.md</div></pre></td></tr></table></figure>
+<p>新建的文章自动添加了categories标签。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 我推荐的编程书籍</div><div class="line">comments: true</div><div class="line">date: 2016-10-04 11:19:10</div><div class="line">tags: 阅读</div><div class="line">categories:</div><div class="line">---</div><div class="line">## 《代码大全》 Code Complete</div><div class="line">。。。该书籍的介绍。。。</div></pre></td></tr></table></figure></p>
+<h3 id="Step4-生成-1"><a href="#Step4-生成-1" class="headerlink" title="Step4 生成"></a>Step4 生成</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo g</div></pre></td></tr></table></figure>
+<p>我们看到，生成了书籍分类的页面index.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/yshen/blog/public/categories/书籍/index.html</div></pre></td></tr></table></figure></p>
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p>最后，看一下最终效果：<br><img src="http://static.zybuluo.com/shenyuflying/nsteo6fk5y9ss50gz1z22gny/side_bar.png" alt="效果图"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网站/">网站</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-wget下载网站供离线浏览" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/wget下载网站供离线浏览/" class="article-date">
+      <time datetime="2016-10-02T16:44:45.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
+</blockquote>
+<p>看wget的man说明，可以发现wget有几个特点：</p>
+<ol>
+<li>非交互式，可以工作在后台。</li>
+<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
+<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
+</ol>
+<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
+<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
+<p>上面用到的wget网站下载选择解释：</p>
+<pre><code>--recursive: 下载整个网站
+--domains shenyu.wiki: 不要下载指定域名之外的网页。
+--no-parent: 仅仅下载当前目录结构下的文件。
+--page-requisites: 现在网页包括的所有内容(images, CSS and so on).
+--html-extension: 将网页保存为html文件。
+--convert-links: 将连接转换为本地连接
+--restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
+--no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
+</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wget/">wget</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-二进制文件-十六进制文件-互转" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/02/二进制文件-十六进制文件-互转/" class="article-date">
+      <time datetime="2016-10-02T13:06:30.000Z" itemprop="datePublished">2016-10-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>二进制文件用文本方式打开之后都是乱码，如何把二进制转为十六进制呢？如下一个小程序实现了二进制和十六进制相互转换。转换为十六进制之后就可以以0-9，a-f显示出来，方便阅读和以字符串形式发送。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 编译</div><div class="line">$ gcc c2bs.c -o c2bs</div><div class="line"></div><div class="line"># 帮助</div><div class="line">$ ./c2bs2</div><div class="line">convert to binary or strings.</div><div class="line">will read from stdin and write to stdout</div><div class="line">usage: ./c2bs2 [options]</div><div class="line">[options]</div><div class="line">    -b convert to binary</div><div class="line">    -s convert to string</div><div class="line"></div><div class="line"># 二进制可执行文件转16进制字符串</div><div class="line">$ cat ./c2bs | ./c2bs -c &gt; c2bs.hex </div><div class="line">$ head c2bs.hex</div><div class="line">7f454c4602010100000000000000000002003e000100000020064000000000004000000000000000a0110000000000000000000040003800090040001e001b000600000005000000400000000000000040004000000000004000400000000000f801000000000000f8010000000...</div><div class="line"></div><div class="line"># 十六进制字符串再转回到二进制</div><div class="line">$ cat ./c2bs.hex | ./c2bs -b &gt; c2bs</div></pre></td></tr></table></figure>
+<p> 源码如下，需要注意的是，都用了不带符号的unsigned char类型，这个很关键，想想为什么？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;math.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> talbe[<span class="string">'f'</span>+<span class="number">1</span>];</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> in_2[<span class="number">3</span>]=&#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (argc == <span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"convert to binary or strings.\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"will read from stdin and write to stdout\n"</span>);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"usage: %s [options]\n"</span></div><div class="line">			<span class="string">"[options]\n"</span></div><div class="line">			<span class="string">"    -b convert to binary\n"</span></div><div class="line">			<span class="string">"    -s convert to string\n"</span>,argv[<span class="number">0</span>]);</div><div class="line">		<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">switch</span>(argv[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> <span class="string">'s'</span>:</div><div class="line">			<span class="keyword">while</span>( fread(&amp;in,<span class="keyword">sizeof</span>(<span class="keyword">char</span>),<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%02x"</span>,in);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		<span class="keyword">break</span>;</div><div class="line">		</div><div class="line">		<span class="keyword">case</span> <span class="string">'b'</span>:</div><div class="line"></div><div class="line">			talbe[<span class="string">'0'</span>]=<span class="number">0</span>;	</div><div class="line">			talbe[<span class="string">'1'</span>]=<span class="number">1</span>;	</div><div class="line">			talbe[<span class="string">'2'</span>]=<span class="number">2</span>;	</div><div class="line">			talbe[<span class="string">'3'</span>]=<span class="number">3</span>;	</div><div class="line">			talbe[<span class="string">'4'</span>]=<span class="number">4</span>;	</div><div class="line">			talbe[<span class="string">'5'</span>]=<span class="number">5</span>;	</div><div class="line">			talbe[<span class="string">'6'</span>]=<span class="number">6</span>;	</div><div class="line">			talbe[<span class="string">'7'</span>]=<span class="number">7</span>;	</div><div class="line">			talbe[<span class="string">'8'</span>]=<span class="number">8</span>;	</div><div class="line">			talbe[<span class="string">'9'</span>]=<span class="number">9</span>;	</div><div class="line">			talbe[<span class="string">'a'</span>]=<span class="number">10</span>;	</div><div class="line">			talbe[<span class="string">'b'</span>]=<span class="number">11</span>;	</div><div class="line">			talbe[<span class="string">'c'</span>]=<span class="number">12</span>;	</div><div class="line">			talbe[<span class="string">'d'</span>]=<span class="number">13</span>;	</div><div class="line">			talbe[<span class="string">'e'</span>]=<span class="number">14</span>;	</div><div class="line">			talbe[<span class="string">'f'</span>]=<span class="number">15</span>;	</div><div class="line">			<span class="keyword">while</span>( fread(in_2,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="number">2</span>,<span class="number">1</span>,<span class="built_in">stdin</span>) &gt; <span class="number">0</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">unsigned</span> <span class="keyword">char</span> out;</div><div class="line">				out = <span class="number">16</span>*talbe[in_2[<span class="number">0</span>]] + talbe[in_2[<span class="number">1</span>]]; </div><div class="line">				<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"%c"</span>,out);</div><div class="line">			&#125;</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"unknown parameter %s"</span>,argv[<span class="number">1</span>]);</div><div class="line">		<span class="keyword">break</span>;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-PostgreSQL-count-优化" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -805,214 +1044,9 @@
 
 
   
-    <article id="post-Mathjax公式" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/17/Mathjax公式/" class="article-date">
-      <time datetime="2016-09-17T13:39:40.000Z" itemprop="datePublished">2016-09-17</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/17/Mathjax公式/">Mathjax公式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>利用mathjax可以方便的输入latex格式的公式，例如输入如下文本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$$E=mc^2$$</div></pre></td></tr></table></figure></p>
-<p>就会自动生成如下格式化的公式<br>$$E=mc^2$$</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网站/">网站</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-长城" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/15/长城/" class="article-date">
-      <time datetime="2016-09-15T13:12:02.000Z" itemprop="datePublished">2016-09-15</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/15/长城/">长城 Great Wall</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>长城（Great Wall）又称万里长城，是中国古代的军事防御工程。长城修筑的历史可上溯到西周时期，发生在首都镐京（今陕西西安）的著名的典故“烽火戏诸侯”就源于此。春秋战国时期列国争霸，互相防守，长城修筑进入第一个高潮，但此时修筑的长度都比较短。秦灭六国统一天下后，秦始皇连接和修缮战国长城，始有万里长城之称。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/gzsbxd49ixdcm1yjk6p4kbma/2016-10-04%2013-05-31%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$八达岭长城$$</p>
-<p>八达岭长城，位于北京市延庆区军都山关沟古道北口。是中国古代伟大的防御工程万里长城的重要组成部分，是明长城的一个隘口。八达岭长城为居庸关的重要前哨，古称“居庸之险不在关而在八达岭”。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/cu9g6kwjxit08k639it2btj4/2016-10-04%2012-58-54%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$烽火台$$<br>烽火台高均五丈，周围建小城，高一丈五尺，上设悬楼垒木，下设壕堑吊桥，外设塌窖陷阱；门道上置水柜，冬日盛冰、夏日盛水；不修台阶，以绳梯上下；每台有火铳、火炮2门，有守卒10人。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/hgfm3n6odz2f1k2ilmz42gyu/2016-10-04%2012-54-09%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$城墙$$</p>
-<p>八达岭长城城墙高6～9米，平面呈梯形，底宽6.5～7.5米、顶宽4.5～5.8米。大部墙顶宽阔平坦，可以“五马并骑、十人并行”；城墙中线偏于外侧，外侧墙高，内侧墙低。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/爱好/">爱好</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-北京奥林匹克公园" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/06/09/北京奥林匹克公园/" class="article-date">
-      <time datetime="2016-06-09T13:57:25.000Z" itemprop="datePublished">2016-06-09</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>北京奥林匹克公园位于北京市朝阳区，地处北京城中轴线北端。2008年奥运会比赛期间，有鸟巢、水立方、国家体育馆、等10个奥运会竞赛场馆。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/usu0xch6mcnp42rby3u62p8p/2016-10-04%2013-45-00%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$ 鸟巢　水立方$$<br>国家游泳中心又称水立方,长宽高分别为177m ×177m×30m。其与国家体育场(俗称鸟巢)分列于北京城市中轴线北端的两侧。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/k0ej1vatj5ffs5vkn9uwpa4j/2016-10-04%2013-44-17%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$ 鸟巢$$<br>国家体育场（鸟巢）位于北京奥林匹克公园中心区南部，为2008年北京奥运会的主体育场。工程总占地面积21公顷。奥运会后成为北京市民参与体育活动及享受体育娱乐的大型专业场所，并成为地标性的体育建筑和奥运遗产。</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/hpflyee8d2bh61j7gr7yzwx9/2016-10-04%2013-46-17%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""><br>$$湖$$<br>森林公园的湖泊作为“龙头”，引起整个奥林匹克公园之中的龙形水系，把自然引入城市。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/爱好/">爱好</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/旅行/">旅行</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
     </nav>
   
 </div>

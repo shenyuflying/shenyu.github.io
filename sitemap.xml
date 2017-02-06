@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/map/database.html</loc>
+    
+    <lastmod>2017-02-06T07:20:42.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2017/02/06/how-to-setup-postgresql-odbc/</loc>
+    
+    <lastmod>2017-02-06T07:20:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</loc>
+    
+    <lastmod>2017-02-06T07:19:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/2017/01/02/pg-logical-backup-restore/</loc>
+    
+    <lastmod>2017-02-06T07:19:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/02/06/odbc-programming/</loc>
     
     <lastmod>2017-02-06T07:10:22.000Z</lastmod>
@@ -75,13 +103,6 @@
     <loc>http://shenyu.wiki/map/os.html</loc>
     
     <lastmod>2017-01-20T04:30:23.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/map/database.html</loc>
-    
-    <lastmod>2017-01-20T04:30:10.000Z</lastmod>
     
   </url>
   
