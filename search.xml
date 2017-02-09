@@ -4,11 +4,16 @@
   
     
     <entry>
-      <title><![CDATA[ODBC programming]]></title>
-      <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
-      <content type="html"><![CDATA[<iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" width="800" height="600"> </iframe>
-
-
+      <title><![CDATA[soname]]></title>
+      <url>http://shenyu.wiki/2017/02/09/soname/</url>
+      <content type="html"><![CDATA[<p>客户反映一个动态库改名为后，编译时链接也是正确的。但在编译出来的应用做依赖分析时(ldd)，发现加载的还是改名之前的动态库。经过分析，是由于编译时带了<code>-Wl,-soname -Wl,libclntsh.so</code>选项：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -shared  .libs/bind.o ... .libs/kociapi.o  -L/lib  -Wl,--version-script=koci.lds -Wl,-soname -Wl,libclntsh.so -o .libs/libclntsh.so</div></pre></td></tr></table></figure></p>
+<p>那么这样在连接时传给<code>ld</code>的参数就会是<code>ld -soname libclntsh.so</code><br>生成的动态库也就带上了<code>SONAME</code>这个字段。</p>
+<p><center> <img src="http://static.zybuluo.com/shenyuflying/lklzdw5gskd5dmuzlnpazkl8/image_1b8gve8oi15h91nd0qjsb5eaju9.png" alt="image_1b8gve8oi15h91nd0qjsb5eaju9.png-52.2kB"> </center><br>关于这个选项手册<code>man ld</code>里面解释是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">-hname</div><div class="line">-soname=name</div><div class="line">    When creating an ELF shared object, set the internal DT_SONAME field  to  the  specified</div><div class="line">    name.   When  an  executable is linked with a shared object which has a DT_SONAME field,</div><div class="line">    then when the executable is run the dynamic linker  will  attempt  to  load  the  shared</div><div class="line">    object specified by the DT_SONAME field rather than the using the file name given to the</div><div class="line">    linker.</div></pre></td></tr></table></figure></p>
+<p>意思是如创建动态链接库的时候，如果加了<code>soname</code>按么生成的ELF文件中就会有<code>SONAME</code>这个字段。之后可执行文件加载这个动态链接库的时候，就会按照<code>SONAME</code>这个字段来找对应的文件，而不是当初链接可执行文件时候指定的动态链接库的文件名。这就是问题发生的原因。</p>
+<p>那么<code>soname</code>有什么作用呢？<br><a href="https://en.wikipedia.org/wiki/Soname" target="_blank" rel="external">google</a>上的解释是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">The soname is often used to provide version backwards-compatibility information. For instance, if versions 1.0 through 1.9 of the shared library libx provide identical interface, they would all have the same soname, e.g. libx.so.1. If the system only includes version 1.3 of that shared object, with filename libx.so.1.3, the soname field of the shared object tells the system that it can be used to fill the dependency for a binary which was originally compiled using version 1.2.</div></pre></td></tr></table></figure></p>
+<p>也就是说<code>soname</code>是为了向下兼容的目的，比如老版本的名字是lib1.2，升级之后lib1.3。如果没有加-soname那么系统还会找lib1.2，也就没有达到升级的目的。如果-soname lib1那么系统认为lib1.2和lib1.3是兼容的，找的时候文件名只要是匹配lib1这个soname前缀就可以了。</p>
+<p>考虑到目前我们的动态链接库目前都是叫libclntsh.so，并没有名字的区分。最后的解决方法很简单，就是增加编译选项: <code>--disable-soname</code>在编译的时候不加<code>-soname</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./configure --disable-soname</div><div class="line"> make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 ]]></content>
     </entry>
     
@@ -25,6 +30,15 @@
       <title><![CDATA[An introduction to ODBC]]></title>
       <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
       <content type="html"><![CDATA[<iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe>
+
+
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[ODBC programming]]></title>
+      <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
+      <content type="html"><![CDATA[<iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" width="800" height="600"> </iframe>
 
 
 ]]></content>
