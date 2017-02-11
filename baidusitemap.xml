@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2017/02/06/odbc-programming/</loc>
+    <lastmod>2017-02-11T06:40:49.000Z</lastmod>
+    <data>
+        <display>
+        <title>ODBC programming</title>
+        <pubTime>2017-02-06T07:08:24.000Z</pubTime>
+        
+        <tag>技术分享</tag>
+         
+        <tag>数据库</tag>
+         
+        <tag>PostgreSQL接口</tag>
+         
+        <tag>ODBC</tag>
+         
+         
+           
+             
+              <breadCrumb title="Presentations" url="http://shenyu.wiki/categories/Presentations/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://shenyu.wiki/2017/02/09/soname/</loc>
     <lastmod>2017-02-09T09:07:53.000Z</lastmod>
     <data>
@@ -101,32 +127,6 @@
         <tag>PostgreSQL</tag>
          
         <tag>备份还原</tag>
-         
-         
-           
-             
-              <breadCrumb title="Presentations" url="http://shenyu.wiki/categories/Presentations/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://shenyu.wiki/2017/02/06/odbc-programming/</loc>
-    <lastmod>2017-02-06T07:10:22.000Z</lastmod>
-    <data>
-        <display>
-        <title>ODBC programming</title>
-        <pubTime>2017-02-06T07:08:24.000Z</pubTime>
-        
-        <tag>技术分享</tag>
-         
-        <tag>数据库</tag>
-         
-        <tag>PostgreSQL接口</tag>
-         
-        <tag>ODBC</tag>
          
          
            

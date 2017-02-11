@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/02/06/odbc-programming/</loc>
+    
+    <lastmod>2017-02-11T06:40:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/02/09/soname/</loc>
     
     <lastmod>2017-02-09T09:07:53.000Z</lastmod>
@@ -33,13 +40,6 @@
     <loc>http://shenyu.wiki/2017/01/02/pg-logical-backup-restore/</loc>
     
     <lastmod>2017-02-06T07:19:35.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/2017/02/06/odbc-programming/</loc>
-    
-    <lastmod>2017-02-06T07:10:22.000Z</lastmod>
     
   </url>
   
