@@ -4,6 +4,41 @@
   
     
     <entry>
+      <title><![CDATA[如何阅读程序源码之——call graph]]></title>
+      <url>http://shenyu.wiki/2017/02/14/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E7%A8%8B%E5%BA%8F%E6%BA%90%E7%A0%81%E4%B9%8B%E2%80%94%E2%80%94call-graph/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>多阅读大型开源项目能够显著提升自己的能力，但是面对几万甚至几十万行的代码是不是感觉无从下手。理解大型工程的一个诀窍就是能够理清函数之间的调用关系。这篇文章介绍几个好用的工具，用来帮助我们生成代码的调用关系，以便更好的理解项目代码。</p>
+</blockquote>
+<p>说到函数调用关系（call graph）相信大家都不陌生，函数调用关系其实就是程序的执行流程。生成函数调用关系的方法一般来说有2个，即动态方法和静态方法。</p>
+<h2 id="动态方法"><a href="#动态方法" class="headerlink" title="动态方法"></a>动态方法</h2><p>动态方法就是在程序执行过程中，把函数的调用情况记录下来，一些程序性能分析工具常常都有这个功能，比如<code>gprof</code>。相对于静态方法来说，动态方法准确的反映了程序执行的过程。但是一些没有实际执行到的分支没有显示出来。<br>常用的工具有：</p>
+<ol>
+<li><a href="https://sourceware.org/binutils/docs/gprof/" target="_blank" rel="external">gprof</a>：可以输出每个函数的调用次数，每个函数消耗的处理器时间，函数之间的调用关系。通过在编译和链接程序的时候（使用 -pg 编译和链接选项），gcc 在你应用程序的每个函数中都加入了一个名为mcount函数，也就是说你的应用程序里的每一个函数都会调用mcount，而mcount会在内存中保存一张函数调用图，并通过函数调用堆栈的形式查找子函数和父函数的地址。这张调用图也保存了所有与函数相关的调用时间，调用次数等等的所有信息。在程序结束后会生成gmon.out文件，然后再用gprof来分析gmon.out文件。但是gprof不支持多线程应用，多线程下只能采集主线程性能数据。原因是gprof采用ITIMER_PROF信号，在多线程内只有主线程才能响应该信号。如果需要支持多线程程序那么需要程序员自己处理线程信号。另外gprof只能输出文本形式的调用关系。</li>
+<li>KCachegrind：利用calgrind生成的结果，绘制调用关系图形。使用也非常简单,首先用valgrind来执行程序<code>valgrind --tools=callgrind ./prog</code>，程序结束后在目录下生成<code>callgrind.out.pid</code>文件，然后用kcachegrind打开这个文件即可。</li>
+</ol>
+<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>静态方法就是直接分析程序源码文件，把函数调用关系记录下来。静态方法能够更为全面的反映函数的调用情况（不管实际是否能调用）。相对于动态方法来说，静态方法不用编译，速度较快节约了大量时间。但是，静态方法的函数调用关系不一定能够反映程序的实际执行情况。<br>常用的工具有：</p>
+<ol>
+<li><a href="http://www.doxygen.nl/manual/index.html" target="_blank" rel="external">doxygen</a>：可由代码以生成html等各种格式的文档，需要编码时按照一定的规范，十分适合大型工程，可以看<a href="https://doxygen.postgresql.org/" target="_blank" rel="external">postgresql</a>的在线文档。但是已有工程由于不符合doxygen的规范，不适合使用。</li>
+<li><a href="http://www.gnu.org/software/cflow/" target="_blank" rel="external">cflow</a>：直接解析C源代码，用lex&amp;yacc来生成文本格式的调用关系图。不需要任何改动。但是只能生成文本格式，不能生成图像。</li>
+<li><a href="http://www.gson.org/egypt/egypt.html" target="_blank" rel="external">egypt</a>：用gcc的-fdump-rtl-expand选项生成调用关系，然后用graphviz生成调用图图像。需要简单改动一下Makefile,或者是make CFLAGS=”-fdump-rtl-expand”。</li>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=2368" target="_blank" rel="external">CCTree</a>：这个是vim的一个插件，利用cscope的输出来生成交叉引用的信息。和SourceInsight的交叉引用很像。</li>
+<li><a href="http://freecode.com/projects/codeviz/" target="_blank" rel="external">codeviz</a> :其基本原理是给 GCC 打个补丁，让它在编译时每个源文件时 dump 出其中函数的 call graph，然后用 Perl 脚本收集并整理调用关系，转交给Graphviz绘制图形。这种方法还需要重新编译gcc，比较麻烦。</li>
+</ol>
+<p>动态方法和静态方法各有好处，在实际使用过程中需要两者相结合才会发挥更大力量。下面是他们生成的调用关系效果图：</p>
+<ol>
+<li><p>gprof</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">$ gprof -b ./node2dot ./gmon.out </div><div class="line">Flat profile:</div><div class="line"></div><div class="line">Each sample counts as 0.01 seconds.</div><div class="line">  %   cumulative   self              self     total           </div><div class="line"> time   seconds   seconds    calls  ms/call  ms/call  name    </div><div class="line">100.22      0.03     0.03        8     3.76     3.76  add_node</div><div class="line">  0.00      0.03     0.00       54     0.00     0.00  get_one_name</div><div class="line">  0.00      0.03     0.00       32     0.00     0.00  add_item</div><div class="line">  0.00      0.03     0.00       16     0.00     0.00  pop</div><div class="line">  0.00      0.03     0.00       16     0.00     0.00  push</div><div class="line">  0.00      0.03     0.00        8     0.00     0.00  add_link</div><div class="line">  0.00      0.03     0.00        1     0.00     0.00  print_body</div><div class="line">  0.00      0.03     0.00        1     0.00     0.00  print_footer</div><div class="line">  0.00      0.03     0.00        1     0.00     0.00  print_header</div><div class="line"></div><div class="line"></div><div class="line">			Call graph</div><div class="line"></div><div class="line"></div><div class="line">granularity: each sample hit covers 2 byte(s) for 33.26% of 0.03 seconds</div><div class="line"></div><div class="line">index % time    self  children    called     name</div><div class="line">                0.03    0.00       8/8           main [2]</div><div class="line">[1]    100.0    0.03    0.00       8         add_node [1]</div><div class="line">-----------------------------------------------</div><div class="line">                                                 &lt;spontaneous&gt;</div><div class="line">[2]    100.0    0.00    0.03                 main [2]</div><div class="line">                0.03    0.00       8/8           add_node [1]</div><div class="line">                0.00    0.00      54/54          get_one_name [3]</div><div class="line">                0.00    0.00      32/32          add_item [4]</div><div class="line">                0.00    0.00      16/16          push [6]</div><div class="line">                0.00    0.00      16/16          pop [5]</div><div class="line">                0.00    0.00       8/8           add_link [7]</div><div class="line">                0.00    0.00       1/1           print_header [10]</div><div class="line">                0.00    0.00       1/1           print_footer [9]</div><div class="line">                0.00    0.00       1/1           print_body [8]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      54/54          main [2]</div><div class="line">[3]      0.0    0.00    0.00      54         get_one_name [3]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      32/32          main [2]</div><div class="line">[4]      0.0    0.00    0.00      32         add_item [4]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      16/16          main [2]</div><div class="line">[5]      0.0    0.00    0.00      16         pop [5]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      16/16          main [2]</div><div class="line">[6]      0.0    0.00    0.00      16         push [6]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       8/8           main [2]</div><div class="line">[7]      0.0    0.00    0.00       8         add_link [7]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       1/1           main [2]</div><div class="line">[8]      0.0    0.00    0.00       1         print_body [8]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       1/1           main [2]</div><div class="line">[9]      0.0    0.00    0.00       1         print_footer [9]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       1/1           main [2]</div><div class="line">[10]     0.0    0.00    0.00       1         print_header [10]</div><div class="line">-----------------------------------------------</div><div class="line"></div><div class="line"></div><div class="line">Index by function name</div><div class="line"></div><div class="line">   [4] add_item                [3] get_one_name            [9] print_footer</div><div class="line">   [7] add_link                [5] pop                    [10] print_header</div><div class="line">   [1] add_node                [8] print_body              [6] push</div></pre></td></tr></table></figure>
+</li>
+<li><p>kcachegrind<br><img src="http://static.zybuluo.com/shenyuflying/bz18v8q1z4vif7o5h9lpepra/image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png" alt="image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png-253.8kB"></p>
+</li>
+<li>egypt<br><img src="http://static.zybuluo.com/shenyuflying/4n143s2us4sxph95uhh5tbij/image_1b8renepf1ckbd1d1qjk1ikv4a0m.png" alt="image_1b8renepf1ckbd1d1qjk1ikv4a0m.png-42.6kB"></li>
+<li>CCTree<br><img src="http://static.zybuluo.com/shenyuflying/rt5utk4711iyfaoo77c2anem/image_1b8rei332c4v1ppefci182muf49.png" alt="image_1b8rei332c4v1ppefci182muf49.png-128.3kB"></li>
+</ol>
+<p>PS:以上分析的源码来自我的两个开源项目：<br>pgNodeGraph: <a href="http://github.com/shenyuflying/pgNodeGraph" target="_blank" rel="external">http://github.com/shenyuflying/pgNodeGraph</a><br>codeRunner: <a href="http://github.com/shenyuflying/codeRunner" target="_blank" rel="external">http://github.com/shenyuflying/codeRunner</a></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[soname]]></title>
       <url>http://shenyu.wiki/2017/02/09/soname/</url>
       <content type="html"><![CDATA[<p>客户反映一个动态库改名为后，编译时链接也是正确的。但在编译出来的应用做依赖分析时(ldd)，发现加载的还是改名之前的动态库。经过分析，是由于编译时带了<code>-Wl,-soname -Wl,libclntsh.so</code>选项：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -shared  .libs/bind.o ... .libs/kociapi.o  -L/lib  -Wl,--version-script=koci.lds -Wl,-soname -Wl,libclntsh.so -o .libs/libclntsh.so</div></pre></td></tr></table></figure></p>
@@ -14,15 +49,6 @@
 <p>也就是说<code>soname</code>是为了向下兼容的目的，比如老版本的名字是lib1.2，升级之后lib1.3。如果没有加-soname那么系统还会找lib1.2，也就没有达到升级的目的。如果-soname lib1那么系统认为lib1.2和lib1.3是兼容的，找的时候文件名只要是匹配lib1这个soname前缀就可以了。</p>
 <p>考虑到目前我们的动态链接库目前都是叫libclntsh.so，并没有名字的区分。最后的解决方法很简单，就是增加编译选项: <code>--disable-soname</code>在编译的时候不加<code>-soname</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./configure --disable-soname</div><div class="line"> make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
 <p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[ODBC programming]]></title>
-      <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
-      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" scrolling="no" frameborder="0" width="800" height="600"> </iframe><br></center>
-
-
 ]]></content>
     </entry>
     
@@ -39,6 +65,15 @@
       <title><![CDATA[An introduction to ODBC]]></title>
       <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
       <content type="html"><![CDATA[<iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe>
+
+
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[ODBC programming]]></title>
+      <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
+      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" scrolling="no" frameborder="0" width="800" height="600"> </iframe><br></center>
 
 
 ]]></content>
