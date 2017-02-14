@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/bz18v8q1z4vif7o5h9lpepra/image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/4n143s2us4sxph95uhh5tbij/image_1b8renepf1ckbd1d1qjk1ikv4a0m.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/rt5utk4711iyfaoo77c2anem/image_1b8rei332c4v1ppefci182muf49.png">
-<meta property="og:updated_time" content="2017-02-14T02:03:02.000Z">
+<meta property="og:updated_time" content="2017-02-14T02:07:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何阅读程序源码之——call graph">
 <meta name="twitter:description" content="多阅读大型开源项目能够显著提升自己的能力，但是面对几万甚至几十万行的代码是不是感觉无从下手。理解大型工程的一个诀窍就是能够理清函数之间的调用关系。这篇文章介绍几个好用的工具，用来帮助我们生成代码的调用关系，以便更好的理解项目代码。
@@ -342,7 +342,7 @@
 <h2 id="动态方法"><a href="#动态方法" class="headerlink" title="动态方法"></a>动态方法</h2><p>动态方法就是在程序执行过程中，把函数的调用情况记录下来，一些程序性能分析工具常常都有这个功能，比如<code>gprof</code>。相对于静态方法来说，动态方法准确的反映了程序执行的过程。但是一些没有实际执行到的分支没有显示出来。<br>常用的工具有：</p>
 <ol>
 <li><a href="https://sourceware.org/binutils/docs/gprof/" target="_blank" rel="external">gprof</a>：可以输出每个函数的调用次数，每个函数消耗的处理器时间，函数之间的调用关系。通过在编译和链接程序的时候（使用 -pg 编译和链接选项），gcc 在你应用程序的每个函数中都加入了一个名为mcount函数，也就是说你的应用程序里的每一个函数都会调用mcount，而mcount会在内存中保存一张函数调用图，并通过函数调用堆栈的形式查找子函数和父函数的地址。这张调用图也保存了所有与函数相关的调用时间，调用次数等等的所有信息。在程序结束后会生成gmon.out文件，然后再用gprof来分析gmon.out文件。但是gprof不支持多线程应用，多线程下只能采集主线程性能数据。原因是gprof采用ITIMER_PROF信号，在多线程内只有主线程才能响应该信号。如果需要支持多线程程序那么需要程序员自己处理线程信号。另外gprof只能输出文本形式的调用关系。</li>
-<li>KCachegrind：利用calgrind生成的结果，绘制调用关系图形。使用也非常简单,首先用valgrind来执行程序<code>valgrind --tools=callgrind ./prog</code>，程序结束后在目录下生成<code>callgrind.out.pid</code>文件，然后用kcachegrind打开这个文件即可。</li>
+<li><a href="http://kcachegrind.sourceforge.net/html/Home.html" target="_blank" rel="external">KCachegrind</a>：利用calgrind生成的结果，绘制调用关系图形。使用也非常简单,首先用valgrind来执行程序<code>valgrind --tools=callgrind ./prog</code>，程序结束后在目录下生成<code>callgrind.out.pid</code>文件，然后用kcachegrind打开这个文件即可。</li>
 </ol>
 <h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>静态方法就是直接分析程序源码文件，把函数调用关系记录下来。静态方法能够更为全面的反映函数的调用情况（不管实际是否能调用）。相对于动态方法来说，静态方法不用编译，速度较快节约了大量时间。但是，静态方法的函数调用关系不一定能够反映程序的实际执行情况。<br>常用的工具有：</p>
 <ol>
@@ -375,7 +375,7 @@
         <p><span>本文标题:</span><a href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
         <p><span>发布时间:</span>2017-02-14, 01:58:20</p>
-        <p><span>最后更新:</span>2017-02-14, 02:03:02</p>
+        <p><span>最后更新:</span>2017-02-14, 02:07:16</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/02/14/如何阅读程序源码之——call-graph/" title="如何阅读程序源码之——call graph">http://shenyu.wiki/2017/02/14/如何阅读程序源码之——call-graph/</a>
             <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/02/14/如何阅读程序源码之——call-graph/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
