@@ -282,11 +282,97 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-PostgreSQL性能分析" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/13/PostgreSQL性能分析/" class="article-date">
+      <time datetime="2016-10-13T04:49:37.000Z" itemprop="datePublished">2016-10-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <blockquote>
+<p>面对客户抱怨诸如“很慢”、“卡顿”等问题的时候，我们该如何找出性能瓶颈？从研发角度来说，做一下性能分析(profiling)可能有所帮助。性能分析能找出来最慢的函数，从而发现性能问题的瓶颈。再从瓶颈入手，优化代码从而解决性能问题。</p>
+</blockquote>
+<p>常用的方法是gdb或pstack堆栈跟踪，比如postgreSQL经常卡在一个特定的地方很长时间，往往都有相同的堆栈跟踪信息。我们要做的就是用gdb附加到进程，将所有进程堆栈打出来，然后利用一些简单的脚本将信息做汇总，再利用sort|uniq|sort的方法排序统计出最多的堆栈信息，或最多的函数调用信息。</p>
+<p>其实这种profile工具已经有了，其中一个简洁有效的工具是<a href="https://poormansprofiler.org/">poor man’s profiler</a>，Google, Facebook, Wikipedia, Intel的工程师都在用这个工具来分析程序的性能。在这里我对其改造一番，使得其更方便的分析postgreSQL数据库。</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># ./poormansprofile.sh  </div><div class="line">usage: promansprofile username samples sleeptime</div></pre></td></tr></table></figure>
+<p>username是postgreSQL登陆的用户名，脚本里来找到对应用户的pid<br>samples是采样点数<br>sleeptime是每采样点数间隔<br>比如我们分析<code>yshen</code>用户进程，采样点300个，那么如下命令启动分析：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># ./poormansprofile.sh  yshen 300 0</div><div class="line">1/300 completed.</div><div class="line">2/300 completed.</div><div class="line">3/300 completed.</div><div class="line">4/300 completed.</div><div class="line">5/300 completed.</div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line">300/300 completed.</div></pre></td></tr></table></figure></p>
+<p>PS: 在有些环境下，需要用root用户。</p>
+<h2 id="分析结果"><a href="#分析结果" class="headerlink" title="分析结果"></a>分析结果</h2><p>这个脚本可以分析</p>
+<ul>
+<li>函数排名：即哪个函数调用最占时间。</li>
+<li>堆栈排名：即种调用堆栈最占用时间。</li>
+</ul>
+<h4 id="函数排名"><a href="#函数排名" class="headerlink" title="函数排名"></a>函数排名</h4><p>如下是跑回归测试的函数排名分析。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">266 ServerLoop</div><div class="line">266 PostmasterMain</div><div class="line">266 PostgresMain</div><div class="line">266 main</div><div class="line">266 BackendStartup</div><div class="line">266 BackendRun</div><div class="line">259 exec_simple_query</div><div class="line">134 CommitTransactionCommand</div><div class="line">134 CommitTransaction</div><div class="line">132 XLogFlush</div><div class="line">132 RecordTransactionCommit</div><div class="line">129 finish_xact_command</div><div class="line">128 XLogWrite</div><div class="line">128 pg_fdatasync</div><div class="line">128 issue_xlog_fsync</div><div class="line">128 __fdatasync_nocancel</div><div class="line">120 PortalRun</div><div class="line">101 standard_ProcessUtility</div><div class="line">101 ProcessUtility</div><div class="line"> 99 PortalRunMulti</div><div class="line"> 96 PortalRunUtility</div><div class="line"> 75 ProcessUtilitySlow</div><div class="line"> 74 smgrimmedsync</div><div class="line"> 74 pg_fsync_no_writethrough</div><div class="line"> 74 pg_fsync</div><div class="line"> 74 mdimmedsync</div><div class="line"> 74 __fsync_nocancel</div><div class="line"> 74 FileSync</div><div class="line"> 73 index_build</div><div class="line"> 69 btbuild</div></pre></td></tr></table></figure></p>
+<p>可以看到ServerLoop这个函数最占用时间，很正常，因为这个函数在等待用户连接。下面几个函数其中有个函数XLogFlush，FileSync，smgrimmedsync，pg_fdatasync等等都是IO相关，可见IO非常耗时。以上是正常状态下的函数排名，如果有异常应该就可以发现，比如一些阻塞行为，死锁，IO，网络问题都能在这里发现。</p>
+<h2 id="堆栈排名"><a href="#堆栈排名" class="headerlink" title="堆栈排名"></a>堆栈排名</h2><p>堆栈排名更加详细，说了哪种堆栈状态最耗时。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">45 __fdatasync_nocancel,pg_fdatasync,issue_xlog_fsync,XLogWrite,XLogFlush,RecordTransactionCommit,CommitTransaction,CommitTransactionCommand,finish_xact_command,exec_simple_query,PostgresMain,BackendRun,BackendStartup,ServerLoop,PostmasterMain,main</div><div class="line"> 7 __fsync_nocancel,pg_fsync_no_writethrough,pg_fsync,FileSync,mdimmedsync,smgrimmedsync,_bt_load,_bt_leafbuild,btbuild,index_build,index_create,DefineIndex,ProcessUtilitySlow,standard_ProcessUtility,ProcessUtility,PortalRunUtility,PortalRunMulti,PortalRun,exec_simple_query,PostgresMain,BackendRun,BackendStartup,ServerLoop,PostmasterMain,main</div><div class="line"> 4 __fsync_nocancel,pg_fsync_no_writethrough,pg_fsync,FileSync,mdimmedsync,smgrimmedsync,_bt_load,_bt_leafbuild,btbuild,index_build,index_create,create_toast_table,CheckAndCreateToastTable,NewRelationCreateToastTable,ProcessUtilitySlow,standard_ProcessUtility,ProcessUtility,PortalRunUtility,PortalRunMulti,PortalRun,exec_simple_query,PostgresMain,BackendRun,BackendStartup,ServerLoop,PostmasterMain,mai</div></pre></td></tr></table></figure></p>
+<p>分析第一个堆栈，出现了45次，堆栈的内容是CommitTransaction提交事务带来的刷盘持久化操作，可见很耗时啊，因为带来了IO。同样的，如果发现什么异常行为也可以在这里发现。</p>
+<h2 id="源码1-——只分析用户进程"><a href="#源码1-——只分析用户进程" class="headerlink" title="源码1 ——只分析用户进程"></a>源码1 ——只分析用户进程</h2><p>源码如下：<br>如果去掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed &apos;s/,/\n/g&apos; | \</div><div class="line">uniq | \</div></pre></td></tr></table></figure></p>
+<p>这两行就是显示的堆栈排名，否则是函数排名。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调优/">调优</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/10/13/PostgreSQL性能分析/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-PostgreSQL日志分析工具——pgBadger" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/" class="article-date">
-      <time datetime="2016-10-13T07:29:26.000Z" itemprop="datePublished">2016-10-13</time>
+      <time datetime="2016-10-12T23:29:26.000Z" itemprop="datePublished">2016-10-13</time>
 </a>
 
 
@@ -405,7 +491,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/11/linux监控脚本-绘图/" class="article-date">
-      <time datetime="2016-10-11T13:36:18.000Z" itemprop="datePublished">2016-10-11</time>
+      <time datetime="2016-10-11T05:36:18.000Z" itemprop="datePublished">2016-10-11</time>
 </a>
 
 
@@ -492,7 +578,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/11/数据库性能测试标准TPC/" class="article-date">
-      <time datetime="2016-10-11T07:31:30.000Z" itemprop="datePublished">2016-10-11</time>
+      <time datetime="2016-10-10T23:31:30.000Z" itemprop="datePublished">2016-10-11</time>
 </a>
 
 
@@ -569,7 +655,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/10/好书推荐：《操作系统设计与实现》/" class="article-date">
-      <time datetime="2016-10-10T11:54:32.000Z" itemprop="datePublished">2016-10-10</time>
+      <time datetime="2016-10-10T03:54:32.000Z" itemprop="datePublished">2016-10-10</time>
 </a>
 
 
@@ -634,7 +720,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/10/linux中的硬链接和软链接/" class="article-date">
-      <time datetime="2016-10-10T06:03:07.000Z" itemprop="datePublished">2016-10-10</time>
+      <time datetime="2016-10-09T22:03:07.000Z" itemprop="datePublished">2016-10-10</time>
 </a>
 
 
@@ -705,7 +791,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/09/linux中的僵尸进程/" class="article-date">
-      <time datetime="2016-10-09T07:13:11.000Z" itemprop="datePublished">2016-10-09</time>
+      <time datetime="2016-10-08T23:13:11.000Z" itemprop="datePublished">2016-10-09</time>
 </a>
 
 
@@ -781,7 +867,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/" class="article-date">
-      <time datetime="2016-10-09T05:54:58.000Z" itemprop="datePublished">2016-10-09</time>
+      <time datetime="2016-10-08T21:54:58.000Z" itemprop="datePublished">2016-10-09</time>
 </a>
 
 
@@ -853,7 +939,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/" class="article-date">
-      <time datetime="2016-10-05T11:23:57.000Z" itemprop="datePublished">2016-10-05</time>
+      <time datetime="2016-10-05T03:23:57.000Z" itemprop="datePublished">2016-10-05</time>
 </a>
 
 
@@ -920,7 +1006,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/05/linux下配置IP地址子网掩码和网关/" class="article-date">
-      <time datetime="2016-10-05T11:09:42.000Z" itemprop="datePublished">2016-10-05</time>
+      <time datetime="2016-10-05T03:09:42.000Z" itemprop="datePublished">2016-10-05</time>
 </a>
 
 
@@ -951,78 +1037,6 @@
 <li>把以上配置命令加入到启动脚本里面</li>
 <li>修改网络配置文件</li>
 </ol>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-ssh免密码登陆linux主机" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/05/ssh免密码登陆linux主机/" class="article-date">
-      <time datetime="2016-10-05T10:07:14.000Z" itemprop="datePublished">2016-10-05</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>比如想登陆一台服务器但是每次都需要输密码，这时候我们可以用ssh的authorized_keys文件来记录允许登陆的主机。</p>
-</blockquote>
-<h2 id="配置hosts"><a href="#配置hosts" class="headerlink" title="配置hosts"></a>配置hosts</h2><p>比如我们有2台主机，分别是host1和host2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat /etc/hosts</div><div class="line">192.168.0.101 host1</div><div class="line">192.168.0.102 host2</div></pre></td></tr></table></figure></p>
-<h2 id="生成key"><a href="#生成key" class="headerlink" title="生成key"></a>生成key</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh-keygen -t dsa -f ~/.ssh/id_dsa -N &quot;&quot;</div><div class="line">Generating public/private dsa key pair.</div><div class="line">Your identification has been saved in /root/.ssh/id_dsa.</div><div class="line">Your public key has been saved in /root/.ssh/id_dsa.pub.</div><div class="line">The key fingerprint is:</div><div class="line">91:09:5c:82:5a:6a:50:08:4e:b2:0c:62:de:cc:74:44 root@host1.clusterlabs.org</div><div class="line">The key&apos;s randomart image is:</div><div class="line">+--[ DSA 1024]----+</div><div class="line">|==.ooEo..        |</div><div class="line">|X O + .o o       |</div><div class="line">| * A    +        |</div><div class="line">|  +      .       |</div><div class="line">| .      S        |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">|                 |</div><div class="line">+-----------------+</div></pre></td></tr></table></figure>
-<h2 id="新建authorized-keys文件"><a href="#新建authorized-keys文件" class="headerlink" title="新建authorized_keys文件"></a>新建authorized_keys文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# cp ~/.ssh/id_dsa.pub ~/.ssh/authorized_keys</div></pre></td></tr></table></figure>
-<h2 id="把authorized-keys文件部署到远程主机"><a href="#把authorized-keys文件部署到远程主机" class="headerlink" title="把authorized_keys文件部署到远程主机"></a>把authorized_keys文件部署到远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# scp -r ~/.ssh/authorized_keys host2:～/.ssh/</div></pre></td></tr></table></figure>
-<h2 id="免密码登陆远程主机"><a href="#免密码登陆远程主机" class="headerlink" title="免密码登陆远程主机"></a>免密码登陆远程主机</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@host1 ~]# ssh host2</div></pre></td></tr></table></figure>
-<p>其实就是把本机生成的*.pub文件内容copy到另外一台主机~/.ssh/authorized_keys文件里面就ok！</p>
 
       
     </div>

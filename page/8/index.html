@@ -282,11 +282,77 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-c语言转汇编语言shell脚本" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/17/c语言转汇编语言shell脚本/" class="article-date">
+      <time datetime="2016-09-17T09:58:57.000Z" itemprop="datePublished">2016-09-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>最近在学习汇编，为了方便写了一个shell脚本，用来把c语言转换为汇编语言。很方便。</p>
+<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash  </div><div class="line">if [  &quot;$#&quot; = &quot;0&quot; ] ; then</div><div class="line">        echo &apos;help: c2asm FILENAME&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line"></div><div class="line"></div><div class="line">if [ -f &quot;$1&quot; ] ; then</div><div class="line">        echo &apos;check file ok!&apos;  </div><div class="line">else</div><div class="line">        echo &apos;c2asm: file not exist&apos;  </div><div class="line">        exit 1;</div><div class="line">fi</div><div class="line">echo &apos;generating asm file...&apos;  </div><div class="line">gcc -O0 -S &quot;$1&quot;</div><div class="line">tmp=$1</div><div class="line">asmfile=$&#123;tmp%%.c&#125;.s;</div><div class="line"></div><div class="line">echo &quot;asm file generated: $asmfile&quot;  </div><div class="line">echo &apos;==================asm====================&apos;  </div><div class="line">cat &quot;$asmfile&quot; | grep -v &apos;\.&apos;</div><div class="line">echo &apos;==================c======================&apos;  </div><div class="line">cat &quot;$1&quot;</div><div class="line">echo &apos;==================END====================&apos;  </div><div class="line">echo &apos;done&apos;</div></pre></td></tr></table></figure>
+<h2 id="使用效果"><a href="#使用效果" class="headerlink" title="使用效果"></a>使用效果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">check file ok!</div><div class="line">generating asm file...</div><div class="line">asm file generated: main.s</div><div class="line">==================asm====================</div><div class="line">main:</div><div class="line">	pushq	%rbp</div><div class="line">	movq	%rsp, %rbp</div><div class="line">	movl	$1, -8(%rbp)</div><div class="line">	movl	$1, -4(%rbp)</div><div class="line">	movl	-8(%rbp), %edx</div><div class="line">	movl	-4(%rbp), %eax</div><div class="line">	addl	%edx, %eax</div><div class="line">	popq	%rbp</div><div class="line">	ret</div><div class="line">==================c======================</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int a,b;</div><div class="line">	a = 1;</div><div class="line">	b = 1;</div><div class="line">	return a+b;</div><div class="line"></div><div class="line">&#125;</div><div class="line">==================END====================</div><div class="line">done</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-linux-shell聊天室" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2016/09/17/linux-shell聊天室/" class="article-date">
-      <time datetime="2016-09-17T17:38:43.000Z" itemprop="datePublished">2016-09-17</time>
+      <time datetime="2016-09-17T09:38:43.000Z" itemprop="datePublished">2016-09-17</time>
 </a>
 
 
@@ -366,7 +432,7 @@
   
     <div class="article-meta">
       <a href="/2016/09/17/linux-shell-切换程序/" class="article-date">
-      <time datetime="2016-09-17T17:14:37.000Z" itemprop="datePublished">2016-09-17</time>
+      <time datetime="2016-09-17T09:14:37.000Z" itemprop="datePublished">2016-09-17</time>
 </a>
 
 
@@ -435,7 +501,7 @@
   
     <div class="article-meta">
       <a href="/2016/09/17/奥运会成绩管理系统/" class="article-date">
-      <time datetime="2016-09-17T15:55:08.000Z" itemprop="datePublished">2016-09-17</time>
+      <time datetime="2016-09-17T07:55:08.000Z" itemprop="datePublished">2016-09-17</time>
 </a>
 
 
@@ -521,7 +587,7 @@
   
     <div class="article-meta">
       <a href="/2016/09/17/Mathjax公式/" class="article-date">
-      <time datetime="2016-09-17T13:39:40.000Z" itemprop="datePublished">2016-09-17</time>
+      <time datetime="2016-09-17T05:39:40.000Z" itemprop="datePublished">2016-09-17</time>
 </a>
 
 
@@ -586,7 +652,7 @@
   
     <div class="article-meta">
       <a href="/2016/09/15/长城/" class="article-date">
-      <time datetime="2016-09-15T13:12:02.000Z" itemprop="datePublished">2016-09-15</time>
+      <time datetime="2016-09-15T05:12:02.000Z" itemprop="datePublished">2016-09-15</time>
 </a>
 
 
@@ -657,7 +723,7 @@
   
     <div class="article-meta">
       <a href="/2016/06/09/北京奥林匹克公园/" class="article-date">
-      <time datetime="2016-06-09T13:57:25.000Z" itemprop="datePublished">2016-06-09</time>
+      <time datetime="2016-06-09T05:57:25.000Z" itemprop="datePublished">2016-06-09</time>
 </a>
 
 
@@ -726,7 +792,7 @@
   
     <div class="article-meta">
       <a href="/2016/05/01/天安门/" class="article-date">
-      <time datetime="2016-05-01T13:40:09.000Z" itemprop="datePublished">2016-05-01</time>
+      <time datetime="2016-05-01T05:40:09.000Z" itemprop="datePublished">2016-05-01</time>
 </a>
 
 
@@ -795,7 +861,7 @@
   
     <div class="article-meta">
       <a href="/2016/03/08/兰州/" class="article-date">
-      <time datetime="2016-03-08T15:54:09.000Z" itemprop="datePublished">2016-03-08</time>
+      <time datetime="2016-03-08T07:54:09.000Z" itemprop="datePublished">2016-03-08</time>
 </a>
 
 
@@ -866,7 +932,7 @@
   
     <div class="article-meta">
       <a href="/2016/01/20/markdown-test/" class="article-date">
-      <time datetime="2016-01-20T02:11:10.000Z" itemprop="datePublished">2016-01-20</time>
+      <time datetime="2016-01-19T18:11:10.000Z" itemprop="datePublished">2016-01-20</time>
 </a>
 
 
@@ -989,83 +1055,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-mysql大数据处理" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/02/17/mysql大数据处理/" class="article-date">
-      <time datetime="2015-02-17T18:10:00.000Z" itemprop="datePublished">2015-02-17</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/17/mysql大数据处理/">mysql数据处理</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><blockquote>
-<p>将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。</p>
-</blockquote>
-<p>ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。</p>
-<h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。</p>
-<p><img src="http://img.blog.csdn.net/20141125135942138?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="ddd"></p>
-<h2 id="数据库设计为如下"><a href="#数据库设计为如下" class="headerlink" title="数据库设计为如下"></a>数据库设计为如下</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">database</span> sensorDB;  </div><div class="line"><span class="keyword">use</span> sensorDB;  </div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> sensor  </div><div class="line">(  </div><div class="line">    <span class="keyword">ID</span> <span class="built_in">smallint</span> ,  </div><div class="line">    dt <span class="built_in">Date</span>,  </div><div class="line">    tm <span class="keyword">Time</span>,  </div><div class="line">    temp <span class="built_in">float</span>,  </div><div class="line">    primary <span class="keyword">key</span> (<span class="keyword">ID</span>,dt,tm)  </div><div class="line">);</div></pre></td></tr></table></figure>
-<p>建立一个视图把dt和tm两个字段合并<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">view</span> temperature  </div><div class="line"><span class="keyword">as</span>  </div><div class="line"><span class="keyword">select</span> <span class="keyword">ID</span>, <span class="keyword">cast</span>(<span class="keyword">CONCAT</span>(dt,<span class="string">' '</span>,tm) <span class="keyword">as</span> datetime) <span class="string">'时间'</span> , temp <span class="keyword">from</span> sensor   ;</div></pre></td></tr></table></figure></p>
-<h2 id="txt格式文件导入数据库"><a href="#txt格式文件导入数据库" class="headerlink" title="txt格式文件导入数据库"></a>txt格式文件导入数据库</h2><p>用C语言写了一个小工具，可以把txt转成sql语句【见后面的源代码】        运行后，输入txt的文件名，要插入的表名，和传感器的编号即可。   程序运行完毕之后，自动生成sql语句如下：<br><img src="http://img.blog.csdn.net/20141125140008127?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="d"><br>然后直接运行sql语句，数据就导入到数据库中了。</p>
-<h2 id="按指定间隔查询数据"><a href="#按指定间隔查询数据" class="headerlink" title="按指定间隔查询数据"></a>按指定间隔查询数据</h2><p>利用了timestampdiff（）来计算时间间隔 ，并利用%来逐个判断</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> temperature <span class="keyword">where</span> <span class="keyword">ID</span> = <span class="number">9</span> <span class="keyword">and</span>  <span class="keyword">timestampdiff</span>(<span class="keyword">MINUTE</span>,时间,<span class="string">'2014-04-19 15:00:00'</span>)%<span class="number">60</span> =<span class="number">0</span>;</div></pre></td></tr></table></figure>
-<p>如下便是间隔1小时的温度数据</p>
-<p><img src="http://img.blog.csdn.net/20141125140019422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="dd"></p>
-<h2 id="附件：txt转sql源代码-C"><a href="#附件：txt转sql源代码-C" class="headerlink" title="附件：txt转sql源代码 C"></a>附件：txt转sql源代码 C</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span>  </span></div><div class="line">  </div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_LEN 2048  </span></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> sp[] = &#123; <span class="string">' '</span>, <span class="string">'\t'</span>, <span class="string">';'</span>,<span class="string">'\r'</span>,<span class="string">'\n'</span> &#125;;  </div><div class="line">  </div><div class="line">   </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error</span><span class="params">(<span class="keyword">char</span> *msg)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"ERROR:%s"</span>,msg);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    getchar();  </div><div class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">isSeperator</span><span class="params">(<span class="keyword">char</span>  ch)</span>  </span></div><div class="line">&#123;  </div><div class="line">      </div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">sizeof</span>(sp) / <span class="keyword">sizeof</span>(<span class="keyword">char</span>); i++)  </div><div class="line">    &#123;  </div><div class="line">        <span class="keyword">if</span> ( ch == sp[i])  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"=============================\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"          txt2sql\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"=============================\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"data fielname: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> filename_in[<span class="number">256</span>], filename_out[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>,filename_in);  </div><div class="line">    <span class="built_in">strcpy</span>(filename_out, filename_in);  </div><div class="line">    <span class="built_in">strcat</span>(filename_out, <span class="string">"_sql.txt"</span>);  </div><div class="line">    <span class="built_in">strcat</span>(filename_in, <span class="string">".txt"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"table name: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> table_name[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>, table_name);  </div><div class="line">  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"sensor ID: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> sensor_ID[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>, sensor_ID);  </div><div class="line">  </div><div class="line">  </div><div class="line">    FILE *fin = fopen(filename_in, <span class="string">"r"</span>);  </div><div class="line">    FILE *fout = fopen(filename_out, <span class="string">"w"</span>);  </div><div class="line">    <span class="keyword">if</span> (fin == <span class="literal">NULL</span> || fout == <span class="literal">NULL</span>)  </div><div class="line">    &#123;  </div><div class="line">        error(<span class="string">"cannot open file"</span>);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">char</span> buffer[BUFFER_LEN];  </div><div class="line">    <span class="keyword">while</span> (fgets(buffer, BUFFER_LEN, fin) != <span class="number">0</span>)  </div><div class="line">    &#123;  </div><div class="line">        <span class="comment">//除去多余的分隔符  </span></div><div class="line">        <span class="keyword">char</span> elem[BUFFER_LEN];  </div><div class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;  </div><div class="line">        <span class="built_in">memset</span>(elem, <span class="number">0</span>, <span class="keyword">sizeof</span>(elem));  </div><div class="line">  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(buffer); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (buffer[i] == <span class="string">'\n'</span> || buffer[i] == <span class="string">'\r'</span> || buffer[i]==<span class="string">'\0'</span>) buffer[i] = <span class="string">' '</span>;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(buffer); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (!isSeperator(buffer[i]))  </div><div class="line">            &#123;  </div><div class="line">                elem[k++] = buffer[i];  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">else</span>  </div><div class="line">            &#123;  </div><div class="line">                <span class="comment">//如果最后一个是分隔符则跳过  </span></div><div class="line">                <span class="keyword">if</span> (i == <span class="built_in">strlen</span>(buffer) &amp;&amp; isSeperator(buffer[i]))  </div><div class="line">                    <span class="keyword">continue</span>;  </div><div class="line">                <span class="comment">//如果下一个还是分隔符，则跳过。  </span></div><div class="line">                <span class="keyword">if</span> (i != <span class="built_in">strlen</span>(buffer) - <span class="number">1</span> &amp;&amp; isSeperator(buffer[i + <span class="number">1</span>]))  </div><div class="line">                    <span class="keyword">continue</span>;  </div><div class="line">                <span class="keyword">if</span> (i != <span class="built_in">strlen</span>(buffer) - <span class="number">1</span> &amp;&amp; !isSeperator(buffer[i + <span class="number">1</span>]))  </div><div class="line">                                elem[k++] = buffer[i];  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="comment">/*printf("\"%s\"",elem);*/</span>  </div><div class="line">        <span class="comment">//经过处理的elem只有包含一个分隔符在一起的情况，最后没有空元素  </span></div><div class="line">  </div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"INSERT INTO %s VALUES ('%s',"</span>, table_name,sensor_ID);  </div><div class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(elem); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (isSeperator(elem[i]))  </div><div class="line">            &#123;  </div><div class="line">                  </div><div class="line">                <span class="built_in">fprintf</span>(fout, <span class="string">"\'"</span>);  </div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = left; j &lt; i; j++)  </div><div class="line">                &#123;  </div><div class="line">                    <span class="built_in">fprintf</span>(fout, <span class="string">"%c"</span>, elem[j]);  </div><div class="line">                &#125;  </div><div class="line">                <span class="built_in">fprintf</span>(fout, <span class="string">"\',"</span>);  </div><div class="line">                left = i + <span class="number">1</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="comment">//the last one  </span></div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"\'"</span>);  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = left; j &lt; <span class="built_in">strlen</span>(elem); j++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="built_in">fprintf</span>(fout, <span class="string">"%c"</span>, elem[j]);  </div><div class="line">        &#125;  </div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"\');\n"</span>);  </div><div class="line">           </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">  </div><div class="line">  </div><div class="line">    fclose(fin);   </div><div class="line">    fclose(fout);  </div><div class="line">  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Done!"</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    getchar();  </div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
     </div>
 
       
