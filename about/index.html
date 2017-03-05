@@ -26,10 +26,8 @@
 2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位
 2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位
 
-在校期间获得奖励
-2013年获得研究生国家奖学金（2万元）
-攻读学士学位期间连续3年获得一等奖学金
-攻读硕士学位期间连续3年获得一">
+参与项目国产数据库Kingbase ES V6\7\8研发
+责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复">
 <meta property="og:type" content="website">
 <meta property="og:title" content="coding for fun">
 <meta property="og:url" content="http://shenyu.wiki/about/index.html">
@@ -45,13 +43,11 @@
 2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位
 2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位
 
-在校期间获得奖励
-2013年获得研究生国家奖学金（2万元）
-攻读学士学位期间连续3年获得一等奖学金
-攻读硕士学位期间连续3年获得一">
+参与项目国产数据库Kingbase ES V6\7\8研发
+责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/r0zt7gogesjj2k9khf90r2p2/image_1b5pg6c8rv8ia70e8n1n906f19.png">
 <meta property="og:image" content="http://shenyu.wiki/uploads/link.png">
-<meta property="og:updated_time" content="2017-01-20T08:24:20.000Z">
+<meta property="og:updated_time" content="2017-03-05T03:03:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="coding for fun">
 <meta name="twitter:description" content="你好！欢迎来我的博客。
@@ -65,10 +61,8 @@
 2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位
 2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位
 
-在校期间获得奖励
-2013年获得研究生国家奖学金（2万元）
-攻读学士学位期间连续3年获得一等奖学金
-攻读硕士学位期间连续3年获得一">
+参与项目国产数据库Kingbase ES V6\7\8研发
+责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复">
 <meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/r0zt7gogesjj2k9khf90r2p2/image_1b5pg6c8rv8ia70e8n1n906f19.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -389,6 +383,83 @@
 <li>2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位</li>
 <li>2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位</li>
 </ul>
+<h2 id="参与项目"><a href="#参与项目" class="headerlink" title="参与项目"></a>参与项目</h2><h3 id="国产数据库Kingbase-ES-V6-7-8研发"><a href="#国产数据库Kingbase-ES-V6-7-8研发" class="headerlink" title="国产数据库Kingbase ES V6\7\8研发"></a>国产数据库Kingbase ES V6\7\8研发</h3><ul>
+<li>责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复等研发工作<ul>
+<li>熟悉数据库实现技术：查询编译和执行、事务与并发控制、存储引擎、故障恢复</li>
+<li>熟悉数据库进程/线程结构、IPC、Lock、MemoryContext、socket网络通信</li>
+<li>修复parser、rewriter、optimizer、executor、access、storage的若干bug</li>
+</ul>
+</li>
+<li>数据文件分析和修复工具（C语言8k行）<ul>
+<li>根据SMS/DMS存储引擎机制实现数据文件完整性校验和修复</li>
+<li>实现数据文件页面的完整性校验、导入导出，元组级别的离线修改</li>
+<li>使用readline、ncurses库实现Linux命令行工具</li>
+<li>使用valgrind、cunit、diff、shell实现工具的测试框架</li>
+</ul>
+</li>
+<li>数据库coredump handler（C语言3k行）<ul>
+<li>使用汇编、backtrace、gdb实现产品堆栈自诊断</li>
+<li>用gcore实现数据库内核进程镜像转储<br>-PLSQL语言debug模块设计和实现（C语言代码20k行）</li>
+<li>使用socket网络编程实现了C/S架构的PLSQL debugger</li>
+<li>使用wxWigets跨平台GUI库（C++）开发了linux和windows的调试终端</li>
+<li>兼容Oracle复合类型调试，比如关联数组、嵌套表的调试<br>- 实现条件断点、表达式赋值等高级调试特性</li>
+</ul>
+</li>
+<li>备份还原工具<ul>
+<li>熟悉libpq接口编程</li>
+<li>实现了多进程框架、快照管理器</li>
+<li>实现了基于多进程的并行备份</li>
+</ul>
+</li>
+<li>逻辑同步工具<ul>
+<li>熟悉redolog结构</li>
+<li>解析redolog并利用regexp替换实现DDL语句跨库跨模式同步</li>
+</ul>
+</li>
+<li>ODBC驱动<ul>
+<li>熟悉unixODBC驱动管理器架构</li>
+<li>熟悉odbc、oci等驱动规范和实现</li>
+<li>熟悉基于ODBC的dblink、同步工具、备份工具的实现</li>
+<li>修复若干ODBC驱动bug</li>
+</ul>
+</li>
+<li>负责为技术支持人员提供答疑和研发级的技术支持<ul>
+<li>负责线上项目有关数据库内核、备份还原、同步工具、驱动的研发支持</li>
+<li>解决100+线上问题（非法内存访问、内存泄漏、并发、死锁、性能）</li>
+</ul>
+</li>
+<li>负责进行竞品（Oracle、MySQL、PostgreSQL等）的功能、实现分析<ul>
+<li>输出：《竞品功能矩阵》</li>
+</ul>
+</li>
+<li>负责技术分享和培养新员工<ul>
+<li>输出：《postgres内核架构地图》</li>
+<li>输出：《query optimizer设计与实现》</li>
+<li>输出：《PLSQL设计与实现》</li>
+<li>输出：《汇编调试方法》</li>
+<li>输出：《PostgreSQL逻辑备份还原设计与实现》</li>
+<li>输出：《ODBC编程》、《ODBC实现》</li>
+<li>输出：《小宇带你学PostgreSQL内核》视频1-6集</li>
+</ul>
+</li>
+</ul>
+<h2 id="超大规模无线温度监测系统——硕士课题"><a href="#超大规模无线温度监测系统——硕士课题" class="headerlink" title="超大规模无线温度监测系统——硕士课题"></a>超大规模无线温度监测系统——硕士课题</h2><ul>
+<li>负责无线温度传感器硬件设计<ul>
+<li>使用CC2530芯片设计无线传感模块硬件</li>
+<li>使用Zigbee协议实现无线传感节点组网</li>
+</ul>
+</li>
+<li>负责温度监控软件设计、实现<ul>
+<li>使用C# .NET实现PC客户端管理软件</li>
+</ul>
+</li>
+<li>负责监控平台后端服务器软件开发和展示网站开发<ul>
+<li>使用Linux C实现后端服务器软件</li>
+<li>使用socket网络编程实现多地数据采集</li>
+<li>使用LAMP实现数据展示平台</li>
+</ul>
+</li>
+</ul>
 <h2 id="在校期间获得奖励"><a href="#在校期间获得奖励" class="headerlink" title="在校期间获得奖励"></a>在校期间获得奖励</h2><ul>
 <li>2013年获得研究生国家奖学金（2万元）</li>
 <li>攻读学士学位期间连续3年获得一等奖学金</li>
@@ -401,26 +472,6 @@
 <h3 id="英语"><a href="#英语" class="headerlink" title="英语"></a>英语</h3><p>大学生英语等级考试四级（CET4）617分/总分710<br>大学生英语等级考试六级（CET6）554分/总分710<br>大学生英语口语等级考试（B级）<br>NECCS 全国大学生英语竞赛二等奖<br>EFSET Quick English Check - Score: Intermediate / Upper Intermediate (CEFR B1/B2<br>2010年\2011年全国大学生英语竞赛二等奖<br>2010年郑州大学英语辩论赛最佳辩手</p>
 <h3 id="日语"><a href="#日语" class="headerlink" title="日语"></a>日语</h3><p>自学了《新版中日交流标准日本语》</p>
 <h3 id="计算机等级考试"><a href="#计算机等级考试" class="headerlink" title="计算机等级考试"></a>计算机等级考试</h3><p>全国计算机等级考试（NCRE）四级 网络工程师<br>全国计算机等级考试（NCRE）三级 网络技术<br>全国计算机等级考试（NCRE）二级 C语言</p>
-<h2 id="参与项目"><a href="#参与项目" class="headerlink" title="参与项目"></a>参与项目</h2><h3 id="国产数据库Kingbase研发"><a href="#国产数据库Kingbase研发" class="headerlink" title="国产数据库Kingbase研发"></a>国产数据库Kingbase研发</h3><p><strong>负责数据库产品的需求分析、系统设计、编码、单元测试、bug修复</strong></p>
-<ul>
-<li>PLSQL语言编译、执行和调试器</li>
-<li>并行备份还原</li>
-<li>本地更新</li>
-<li>堆栈输出</li>
-<li><code>sys_analyze_datafile</code> 数据文件修复工具</li>
-<li><code>KingbaseLogAnalyzer</code> 日志分析工具</li>
-<li>定位并且修复了数据库内核，备份还原工具，Database Link，接口，同步工具，回归测试的若干bug</li>
-</ul>
-<p><strong>负责为技术支持人员提供答疑和研发级的技术支持</strong></p>
-<ul>
-<li>SQL调优</li>
-<li>解决现场问题44个</li>
-</ul>
-<p><strong>负责提供培训和技术分享</strong></p>
-<ul>
-<li>包括调试方法和工具、查询优化、备份还原等培训</li>
-<li>完成文档和ppt共200余页</li>
-</ul>
 <h3 id="硕士课题——超大规模无线温度监测系统"><a href="#硕士课题——超大规模无线温度监测系统" class="headerlink" title="硕士课题——超大规模无线温度监测系统"></a>硕士课题——超大规模无线温度监测系统</h3><p>骨干负责整个系统软硬设计、开发和应用。<br>涉及到了DS18B20数字温度传感器、光纤光栅温度传感器、Zigbee无线通信以及硬件设计，windows应用程序开发（C# .NET），服务器端开发（Linux），网站开发（LAMP架构）和组网技术。</p>
 <h3 id="国家自然科学基金——PVDF无线智能疲劳监测系统"><a href="#国家自然科学基金——PVDF无线智能疲劳监测系统" class="headerlink" title="国家自然科学基金——PVDF无线智能疲劳监测系统"></a>国家自然科学基金——PVDF无线智能疲劳监测系统</h3><p>负责算法设计（matlab）、PVDF放大电路设计、DSP算法实现（C语言）。</p>
 <h2 id="开源社区"><a href="#开源社区" class="headerlink" title="开源社区"></a>开源社区</h2><p><a href="https://github.com/shenyuflying" target="_blank" rel="external">Github</a>: <a href="https://github.com/shenyuflying" target="_blank" rel="external">https://github.com/shenyuflying</a></p>
@@ -447,7 +498,7 @@
 </ol>
 <h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>Email: shenyufly@163.com<br>QQ   : 316472763</p>
 <p><img src="/uploads/link.png" alt="link"></p>
-<p><a href="/uploads/申宇的简历.pdf">pdf版本</a></p>
+<p><a href="/uploads/申宇的简历database.pdf">pdf版本</a></p>
 
       
     </div>
