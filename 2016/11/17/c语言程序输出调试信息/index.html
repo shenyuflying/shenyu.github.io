@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="随着服务器的内存逐渐增大，从16GB、32GB逐步拓展到64GB、128GB甚至256GB或更多。大型程序在遇到一些致命错误（比如SIGSEGV段错误、stack overflow）时，受限于磁盘空间大小、IO速度、恢复时间等限制，往往不具备条件把内存映像（coredump）转储到磁盘上，这为后续排查出错原因带来了很大困难。这时候就需要程序在遇到致命错误时，能够及时输出诊断信息。一些语言的运行时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c语言程序输出调试信息">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/17/c语言程序输出调试信息/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="随着服务器的内存逐渐增大，从16GB、32GB逐步拓展到64GB、128GB甚至256GB或更多。大型程序在遇到一些致命错误（比如SIGSEGV段错误、stack overflow）时，受限于磁盘空间大小、IO速度、恢复时间等限制，往往不具备条件把内存映像（coredump）转储到磁盘上，这为后续排查出错原因带来了很大困难。这时候就需要程序在遇到致命错误时，能够及时输出诊断信息。一些语言的运行时">
+<meta property="og:updated_time" content="2017-01-14T08:59:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c语言程序输出调试信息">
+<meta name="twitter:description" content="随着服务器的内存逐渐增大，从16GB、32GB逐步拓展到64GB、128GB甚至256GB或更多。大型程序在遇到一些致命错误（比如SIGSEGV段错误、stack overflow）时，受限于磁盘空间大小、IO速度、恢复时间等限制，往往不具备条件把内存映像（coredump）转储到磁盘上，这为后续排查出错原因带来了很大困难。这时候就需要程序在遇到致命错误时，能够及时输出诊断信息。一些语言的运行时">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/uploads/siteicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>c语言程序输出调试信息 | 小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+	
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Coding for fun</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-home icon-2x">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/map/">导航</a></li>
+                        
+                            <li><a href="/message/">留言</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL接口/">PostgreSQL接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cctree/">cctree</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cflow/">cflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dnsmasq/">dnsmasq</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/egypt/">egypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gprof/">gprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wget/">wget</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备份还原/">备份还原</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源社区/">开源社区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/接口/">接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，PostgreSQL/">数据库，PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文章/">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地化/">本地化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查询优化/">查询优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/汇编调试方法/">汇编调试方法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爱好/">爱好</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网站/">网站</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言层/">语言层</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调优/">调优</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于基础软件研发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Coding for fun</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/map/">导航</a></li>
+                
+                    <li><a href="/message/">留言</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-c语言程序输出调试信息" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/17/c语言程序输出调试信息/" class="article-date">
+      <time datetime="2016-11-17T13:51:58.000Z" itemprop="datePublished">2016-11-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      c语言程序输出调试信息
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>随着服务器的内存逐渐增大，从16GB、32GB逐步拓展到64GB、128GB甚至256GB或更多。大型程序在遇到一些致命错误（比如SIGSEGV段错误、stack overflow）时，受限于磁盘空间大小、IO速度、恢复时间等限制，往往不具备条件把内存映像（coredump）转储到磁盘上，这为后续排查出错原因带来了很大困难。这时候就需要程序在遇到致命错误时，能够及时输出诊断信息。一些语言的运行时，比如java、golang等内建了错误堆栈输出的功能。那么c语言程序如何实现错误堆栈输出的功能呢？</p>
+</blockquote>
+<h2 id="先睹为快"><a href="#先睹为快" class="headerlink" title="先睹为快"></a>先睹为快</h2><p>启动程序，然后发送SIGSEGV信号来模拟程序遇到非法内存访问错误的情形。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ ./main &amp;</div><div class="line">[new process 2018]</div><div class="line">$ kill -11 2018</div><div class="line">#0  0x00007f30d7487680 in __read_nocancel () at ../sysdeps/unix/syscall-template.S:84</div><div class="line">#1  0x0000000000400b6b in system_ex ()</div><div class="line">#2  0x0000000000400c87 in run ()</div><div class="line">#3  0x0000000000400dcb in run_gdb ()</div><div class="line">#4  0x0000000000400f37 in GetCrashInfo ()</div><div class="line">#5  &lt;signal handler called&gt;</div><div class="line">#6  0x0000000000400f9a in main ()</div></pre></td></tr></table></figure></p>
+<p>我们看到了函数的堆栈，进一步还可以打出诸如本地变量，局部变量，寄存器等等信息。<br><a id="more"></a></p>
+<h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>运行中的程序输出堆栈的方法有2种。<br>第一种：借助backtrace函数。<br>第二种：借助gdb。</p>
+<h3 id="backtrace函数"><a href="#backtrace函数" class="headerlink" title="backtrace函数"></a>backtrace函数</h3><p>backtrace用法比较简单，但是功能也比较有限，只能输出基本的堆栈。<br>比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ cc -rdynamic prog.c -o prog</div><div class="line">$ ./prog 3</div><div class="line">backtrace() returned 8 addresses</div><div class="line">./prog(myfunc3+0x5c) [0x80487f0]</div><div class="line">./prog [0x8048871]</div><div class="line">./prog(myfunc+0x21) [0x8048894]</div><div class="line">./prog(myfunc+0x1a) [0x804888d]</div><div class="line">./prog(myfunc+0x1a) [0x804888d]</div><div class="line">./prog(main+0x65) [0x80488fb]</div><div class="line">/lib/libc.so.6(__libc_start_main+0xdc) [0xb7e38f9c]</div><div class="line">./prog [0x8048711]</div></pre></td></tr></table></figure></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;execinfo.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">myfunc3</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> j, nptrs;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE 100</span></div><div class="line">    <span class="keyword">void</span> *buffer[<span class="number">100</span>];</div><div class="line">    <span class="keyword">char</span> **strings;</div><div class="line"></div><div class="line">    nptrs = backtrace(buffer, SIZE);</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"backtrace() returned %d addresses\n"</span>, nptrs);</div><div class="line"></div><div class="line">    <span class="comment">/* The call backtrace_symbols_fd(buffer, nptrs, STDOUT_FILENO)</span></div><div class="line">       would produce similar output to the following: */</div><div class="line"></div><div class="line">    strings = backtrace_symbols(buffer, nptrs);</div><div class="line">    <span class="keyword">if</span> (strings == <span class="literal">NULL</span>) &#123;</div><div class="line">        perror(<span class="string">"backtrace_symbols"</span>);</div><div class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; nptrs; j++)</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, strings[j]);</div><div class="line"></div><div class="line">    <span class="built_in">free</span>(strings);</div><div class="line">&#125;</div><div class="line"><span class="keyword">static</span> <span class="keyword">void</span>   <span class="comment">/* "static" means don't export the symbol... */</span></div><div class="line">myfunc2(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">    myfunc3();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">myfunc</span><span class="params">(<span class="keyword">int</span> ncalls)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (ncalls &gt; <span class="number">1</span>)</div><div class="line">        myfunc(ncalls - <span class="number">1</span>);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        myfunc2();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>) &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%s num-calls\n"</span>, argv[<span class="number">0</span>]);</div><div class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    myfunc(atoi(argv[<span class="number">1</span>]));</div><div class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="借助gdb"><a href="#借助gdb" class="headerlink" title="借助gdb"></a>借助gdb</h3><p>gdb是专为调试诞生的工具，更为强大。但是如何在程序中调用gdb？系统已经提供了system调用，但是该调用不能把程序的信息输出给调用者。需要我们自己写一个system调用，能够把子进程输出的信息发送给主进程。<br>基本思路是fork一个进程，在子进程execv运行gdb，attach到主进程，运行一系列调试命令来输出调试信息。把子进程输出的信息发送给主进程的方法，涉及到了多线程通信的问题。一个比较简单的解决方法是在主进程和子进程之间建立管道，在子进程里面把标准输出重定向到管道的写入端，主进程从管道读取信息。为此专门写了一个<code>system_ex</code>函数来完成这个工作。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * system_ex -- system with something extra</div><div class="line"> *</div><div class="line"> * like original system but can save the</div><div class="line"> * cmd output value to buf. the memory</div><div class="line"> * used by buf is allocated by system_ex</div><div class="line"> * using malloc and realloc, make sure</div><div class="line"> * you free the buf memory after the</div><div class="line"> * function returns.</div><div class="line"> *</div><div class="line"> *                       yshen@2016</div><div class="line"> * Argument:</div><div class="line"> *       cmd: the command as a null terminated</div><div class="line"> *       string to execute</div><div class="line"> *       buf: the buffer to save the stdout</div><div class="line"> *       printed by the command</div><div class="line"> * Return:</div><div class="line"> *       on sucess system_ex returns the</div><div class="line"> *       command exit code</div><div class="line"> *       on faliure system_ex returns -1</div><div class="line"> *       and buf set to NULL</div><div class="line"> * Usage:</div><div class="line"> *       char *buf = NULL;</div><div class="line"> *       if (system_ex("ls",&amp;buf) != -1)</div><div class="line"> *       &#123;</div><div class="line"> *           printf("%s", buf == NULL ? "(no output)" : buf);</div><div class="line"> *           if (buf != NULL)</div><div class="line"> *               free(buf);</div><div class="line"> *       &#125;</div><div class="line"> *       else</div><div class="line"> *       &#123;</div><div class="line"> *           ...error handling...</div><div class="line"> *       &#125;</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">system_ex</span><span class="params">(<span class="keyword">char</span>* cmd, <span class="keyword">char</span> **buf)</span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">int</span>   fd[<span class="number">2</span>];</div><div class="line">	<span class="keyword">pid_t</span> pid;</div><div class="line">	<span class="keyword">int</span>   n, count;</div><div class="line">	<span class="keyword">int</span> wait_val = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (cmd == <span class="literal">NULL</span>)</div><div class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line"></div><div class="line">	<span class="comment">/* no need to save to buf, use original system() */</span></div><div class="line">	<span class="keyword">if</span> (buf == <span class="literal">NULL</span>)</div><div class="line">		<span class="keyword">return</span> system(cmd);</div><div class="line"></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 *         write                    read</div><div class="line">	 * child ---------&gt; fd[1] fd[0] ------------&gt; parent</div><div class="line">	 *</div><div class="line">	 */</div><div class="line">	<span class="keyword">if</span> (pipe(fd) &lt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		*buf = <span class="literal">NULL</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* fork failed, close pipe*/</span></div><div class="line">		close(fd[<span class="number">0</span>]);</div><div class="line">		close(fd[<span class="number">1</span>]);</div><div class="line">		*buf = <span class="literal">NULL</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (pid &gt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* parent */</span></div><div class="line">		<span class="keyword">int</span> allocsz = <span class="number">1024</span>;</div><div class="line">		close(fd[<span class="number">1</span>]);</div><div class="line">		count = <span class="number">0</span>;</div><div class="line">		<span class="comment">/* 1k shall be enough for most case */</span></div><div class="line">		*buf = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*allocsz);</div><div class="line">		<span class="comment">/* not enough memory */</span></div><div class="line">		<span class="keyword">if</span> (*buf == <span class="literal">NULL</span>)</div><div class="line">			<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line"></div><div class="line">		<span class="comment">/* parent block here waiting child to write */</span></div><div class="line">		<span class="keyword">while</span> (n = read(fd[<span class="number">0</span>], (*buf) + count, <span class="number">1024</span>))</div><div class="line">		&#123;</div><div class="line">			count += n;</div><div class="line">			<span class="keyword">if</span> (count &gt;= allocsz)</div><div class="line">			&#123;</div><div class="line">				<span class="comment">/* double the buffer each time */</span></div><div class="line">				allocsz *= <span class="number">2</span>;</div><div class="line">				*buf = (<span class="keyword">char</span> *)<span class="built_in">realloc</span>(*buf, allocsz);</div><div class="line"></div><div class="line">				<span class="comment">/* not enough memory */</span></div><div class="line">				<span class="keyword">if</span> (*buf == <span class="literal">NULL</span>)</div><div class="line">					<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">/*terminate the string */</span></div><div class="line">		<span class="keyword">if</span> (count &gt; <span class="number">0</span>)</div><div class="line">			(*buf)[count - <span class="number">1</span>] = <span class="string">'\0'</span>;</div><div class="line">		<span class="keyword">else</span></div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* opps, the child exit abnormally, nothing read */</span></div><div class="line">			<span class="built_in">free</span>(*buf);</div><div class="line">			*buf = <span class="literal">NULL</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		close(fd[<span class="number">0</span>]);</div><div class="line">		<span class="comment">/* get the return value of command */</span></div><div class="line">		<span class="keyword">if</span> (wait4(pid, &amp;wait_val, <span class="number">0</span>, <span class="number">0</span>) == <span class="number">-1</span>)</div><div class="line">		&#123;</div><div class="line">			wait_val = <span class="number">-1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> wait_val;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* child */</span></div><div class="line">		<span class="comment">/* close read side */</span></div><div class="line">		close(fd[<span class="number">0</span>]);</div><div class="line"></div><div class="line">		<span class="comment">/* close stdout */</span></div><div class="line">		close(STDOUT_FILENO);</div><div class="line">		<span class="comment">/* dup fd1 now fd1 equals to stdout */</span></div><div class="line">		dup(fd[<span class="number">1</span>]);</div><div class="line">		<span class="comment">/* close it again */</span></div><div class="line">		close(fd[<span class="number">1</span>]);</div><div class="line">		<span class="comment">/* execute the command */</span></div><div class="line">        execl(<span class="string">"/bin/sh"</span>, <span class="string">"sh"</span>, <span class="string">"-c"</span>, cmd, (<span class="keyword">char</span>*)<span class="number">0</span>);</div><div class="line">		<span class="comment">/* should not reach here */</span></div><div class="line">        <span class="built_in">exit</span>(<span class="number">127</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">/* should not reach here */</span></div><div class="line">	*buf = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>好了准备工作完毕。下面从<code>main</code>函数开始讲解。<br>第一步在程序入口注册信号处理函数，在程序发生非法内存访问，会收到SIGSEGV信号，这时候调用GetCrashInfo。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	signal(SIGSEGV, GetCrashInfo);</div><div class="line"></div><div class="line">	<span class="keyword">while</span>(<span class="number">1</span>)；</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接下来<code>GetCrashInfo</code>调用<code>run_gdb</code>来完成详细调试信息的输出。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * MAIN entrance of Crash Info Collector</div><div class="line"> * run a batch of gdb command to collect</div><div class="line"> * neccessary infomation useful for debug</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">GetCrashInfo</span><span class="params">(<span class="keyword">int</span> a)</span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span>  level;</div><div class="line">	<span class="keyword">int</span>  i;</div><div class="line">	</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"get singal %d\n"</span>, a);</div><div class="line"></div><div class="line">	run_gdb(<span class="string">"bt"</span>, <span class="number">-1</span>);</div><div class="line">	run_gdb(<span class="string">"thread apply all bt"</span>, <span class="number">-1</span>);</div><div class="line"></div><div class="line">	level = GetStackLevel();</div><div class="line"></div><div class="line">	<span class="comment">/* general infos */</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; level ; i++)</div><div class="line">	&#123;</div><div class="line">		run_gdb(<span class="string">"info args"</span>, i);</div><div class="line">		run_gdb(<span class="string">"info locals"</span>, i);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/* detailed asm info */</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; level; i++)</div><div class="line">	&#123;</div><div class="line">		run_gdb(<span class="string">"info frame"</span>, i);</div><div class="line">		run_gdb(<span class="string">"info registers"</span>, i);</div><div class="line">		run_gdb(<span class="string">"disas"</span>, i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>run_gdb</code>调用gdb来完成入参指定的命令。方法是拼了一个命令串<code>cmd_str</code>，包含要执行的gdb命令，pid等信息。接下来调用<code>run</code>来执行这个命令并返回结果。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * run a gdb command under frame n</div><div class="line"> * the output of gdb is printed using ereport LOG</div><div class="line"> * Arguments:</div><div class="line"> *      cmd: the command to run by gdb, such as "bt"</div><div class="line"> *      frame: under which frame to run the command</div><div class="line"> *             values from 0-N, any value less than 0</div><div class="line"> *             means no need to go to that frame</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run_gdb</span><span class="params">(<span class="keyword">char</span> *cmd, <span class="keyword">int</span> frame)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> cmd_str[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">char</span> arg_f[<span class="number">256</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">char</span> *buf = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IGNORE_STRING 	<span class="meta-string">"| grep -v \"\\[New Thread\" "</span>\</span></div><div class="line">						<span class="meta-string">"| grep -v \"No symbol table info available\" "</span>\</div><div class="line">						<span class="meta-string">"| grep -v \"in read () from\" "</span>\</div><div class="line">						<span class="meta-string">"| grep -v \"\\[Thread debugging using\" "</span>\</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (frame &gt;= <span class="number">0</span>)</div><div class="line">		<span class="built_in">sprintf</span>(arg_f,<span class="string">"-ex \"f %d\""</span>,frame);</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">sprintf</span>(arg_f,<span class="string">" "</span>);</div><div class="line"></div><div class="line">	<span class="built_in">sprintf</span>(cmd_str,<span class="string">"gdb -batch "</span></div><div class="line">				<span class="string">"-ex \" set pagination 0 \" "</span></div><div class="line">				<span class="string">"%s "</span> <span class="comment">/* -ex f ?*/</span></div><div class="line">				<span class="string">"-ex \"%s\" "</span></div><div class="line">				<span class="string">"-p %d "</span></div><div class="line">				IGNORE_STRING,</div><div class="line">				arg_f,</div><div class="line">				cmd,</div><div class="line">				getpid());</div><div class="line"></div><div class="line">	buf = run(cmd_str);</div><div class="line">	<span class="keyword">if</span> (buf != <span class="literal">NULL</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"\n=====================================================================\n"</span></div><div class="line">			<span class="string">"\n            frame:%d   command:%s                                    \n"</span></div><div class="line">			<span class="string">"\n---------------------------------------------------------------------\n"</span>,</div><div class="line">			frame &lt; <span class="number">0</span> ? <span class="number">0</span> : frame, cmd);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>, buf);</div><div class="line">		<span class="built_in">free</span>(buf);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>run</code>函数调用了上述的<code>system_ex</code>来实际执行命令并返回结果。对错误进行了简单的处理。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * run a command and return the output</div><div class="line"> * if the command failed report the</div><div class="line"> * error message using ereport DEBUG1</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> *</span></div><div class="line"><span class="title">run</span><span class="params">(<span class="keyword">char</span> *cmd)</span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="keyword">char</span> *buf = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">int</span> status;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">if</span> ((status = system_ex(cmd, &amp;buf)) == <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (buf != <span class="literal">NULL</span>)</div><div class="line">				<span class="keyword">return</span> buf;</div><div class="line">    &#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"command %s failed with status %d msg %s"</span>,</div><div class="line">			cmd, WEXITSTATUS(status), buf == <span class="literal">NULL</span> ? <span class="string">"no"</span> : buf);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> buf;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="完整的源码"><a href="#完整的源码" class="headerlink" title="完整的源码"></a>完整的源码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/resource.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">system_ex</span><span class="params">(<span class="keyword">char</span>* cmd, <span class="keyword">char</span> **buf)</span></span>;</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> *<span class="title">run</span><span class="params">(<span class="keyword">char</span> *cmd)</span></span>;</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run_gdb</span><span class="params">(<span class="keyword">char</span> *cmd, <span class="keyword">int</span> frame)</span></span>;</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">GetStackLevel</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">GetCrashInfo</span><span class="params">(<span class="keyword">int</span>)</span></span>;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * system_ex -- system with something extra</div><div class="line"> *</div><div class="line"> * like original system but can save the</div><div class="line"> * cmd output value to buf. the memory</div><div class="line"> * used by buf is allocated by system_ex</div><div class="line"> * using malloc and realloc, make sure</div><div class="line"> * you free the buf memory after the</div><div class="line"> * function returns.</div><div class="line"> *</div><div class="line"> *                       yshen@2016</div><div class="line"> * Argument:</div><div class="line"> *       cmd: the command as a null terminated</div><div class="line"> *       string to execute</div><div class="line"> *       buf: the buffer to save the stdout</div><div class="line"> *       printed by the command</div><div class="line"> * Return:</div><div class="line"> *       on sucess system_ex returns the</div><div class="line"> *       command exit code</div><div class="line"> *       on faliure system_ex returns -1</div><div class="line"> *       and buf set to NULL</div><div class="line"> * Usage:</div><div class="line"> *       char *buf = NULL;</div><div class="line"> *       if (system_ex("ls",&amp;buf) != -1)</div><div class="line"> *       &#123;</div><div class="line"> *           printf("%s", buf == NULL ? "(no output)" : buf);</div><div class="line"> *           if (buf != NULL)</div><div class="line"> *               free(buf);</div><div class="line"> *       &#125;</div><div class="line"> *       else</div><div class="line"> *       &#123;</div><div class="line"> *           ...error handling...</div><div class="line"> *       &#125;</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">system_ex</span><span class="params">(<span class="keyword">char</span>* cmd, <span class="keyword">char</span> **buf)</span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="keyword">int</span>   fd[<span class="number">2</span>];</div><div class="line">	<span class="keyword">pid_t</span> pid;</div><div class="line">	<span class="keyword">int</span>   n, count;</div><div class="line">	<span class="keyword">int</span> wait_val = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (cmd == <span class="literal">NULL</span>)</div><div class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line"></div><div class="line">	<span class="comment">/* no need to save to buf, use original system() */</span></div><div class="line">	<span class="keyword">if</span> (buf == <span class="literal">NULL</span>)</div><div class="line">		<span class="keyword">return</span> system(cmd);</div><div class="line"></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 *         write                    read</div><div class="line">	 * child ---------&gt; fd[1] fd[0] ------------&gt; parent</div><div class="line">	 *</div><div class="line">	 */</div><div class="line">	<span class="keyword">if</span> (pipe(fd) &lt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		*buf = <span class="literal">NULL</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ((pid = fork()) &lt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* fork failed, close pipe*/</span></div><div class="line">		close(fd[<span class="number">0</span>]);</div><div class="line">		close(fd[<span class="number">1</span>]);</div><div class="line">		*buf = <span class="literal">NULL</span>;</div><div class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (pid &gt; <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* parent */</span></div><div class="line">		<span class="keyword">int</span> allocsz = <span class="number">1024</span>;</div><div class="line">		close(fd[<span class="number">1</span>]);</div><div class="line">		count = <span class="number">0</span>;</div><div class="line">		<span class="comment">/* 1k shall be enough for most case */</span></div><div class="line">		*buf = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*allocsz);</div><div class="line">		<span class="comment">/* not enough memory */</span></div><div class="line">		<span class="keyword">if</span> (*buf == <span class="literal">NULL</span>)</div><div class="line">			<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line"></div><div class="line">		<span class="comment">/* parent block here waiting child to write */</span></div><div class="line">		<span class="keyword">while</span> (n = read(fd[<span class="number">0</span>], (*buf) + count, <span class="number">1024</span>))</div><div class="line">		&#123;</div><div class="line">			count += n;</div><div class="line">			<span class="keyword">if</span> (count &gt;= allocsz)</div><div class="line">			&#123;</div><div class="line">				<span class="comment">/* double the buffer each time */</span></div><div class="line">				allocsz *= <span class="number">2</span>;</div><div class="line">				*buf = (<span class="keyword">char</span> *)<span class="built_in">realloc</span>(*buf, allocsz);</div><div class="line"></div><div class="line">				<span class="comment">/* not enough memory */</span></div><div class="line">				<span class="keyword">if</span> (*buf == <span class="literal">NULL</span>)</div><div class="line">					<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">/*terminate the string */</span></div><div class="line">		<span class="keyword">if</span> (count &gt; <span class="number">0</span>)</div><div class="line">			(*buf)[count - <span class="number">1</span>] = <span class="string">'\0'</span>;</div><div class="line">		<span class="keyword">else</span></div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* opps, the child exit abnormally, nothing read */</span></div><div class="line">			<span class="built_in">free</span>(*buf);</div><div class="line">			*buf = <span class="literal">NULL</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		close(fd[<span class="number">0</span>]);</div><div class="line">		<span class="comment">/* get the return value of command */</span></div><div class="line">		<span class="keyword">if</span> (wait4(pid, &amp;wait_val, <span class="number">0</span>, <span class="number">0</span>) == <span class="number">-1</span>)</div><div class="line">		&#123;</div><div class="line">			wait_val = <span class="number">-1</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> wait_val;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* child */</span></div><div class="line">		<span class="comment">/* close read side */</span></div><div class="line">		close(fd[<span class="number">0</span>]);</div><div class="line"></div><div class="line">		<span class="comment">/* close stdout */</span></div><div class="line">		close(STDOUT_FILENO);</div><div class="line">		<span class="comment">/* dup fd1 now fd1 equals to stdout */</span></div><div class="line">		dup(fd[<span class="number">1</span>]);</div><div class="line">		<span class="comment">/* close it again */</span></div><div class="line">		close(fd[<span class="number">1</span>]);</div><div class="line">		<span class="comment">/* execute the command */</span></div><div class="line">        execl(<span class="string">"/bin/sh"</span>, <span class="string">"sh"</span>, <span class="string">"-c"</span>, cmd, (<span class="keyword">char</span>*)<span class="number">0</span>);</div><div class="line">		<span class="comment">/* should not reach here */</span></div><div class="line">        <span class="built_in">exit</span>(<span class="number">127</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">/* should not reach here */</span></div><div class="line">	*buf = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * run a command and return the output</div><div class="line"> * if the command failed report the</div><div class="line"> * error message using ereport DEBUG1</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> *</span></div><div class="line"><span class="title">run</span><span class="params">(<span class="keyword">char</span> *cmd)</span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="keyword">char</span> *buf = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">int</span> status;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">if</span> ((status = system_ex(cmd, &amp;buf)) == <span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (buf != <span class="literal">NULL</span>)</div><div class="line">				<span class="keyword">return</span> buf;</div><div class="line">    &#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"command %s failed with status %d msg %s"</span>,</div><div class="line">			cmd, WEXITSTATUS(status), buf == <span class="literal">NULL</span> ? <span class="string">"no"</span> : buf);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> buf;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * run a gdb command under frame n</div><div class="line"> * the output of gdb is printed using ereport LOG</div><div class="line"> * Arguments:</div><div class="line"> *      cmd: the command to run by gdb, such as "bt"</div><div class="line"> *      frame: under which frame to run the command</div><div class="line"> *             values from 0-N, any value less than 0</div><div class="line"> *             means no need to go to that frame</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run_gdb</span><span class="params">(<span class="keyword">char</span> *cmd, <span class="keyword">int</span> frame)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> cmd_str[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">char</span> arg_f[<span class="number">256</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">char</span> *buf = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> IGNORE_STRING 	<span class="meta-string">"| grep -v \"\\[New Thread\" "</span>\</span></div><div class="line">						<span class="meta-string">"| grep -v \"No symbol table info available\" "</span>\</div><div class="line">						<span class="meta-string">"| grep -v \"in read () from\" "</span>\</div><div class="line">						<span class="meta-string">"| grep -v \"\\[Thread debugging using\" "</span>\</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (frame &gt;= <span class="number">0</span>)</div><div class="line">		<span class="built_in">sprintf</span>(arg_f,<span class="string">"-ex \"f %d\""</span>,frame);</div><div class="line">	<span class="keyword">else</span></div><div class="line">		<span class="built_in">sprintf</span>(arg_f,<span class="string">" "</span>);</div><div class="line"></div><div class="line">	<span class="built_in">sprintf</span>(cmd_str,<span class="string">"gdb -batch "</span></div><div class="line">				<span class="string">"-ex \" set pagination 0 \" "</span></div><div class="line">				<span class="string">"%s "</span> <span class="comment">/* -ex f ?*/</span></div><div class="line">				<span class="string">"-ex \"%s\" "</span></div><div class="line">				<span class="string">"-p %d "</span></div><div class="line">				IGNORE_STRING,</div><div class="line">				arg_f,</div><div class="line">				cmd,</div><div class="line">				getpid());</div><div class="line"></div><div class="line">	buf = run(cmd_str);</div><div class="line">	<span class="keyword">if</span> (buf != <span class="literal">NULL</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"\n=====================================================================\n"</span></div><div class="line">			<span class="string">"\n            frame:%d   command:%s                                    \n"</span></div><div class="line">			<span class="string">"\n---------------------------------------------------------------------\n"</span>,</div><div class="line">			frame &lt; <span class="number">0</span> ? <span class="number">0</span> : frame, cmd);</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%s"</span>, buf);</div><div class="line">		<span class="built_in">free</span>(buf);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">GetStackLevel</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> cmd[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	<span class="keyword">int</span>  level;</div><div class="line">	<span class="keyword">char</span> *buf = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">	<span class="built_in">sprintf</span>(cmd,<span class="string">"gdb -batch "</span></div><div class="line">				<span class="string">"-ex \"set pagination 0\" "</span></div><div class="line">				<span class="string">"-ex \"bt\" "</span></div><div class="line">				<span class="string">"-p %d"</span></div><div class="line">				<span class="string">"| grep \"#\" "</span></div><div class="line">				<span class="string">"| wc -l"</span>,</div><div class="line">				getpid());</div><div class="line">	buf = run(cmd);</div><div class="line">	<span class="keyword">if</span> (buf != <span class="literal">NULL</span>)</div><div class="line">	&#123;</div><div class="line">		level = atoi(buf);</div><div class="line">		<span class="built_in">free</span>(buf);</div><div class="line">		<span class="keyword">return</span> level;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * MAIN entrance of Crash Info Collector</div><div class="line"> * run a batch of gdb command to collect</div><div class="line"> * neccessary infomation useful for debug</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">GetCrashInfo</span><span class="params">(<span class="keyword">int</span> a)</span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span>  level;</div><div class="line">	<span class="keyword">int</span>  i;</div><div class="line">	</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"get singal %d\n"</span>, a);</div><div class="line"></div><div class="line">	run_gdb(<span class="string">"bt"</span>, <span class="number">-1</span>);</div><div class="line">	run_gdb(<span class="string">"thread apply all bt"</span>, <span class="number">-1</span>);</div><div class="line"></div><div class="line">	level = GetStackLevel();</div><div class="line"></div><div class="line">	<span class="comment">/* general infos */</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; level ; i++)</div><div class="line">	&#123;</div><div class="line">		run_gdb(<span class="string">"info args"</span>, i);</div><div class="line">		run_gdb(<span class="string">"info locals"</span>, i);</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/* detailed asm info */</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; level; i++)</div><div class="line">	&#123;</div><div class="line">		run_gdb(<span class="string">"info frame"</span>, i);</div><div class="line">		run_gdb(<span class="string">"info registers"</span>, i);</div><div class="line">		run_gdb(<span class="string">"disas"</span>, i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	signal(SIGSEGV, GetCrashInfo);</div><div class="line"></div><div class="line">	<span class="keyword">while</span>(<span class="number">1</span>)；</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
+        <p><span>发布时间:</span>2016-11-17, 13:51:58</p>
+        <p><span>最后更新:</span>2017-01-14, 08:59:53</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/17/c语言程序输出调试信息/" title="c语言程序输出调试信息">http://shenyu.wiki/2016/11/17/c语言程序输出调试信息/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/17/c语言程序输出调试信息/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/11/20/linux把文件放置到剪贴板/">
+                    linux把文件放置到剪贴板
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/14/c和汇编混合编程/">
+                    c和汇编混合编程
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先睹为快"><span class="toc-number">1.</span> <span class="toc-text">先睹为快</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本思路"><span class="toc-number">2.</span> <span class="toc-text">基本思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#backtrace函数"><span class="toc-number">2.1.</span> <span class="toc-text">backtrace函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#借助gdb"><span class="toc-number">2.2.</span> <span class="toc-text">借助gdb</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整的源码"><span class="toc-number">3.</span> <span class="toc-text">完整的源码</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"c语言程序输出调试信息　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/17/c语言程序输出调试信息/" data-title="c语言程序输出调试信息" data-url="http://shenyu.wiki/2016/11/17/c语言程序输出调试信息/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/11/20/linux把文件放置到剪贴板/" title="上一篇: linux把文件放置到剪贴板">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/14/c和汇编混合编程/" title="下一篇: c和汇编混合编程">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/how to change your linux timezone/">how to set your linux's timezone</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/科学上网——搭建自己的DNS服务器/">科学上网——搭建自己的DNS服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/09/soname/">soname</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/how-to-setup-postgresql-odbc/">How to setup postgresql ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/odbc-programming/">ODBC programming</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/an-introduction-to-odbc/">An introduction to ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/">过年在家写了一个蛮有趣的小程序：codeRunner</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/The-best-career-advice-I’ve-received/">The best career advice I’ve received</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160526/">汇编调试方法-20160526</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160506/">汇编调试方法-20160506</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/修改hosts来访问谷歌/">修改hosts来访问谷歌</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/">如果你要给学生一些学习建议，你会说些什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/16/hexo博客增加菜单栏目/">hexo博客增加菜单栏目</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/13/PostgreSQL中的PL-SQL实现/">PostgreSQL中的PL/SQL实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/PostgreSQL逻辑备份还原/">PostgreSQL逻辑备份还原</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/08/【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）/">【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/git统计代码贡献/">git统计代码贡献</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/02/pg-logical-backup-restore/">PostgreSQL logical backup & restore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/01/【小宇带你学PostgreSQL内核】第四课：parser语法分析/">【小宇带你学PostgreSQL内核】第四课：parser语法分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/29/GDB图形界面大PK/">GDB图形界面大PK</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/">【小宇带你学PostgreSQL内核】第三课：内核架构(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/">【小宇带你学PostgreSQL内核】第三课：内核架构(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/PostgreSQL-internal-roadmap/">PostgresSQL-internal-roadmap</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/14/yshen-s-vim-settings/">yshen's vim settings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/">【小宇带你学PostgreSQL内核】第二课：开发环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">【小宇带你学PostgreSQL内核】第一课：课程简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">好书推荐：《Debug hacks——深入调试的技术和工具》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/26/缓冲区溢出的那些事儿/">缓冲区溢出的那些事儿</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解静态链接库和动态链接库/">深入理解静态链接库和动态链接库</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/12/linux中进程共享内存的2种方法/">linux中进程共享内存的2种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux进程改名/">linux进程改名</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC driver internal</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/20/markdown-test/">markdown test</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2017 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

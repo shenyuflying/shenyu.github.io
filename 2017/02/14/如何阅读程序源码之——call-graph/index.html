@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="多阅读大型开源项目能够显著提升自己的能力，但是面对几万甚至几十万行的代码是不是感觉无从下手。理解大型工程的一个诀窍就是能够理清函数之间的调用关系。这篇文章介绍几个好用的工具，用来帮助我们生成代码的调用关系，以便更好的理解项目代码。
+
+说到函数调用关系（call graph）相信大家都不陌生，函数调用关系其实就是程序的执行流程。生成函数调用关系的方法一般来说有2个，即动态方法和静态方法。
+动态方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何阅读程序源码之——call graph">
+<meta property="og:url" content="http://shenyu.wiki/2017/02/14/如何阅读程序源码之——call-graph/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="多阅读大型开源项目能够显著提升自己的能力，但是面对几万甚至几十万行的代码是不是感觉无从下手。理解大型工程的一个诀窍就是能够理清函数之间的调用关系。这篇文章介绍几个好用的工具，用来帮助我们生成代码的调用关系，以便更好的理解项目代码。
+
+说到函数调用关系（call graph）相信大家都不陌生，函数调用关系其实就是程序的执行流程。生成函数调用关系的方法一般来说有2个，即动态方法和静态方法。
+动态方法">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/bz18v8q1z4vif7o5h9lpepra/image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/4n143s2us4sxph95uhh5tbij/image_1b8renepf1ckbd1d1qjk1ikv4a0m.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/rt5utk4711iyfaoo77c2anem/image_1b8rei332c4v1ppefci182muf49.png">
+<meta property="og:updated_time" content="2017-02-14T02:07:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何阅读程序源码之——call graph">
+<meta name="twitter:description" content="多阅读大型开源项目能够显著提升自己的能力，但是面对几万甚至几十万行的代码是不是感觉无从下手。理解大型工程的一个诀窍就是能够理清函数之间的调用关系。这篇文章介绍几个好用的工具，用来帮助我们生成代码的调用关系，以便更好的理解项目代码。
+
+说到函数调用关系（call graph）相信大家都不陌生，函数调用关系其实就是程序的执行流程。生成函数调用关系的方法一般来说有2个，即动态方法和静态方法。
+动态方法">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/bz18v8q1z4vif7o5h9lpepra/image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/uploads/siteicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>如何阅读程序源码之——call graph | 小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+	
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Coding for fun</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-home icon-2x">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/map/">导航</a></li>
+                        
+                            <li><a href="/message/">留言</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL接口/">PostgreSQL接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cctree/">cctree</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cflow/">cflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dnsmasq/">dnsmasq</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/egypt/">egypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gprof/">gprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wget/">wget</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备份还原/">备份还原</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源社区/">开源社区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/接口/">接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，PostgreSQL/">数据库，PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文章/">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地化/">本地化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查询优化/">查询优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/汇编调试方法/">汇编调试方法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爱好/">爱好</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网站/">网站</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言层/">语言层</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调优/">调优</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于基础软件研发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Coding for fun</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/map/">导航</a></li>
+                
+                    <li><a href="/message/">留言</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-如何阅读程序源码之——call-graph" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/02/14/如何阅读程序源码之——call-graph/" class="article-date">
+      <time datetime="2017-02-14T01:58:20.000Z" itemprop="datePublished">2017-02-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      如何阅读程序源码之——call graph
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cctree/">cctree</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cflow/">cflow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/egypt/">egypt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gprof/">gprof</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>多阅读大型开源项目能够显著提升自己的能力，但是面对几万甚至几十万行的代码是不是感觉无从下手。理解大型工程的一个诀窍就是能够理清函数之间的调用关系。这篇文章介绍几个好用的工具，用来帮助我们生成代码的调用关系，以便更好的理解项目代码。</p>
+</blockquote>
+<p>说到函数调用关系（call graph）相信大家都不陌生，函数调用关系其实就是程序的执行流程。生成函数调用关系的方法一般来说有2个，即动态方法和静态方法。</p>
+<h2 id="动态方法"><a href="#动态方法" class="headerlink" title="动态方法"></a>动态方法</h2><p>动态方法就是在程序执行过程中，把函数的调用情况记录下来，一些程序性能分析工具常常都有这个功能，比如<code>gprof</code>。相对于静态方法来说，动态方法准确的反映了程序执行的过程。但是一些没有实际执行到的分支没有显示出来。<br>常用的工具有：</p>
+<ol>
+<li><a href="https://sourceware.org/binutils/docs/gprof/" target="_blank" rel="external">gprof</a>：可以输出每个函数的调用次数，每个函数消耗的处理器时间，函数之间的调用关系。通过在编译和链接程序的时候（使用 -pg 编译和链接选项），gcc 在你应用程序的每个函数中都加入了一个名为mcount函数，也就是说你的应用程序里的每一个函数都会调用mcount，而mcount会在内存中保存一张函数调用图，并通过函数调用堆栈的形式查找子函数和父函数的地址。这张调用图也保存了所有与函数相关的调用时间，调用次数等等的所有信息。在程序结束后会生成gmon.out文件，然后再用gprof来分析gmon.out文件。但是gprof不支持多线程应用，多线程下只能采集主线程性能数据。原因是gprof采用ITIMER_PROF信号，在多线程内只有主线程才能响应该信号。如果需要支持多线程程序那么需要程序员自己处理线程信号。另外gprof只能输出文本形式的调用关系。</li>
+<li><a href="http://kcachegrind.sourceforge.net/html/Home.html" target="_blank" rel="external">KCachegrind</a>：利用calgrind生成的结果，绘制调用关系图形。使用也非常简单,首先用valgrind来执行程序<code>valgrind --tools=callgrind ./prog</code>，程序结束后在目录下生成<code>callgrind.out.pid</code>文件，然后用kcachegrind打开这个文件即可。</li>
+</ol>
+<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>静态方法就是直接分析程序源码文件，把函数调用关系记录下来。静态方法能够更为全面的反映函数的调用情况（不管实际是否能调用）。相对于动态方法来说，静态方法不用编译，速度较快节约了大量时间。但是，静态方法的函数调用关系不一定能够反映程序的实际执行情况。<br>常用的工具有：</p>
+<ol>
+<li><a href="http://www.doxygen.nl/manual/index.html" target="_blank" rel="external">doxygen</a>：可由代码以生成html等各种格式的文档，需要编码时按照一定的规范，十分适合大型工程，可以看<a href="https://doxygen.postgresql.org/" target="_blank" rel="external">postgresql</a>的在线文档。但是已有工程由于不符合doxygen的规范，不适合使用。</li>
+<li><a href="http://www.gnu.org/software/cflow/" target="_blank" rel="external">cflow</a>：直接解析C源代码，用lex&amp;yacc来生成文本格式的调用关系图。不需要任何改动。但是只能生成文本格式，不能生成图像。</li>
+<li><a href="http://www.gson.org/egypt/egypt.html" target="_blank" rel="external">egypt</a>：用gcc的-fdump-rtl-expand选项生成调用关系，然后用graphviz生成调用图图像。需要简单改动一下Makefile,或者是make CFLAGS=”-fdump-rtl-expand”。</li>
+<li><a href="http://www.vim.org/scripts/script.php?script_id=2368" target="_blank" rel="external">CCTree</a>：这个是vim的一个插件，利用cscope的输出来生成交叉引用的信息。和SourceInsight的交叉引用很像。</li>
+<li><a href="http://freecode.com/projects/codeviz/" target="_blank" rel="external">codeviz</a> :其基本原理是给 GCC 打个补丁，让它在编译时每个源文件时 dump 出其中函数的 call graph，然后用 Perl 脚本收集并整理调用关系，转交给Graphviz绘制图形。这种方法还需要重新编译gcc，比较麻烦。</li>
+</ol>
+<p>动态方法和静态方法各有好处，在实际使用过程中需要两者相结合才会发挥更大力量。下面是他们生成的调用关系效果图：</p>
+<ol>
+<li><p>gprof</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">$ gprof -b ./node2dot ./gmon.out </div><div class="line">Flat profile:</div><div class="line"></div><div class="line">Each sample counts as 0.01 seconds.</div><div class="line">  %   cumulative   self              self     total           </div><div class="line"> time   seconds   seconds    calls  ms/call  ms/call  name    </div><div class="line">100.22      0.03     0.03        8     3.76     3.76  add_node</div><div class="line">  0.00      0.03     0.00       54     0.00     0.00  get_one_name</div><div class="line">  0.00      0.03     0.00       32     0.00     0.00  add_item</div><div class="line">  0.00      0.03     0.00       16     0.00     0.00  pop</div><div class="line">  0.00      0.03     0.00       16     0.00     0.00  push</div><div class="line">  0.00      0.03     0.00        8     0.00     0.00  add_link</div><div class="line">  0.00      0.03     0.00        1     0.00     0.00  print_body</div><div class="line">  0.00      0.03     0.00        1     0.00     0.00  print_footer</div><div class="line">  0.00      0.03     0.00        1     0.00     0.00  print_header</div><div class="line"></div><div class="line"></div><div class="line">			Call graph</div><div class="line"></div><div class="line"></div><div class="line">granularity: each sample hit covers 2 byte(s) for 33.26% of 0.03 seconds</div><div class="line"></div><div class="line">index % time    self  children    called     name</div><div class="line">                0.03    0.00       8/8           main [2]</div><div class="line">[1]    100.0    0.03    0.00       8         add_node [1]</div><div class="line">-----------------------------------------------</div><div class="line">                                                 &lt;spontaneous&gt;</div><div class="line">[2]    100.0    0.00    0.03                 main [2]</div><div class="line">                0.03    0.00       8/8           add_node [1]</div><div class="line">                0.00    0.00      54/54          get_one_name [3]</div><div class="line">                0.00    0.00      32/32          add_item [4]</div><div class="line">                0.00    0.00      16/16          push [6]</div><div class="line">                0.00    0.00      16/16          pop [5]</div><div class="line">                0.00    0.00       8/8           add_link [7]</div><div class="line">                0.00    0.00       1/1           print_header [10]</div><div class="line">                0.00    0.00       1/1           print_footer [9]</div><div class="line">                0.00    0.00       1/1           print_body [8]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      54/54          main [2]</div><div class="line">[3]      0.0    0.00    0.00      54         get_one_name [3]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      32/32          main [2]</div><div class="line">[4]      0.0    0.00    0.00      32         add_item [4]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      16/16          main [2]</div><div class="line">[5]      0.0    0.00    0.00      16         pop [5]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00      16/16          main [2]</div><div class="line">[6]      0.0    0.00    0.00      16         push [6]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       8/8           main [2]</div><div class="line">[7]      0.0    0.00    0.00       8         add_link [7]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       1/1           main [2]</div><div class="line">[8]      0.0    0.00    0.00       1         print_body [8]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       1/1           main [2]</div><div class="line">[9]      0.0    0.00    0.00       1         print_footer [9]</div><div class="line">-----------------------------------------------</div><div class="line">                0.00    0.00       1/1           main [2]</div><div class="line">[10]     0.0    0.00    0.00       1         print_header [10]</div><div class="line">-----------------------------------------------</div><div class="line"></div><div class="line"></div><div class="line">Index by function name</div><div class="line"></div><div class="line">   [4] add_item                [3] get_one_name            [9] print_footer</div><div class="line">   [7] add_link                [5] pop                    [10] print_header</div><div class="line">   [1] add_node                [8] print_body              [6] push</div></pre></td></tr></table></figure>
+</li>
+<li><p>kcachegrind<br><img src="http://static.zybuluo.com/shenyuflying/bz18v8q1z4vif7o5h9lpepra/image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png" alt="image_1b8t50qjn1p7f9i0bjs1qud1cqc9.png-253.8kB"></p>
+</li>
+<li>egypt<br><img src="http://static.zybuluo.com/shenyuflying/4n143s2us4sxph95uhh5tbij/image_1b8renepf1ckbd1d1qjk1ikv4a0m.png" alt="image_1b8renepf1ckbd1d1qjk1ikv4a0m.png-42.6kB"></li>
+<li>CCTree<br><img src="http://static.zybuluo.com/shenyuflying/rt5utk4711iyfaoo77c2anem/image_1b8rei332c4v1ppefci182muf49.png" alt="image_1b8rei332c4v1ppefci182muf49.png-128.3kB"></li>
+</ol>
+<p>PS:以上分析的源码来自我的两个开源项目：<br>pgNodeGraph: <a href="http://github.com/shenyuflying/pgNodeGraph" target="_blank" rel="external">http://github.com/shenyuflying/pgNodeGraph</a><br>codeRunner: <a href="http://github.com/shenyuflying/codeRunner" target="_blank" rel="external">http://github.com/shenyuflying/codeRunner</a></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
+        <p><span>发布时间:</span>2017-02-14, 01:58:20</p>
+        <p><span>最后更新:</span>2017-02-14, 02:07:16</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/02/14/如何阅读程序源码之——call-graph/" title="如何阅读程序源码之——call graph">http://shenyu.wiki/2017/02/14/如何阅读程序源码之——call-graph/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/02/14/如何阅读程序源码之——call-graph/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/02/16/科学上网——搭建自己的DNS服务器/">
+                    科学上网——搭建自己的DNS服务器
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/02/09/soname/">
+                    soname
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#动态方法"><span class="toc-number">1.</span> <span class="toc-text">动态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#静态方法"><span class="toc-number">2.</span> <span class="toc-text">静态方法</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"如何阅读程序源码之——call graph　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/02/14/如何阅读程序源码之——call-graph/" data-title="如何阅读程序源码之——call graph" data-url="http://shenyu.wiki/2017/02/14/如何阅读程序源码之——call-graph/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/02/16/科学上网——搭建自己的DNS服务器/" title="上一篇: 科学上网——搭建自己的DNS服务器">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/02/09/soname/" title="下一篇: soname">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/how to change your linux timezone/">how to set your linux's timezone</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/科学上网——搭建自己的DNS服务器/">科学上网——搭建自己的DNS服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/09/soname/">soname</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/how-to-setup-postgresql-odbc/">How to setup postgresql ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/odbc-programming/">ODBC programming</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/an-introduction-to-odbc/">An introduction to ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/">过年在家写了一个蛮有趣的小程序：codeRunner</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/The-best-career-advice-I’ve-received/">The best career advice I’ve received</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160526/">汇编调试方法-20160526</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160506/">汇编调试方法-20160506</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/修改hosts来访问谷歌/">修改hosts来访问谷歌</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/">如果你要给学生一些学习建议，你会说些什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/16/hexo博客增加菜单栏目/">hexo博客增加菜单栏目</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/13/PostgreSQL中的PL-SQL实现/">PostgreSQL中的PL/SQL实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/PostgreSQL逻辑备份还原/">PostgreSQL逻辑备份还原</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/08/【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）/">【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/git统计代码贡献/">git统计代码贡献</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/02/pg-logical-backup-restore/">PostgreSQL logical backup & restore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/01/【小宇带你学PostgreSQL内核】第四课：parser语法分析/">【小宇带你学PostgreSQL内核】第四课：parser语法分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/29/GDB图形界面大PK/">GDB图形界面大PK</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/">【小宇带你学PostgreSQL内核】第三课：内核架构(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/">【小宇带你学PostgreSQL内核】第三课：内核架构(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/PostgreSQL-internal-roadmap/">PostgresSQL-internal-roadmap</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/14/yshen-s-vim-settings/">yshen's vim settings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/">【小宇带你学PostgreSQL内核】第二课：开发环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">【小宇带你学PostgreSQL内核】第一课：课程简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">好书推荐：《Debug hacks——深入调试的技术和工具》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/26/缓冲区溢出的那些事儿/">缓冲区溢出的那些事儿</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解静态链接库和动态链接库/">深入理解静态链接库和动态链接库</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/12/linux中进程共享内存的2种方法/">linux中进程共享内存的2种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux进程改名/">linux进程改名</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC driver internal</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/20/markdown-test/">markdown test</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2017 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

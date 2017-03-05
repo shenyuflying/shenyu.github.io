@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="磁盘IO是数据库性能的瓶颈。如果把数据放在内存盘上性能能提升多少呢？我也很好奇，于是用pg自带的pgbench测试了一下，结果表明在SSD硬盘上性能为207tps；在内存盘上性能为1897tps；性能提升了9倍。
+
+基本配置电脑品牌：Thinkpad X201CPU:Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHzSSD磁盘性能：随机写：4k，162">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL内存盘性能测试">
+<meta property="og:url" content="http://shenyu.wiki/2016/11/29/PostgreSQL内存盘性能测试/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="磁盘IO是数据库性能的瓶颈。如果把数据放在内存盘上性能能提升多少呢？我也很好奇，于是用pg自带的pgbench测试了一下，结果表明在SSD硬盘上性能为207tps；在内存盘上性能为1897tps；性能提升了9倍。
+
+基本配置电脑品牌：Thinkpad X201CPU:Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHzSSD磁盘性能：随机写：4k，162">
+<meta property="og:updated_time" content="2017-01-14T09:10:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PostgreSQL内存盘性能测试">
+<meta name="twitter:description" content="磁盘IO是数据库性能的瓶颈。如果把数据放在内存盘上性能能提升多少呢？我也很好奇，于是用pg自带的pgbench测试了一下，结果表明在SSD硬盘上性能为207tps；在内存盘上性能为1897tps；性能提升了9倍。
+
+基本配置电脑品牌：Thinkpad X201CPU:Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHzSSD磁盘性能：随机写：4k，162">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/uploads/siteicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>PostgreSQL内存盘性能测试 | 小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+	
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Coding for fun</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-home icon-2x">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/map/">导航</a></li>
+                        
+                            <li><a href="/message/">留言</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL接口/">PostgreSQL接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cctree/">cctree</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cflow/">cflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dnsmasq/">dnsmasq</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/egypt/">egypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gprof/">gprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wget/">wget</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备份还原/">备份还原</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源社区/">开源社区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/接口/">接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，PostgreSQL/">数据库，PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文章/">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地化/">本地化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查询优化/">查询优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/汇编调试方法/">汇编调试方法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爱好/">爱好</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网站/">网站</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言层/">语言层</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调优/">调优</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于基础软件研发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Coding for fun</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/map/">导航</a></li>
+                
+                    <li><a href="/message/">留言</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-PostgreSQL内存盘性能测试" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/29/PostgreSQL内存盘性能测试/" class="article-date">
+      <time datetime="2016-11-29T12:53:53.000Z" itemprop="datePublished">2016-11-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PostgreSQL内存盘性能测试
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调优/">调优</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>磁盘IO是数据库性能的瓶颈。如果把数据放在内存盘上性能能提升多少呢？我也很好奇，于是用pg自带的pgbench测试了一下，结果表明在SSD硬盘上性能为207tps；在内存盘上性能为1897tps；性能提升了9倍。</p>
+</blockquote>
+<h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>电脑品牌：Thinkpad X201<br>CPU:Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHz<br>SSD磁盘性能：<br>随机写：4k，162M/s，iops=40656<br>随机读：4k，178M/s，iops=55240<br>顺序写：362M/s<br>内存盘性能： 2.0 GB/s<br>内存：8G<br>数据库采用默认配置</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">$ cat /proc/cpuinfo </div><div class="line">processor	: 0</div><div class="line">vendor_id	: GenuineIntel</div><div class="line">cpu family	: 6</div><div class="line">model		: 37</div><div class="line">model name	: Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHz</div><div class="line">stepping	: 2</div><div class="line">microcode	: 0xe</div><div class="line">cpu MHz		: 2659.889</div><div class="line">cache size	: 4096 KB</div><div class="line"></div><div class="line">$ free -g</div><div class="line">              total        used        free      shared  buff/cache   available</div><div class="line">Mem:              7           1           2           2           3           3</div><div class="line">Swap:             7           0           7</div><div class="line"></div><div class="line">$ fio -direct=1 -iodepth=128 -rw=randwrite -ioengine=libaio -bs=4k -size=2G -numjobs=1 -runtime=10 -group_reporting -name=./tmp</div><div class="line">./tmp: (g=0): rw=randwrite, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=128</div><div class="line">fio-2.2.10</div><div class="line">Starting 1 process</div><div class="line">Jobs: 1 (f=1): [w(1)] [100.0% done] [0KB/158.6MB/0KB /s] [0/40.6K/0 iops] [eta 00m:00s]</div><div class="line">./tmp: (groupid=0, jobs=1): err= 0: pid=16914: Tue Nov 29 20:24:40 2016</div><div class="line">  write: io=1591.0MB, bw=162626KB/s, iops=40656, runt= 10018msec</div><div class="line">    slat (usec): min=3, max=9846, avg=13.45, stdev=65.57</div><div class="line">    clat (usec): min=596, max=33299, avg=3131.62, stdev=1837.53</div><div class="line">     lat (usec): min=718, max=33324, avg=3145.41, stdev=1839.00</div><div class="line">    clat percentiles (usec):</div><div class="line">     |  1.00th=[  828],  5.00th=[ 1048], 10.00th=[ 1288], 20.00th=[ 1672],</div><div class="line">     | 30.00th=[ 1976], 40.00th=[ 2352], 50.00th=[ 2800], 60.00th=[ 3280],</div><div class="line">     | 70.00th=[ 3760], 80.00th=[ 4320], 90.00th=[ 5216], 95.00th=[ 6176],</div><div class="line">     | 99.00th=[ 9408], 99.50th=[11072], 99.90th=[16320], 99.95th=[20352],</div><div class="line">     | 99.99th=[28032]</div><div class="line">    bw (KB  /s): min=134968, max=178976, per=100.00%, avg=162657.65, stdev=8446.26</div><div class="line">    lat (usec) : 750=0.13%, 1000=3.92%</div><div class="line">    lat (msec) : 2=26.45%, 4=43.78%, 10=24.95%, 20=0.72%, 50=0.05%</div><div class="line">  cpu          : usr=10.98%, sys=52.95%, ctx=134871, majf=0, minf=11</div><div class="line">  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, &gt;=64=100.0%</div><div class="line">     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%</div><div class="line">     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.1%</div><div class="line">     issued    : total=r=0/w=407296/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0</div><div class="line">     latency   : target=0, window=0, percentile=100.00%, depth=128</div><div class="line"></div><div class="line">Run status group 0 (all jobs):</div><div class="line">  WRITE: io=1591.0MB, aggrb=162625KB/s, minb=162625KB/s, maxb=162625KB/s, mint=10018msec, maxt=10018msec</div><div class="line"></div><div class="line">Disk stats (read/write):</div><div class="line">    dm-0: ios=0/403504, merge=0/0, ticks=0/998476, in_queue=999688, util=95.90%, aggrios=0/406834, aggrmerge=0/1774, aggrticks=0/1005596, aggrin_queue=1006352, aggrutil=95.37%</div><div class="line">  sda: ios=0/406834, merge=0/1774, ticks=0/1005596, in_queue=1006352, util=95.37%</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"> $ fio -direct=1 -iodepth=128 -rw=randread -ioengine=libaio -bs=4k -size=2G -numjobs=1 -runtime=10 -group_reporting -name=./tmp</div><div class="line">./tmp: (g=0): rw=randread, bs=4K-4K/4K-4K/4K-4K, ioengine=libaio, iodepth=128</div><div class="line">fio-2.2.10</div><div class="line">Starting 1 process</div><div class="line">Jobs: 1 (f=1): [r(1)] [90.9% done] [178.3MB/0KB/0KB /s] [45.7K/0/0 iops] [eta 00m:01s]</div><div class="line">./tmp: (groupid=0, jobs=1): err= 0: pid=17067: Tue Nov 29 20:26:26 2016</div><div class="line">  read : io=2048.0MB, bw=220962KB/s, iops=55240, runt=  9491msec</div><div class="line">    slat (usec): min=1, max=6358, avg= 9.30, stdev=49.59</div><div class="line">    clat (usec): min=2, max=28539, avg=2305.34, stdev=1747.77</div><div class="line">     lat (usec): min=4, max=28556, avg=2314.95, stdev=1750.45</div><div class="line">    clat percentiles (usec):</div><div class="line">     |  1.00th=[  354],  5.00th=[  382], 10.00th=[  394], 20.00th=[  442],</div><div class="line">     | 30.00th=[ 1176], 40.00th=[ 1608], 50.00th=[ 2024], 60.00th=[ 2512],</div><div class="line">     | 70.00th=[ 3056], 80.00th=[ 3632], 90.00th=[ 4384], 95.00th=[ 5216],</div><div class="line">     | 99.00th=[ 7776], 99.50th=[ 9152], 99.90th=[13504], 99.95th=[15296],</div><div class="line">     | 99.99th=[19584]</div><div class="line">    bw (KB  /s): min=174240, max=184504, per=80.94%, avg=178856.28, stdev=3158.59</div><div class="line">    lat (usec) : 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%, 100=0.01%</div><div class="line">    lat (usec) : 250=0.02%, 500=21.63%, 750=1.12%, 1000=4.08%</div><div class="line">    lat (msec) : 2=22.54%, 4=35.98%, 10=14.26%, 20=0.35%, 50=0.01%</div><div class="line">  cpu          : usr=12.77%, sys=50.96%, ctx=127960, majf=0, minf=138</div><div class="line">  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, &gt;=64=100.0%</div><div class="line">     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%</div><div class="line">     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.1%</div><div class="line">     issued    : total=r=524288/w=0/d=0, short=r=0/w=0/d=0, drop=r=0/w=0/d=0</div><div class="line">     latency   : target=0, window=0, percentile=100.00%, depth=128</div><div class="line"></div><div class="line">Run status group 0 (all jobs):</div><div class="line">   READ: io=2048.0MB, aggrb=220962KB/s, minb=220962KB/s, maxb=220962KB/s, mint=9491msec, maxt=9491msec</div><div class="line"></div><div class="line">Disk stats (read/write):</div><div class="line">    dm-0: ios=407296/3, merge=0/0, ticks=958808/12, in_queue=959388, util=93.58%, aggrios=406755/3, aggrmerge=541/1, aggrticks=956908/12, aggrin_queue=959268, aggrutil=92.23%</div><div class="line">  sda: ios=406755/3, merge=541/1, ticks=956908/12, in_queue=959268, util=92.23%</div><div class="line"></div><div class="line">$ dd if=/dev/zero of=./tmp bs=8k count=300000</div><div class="line">300000+0 records in</div><div class="line">300000+0 records out</div><div class="line">2457600000 bytes (2.5 GB, 2.3 GiB) copied, 6.793 s, 362 MB/s</div><div class="line"></div><div class="line">$ dd if=/dev/zero of=./tmp bs=8k count=300000</div><div class="line">300000+0 records in</div><div class="line">300000+0 records out</div><div class="line">2457600000 bytes (2.5 GB, 2.3 GiB) copied, 1.24375 s, 2.0 GB/s</div></pre></td></tr></table></figure>
+<h2 id="data目录在磁盘上"><a href="#data目录在磁盘上" class="headerlink" title="data目录在磁盘上"></a>data目录在磁盘上</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">$ ./pgbench --client=16 --jobs=16  --time=20 --progress=1  postgres</div><div class="line">starting vacuum...end.</div><div class="line">progress: 1.0 s, 204.0 tps, lat 69.831 ms stddev 57.034</div><div class="line">progress: 2.0 s, 206.0 tps, lat 79.884 ms stddev 64.072</div><div class="line">progress: 3.0 s, 207.0 tps, lat 79.170 ms stddev 55.301</div><div class="line">progress: 4.0 s, 204.0 tps, lat 76.850 ms stddev 43.849</div><div class="line">progress: 5.0 s, 207.0 tps, lat 77.856 ms stddev 44.732</div><div class="line">progress: 6.0 s, 190.0 tps, lat 84.452 ms stddev 70.720</div><div class="line">progress: 7.0 s, 211.0 tps, lat 75.539 ms stddev 49.628</div><div class="line">progress: 8.0 s, 210.0 tps, lat 75.229 ms stddev 51.632</div><div class="line">progress: 9.0 s, 211.0 tps, lat 75.075 ms stddev 49.451</div><div class="line">progress: 10.0 s, 207.0 tps, lat 79.154 ms stddev 63.283</div><div class="line">progress: 11.0 s, 212.0 tps, lat 76.071 ms stddev 47.042</div><div class="line">progress: 12.0 s, 209.9 tps, lat 74.868 ms stddev 59.072</div><div class="line">progress: 13.0 s, 210.1 tps, lat 77.152 ms stddev 51.673</div><div class="line">progress: 14.0 s, 210.0 tps, lat 76.003 ms stddev 51.179</div><div class="line">progress: 15.0 s, 210.0 tps, lat 75.999 ms stddev 62.302</div><div class="line">progress: 16.0 s, 210.0 tps, lat 74.284 ms stddev 44.574</div><div class="line">progress: 17.0 s, 210.0 tps, lat 78.569 ms stddev 54.181</div><div class="line">progress: 18.0 s, 207.0 tps, lat 77.143 ms stddev 57.839</div><div class="line">progress: 19.0 s, 207.0 tps, lat 75.662 ms stddev 52.170</div><div class="line">progress: 20.0 s, 210.0 tps, lat 75.412 ms stddev 60.447</div><div class="line">transaction type: TPC-B (sort of)</div><div class="line">scaling factor: 1</div><div class="line">query mode: simple</div><div class="line">number of clients: 16</div><div class="line">number of threads: 16</div><div class="line">duration: 20 s</div><div class="line">number of transactions actually processed: 4169</div><div class="line">latency average: 76.853 ms</div><div class="line">latency stddev: 55.239 ms</div><div class="line">tps = 207.607456 (including connections establishing)</div><div class="line">tps = 207.748916 (excluding connections establishing)</div></pre></td></tr></table></figure>
+<h2 id="data目录在内存中"><a href="#data目录在内存中" class="headerlink" title="data目录在内存中"></a>data目录在内存中</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">$ ./pgbench --client=16 --jobs=16  --time=20 --progress=1  postgres</div><div class="line">starting vacuum...end.</div><div class="line">progress: 1.0 s, 1710.8 tps, lat 9.217 ms stddev 5.359</div><div class="line">progress: 2.0 s, 2055.9 tps, lat 7.771 ms stddev 4.212</div><div class="line">progress: 3.0 s, 1837.2 tps, lat 8.704 ms stddev 5.085</div><div class="line">progress: 4.0 s, 1989.9 tps, lat 7.992 ms stddev 4.249</div><div class="line">progress: 5.0 s, 1856.2 tps, lat 8.680 ms stddev 5.048</div><div class="line">progress: 6.0 s, 1971.6 tps, lat 8.122 ms stddev 4.327</div><div class="line">progress: 7.0 s, 1804.0 tps, lat 8.834 ms stddev 5.235</div><div class="line">progress: 8.0 s, 1973.6 tps, lat 8.124 ms stddev 4.456</div><div class="line">progress: 9.0 s, 2152.9 tps, lat 7.434 ms stddev 4.087</div><div class="line">progress: 10.0 s, 1843.9 tps, lat 8.665 ms stddev 5.084</div><div class="line">progress: 11.0 s, 2077.6 tps, lat 7.698 ms stddev 4.675</div><div class="line">progress: 12.0 s, 1662.5 tps, lat 9.637 ms stddev 5.916</div><div class="line">progress: 13.0 s, 1853.4 tps, lat 8.615 ms stddev 4.853</div><div class="line">progress: 14.0 s, 1812.1 tps, lat 8.840 ms stddev 4.836</div><div class="line">progress: 15.0 s, 2052.6 tps, lat 7.798 ms stddev 4.230</div><div class="line">progress: 16.0 s, 1892.0 tps, lat 8.444 ms stddev 4.816</div><div class="line">progress: 17.0 s, 1712.4 tps, lat 9.321 ms stddev 5.256</div><div class="line">progress: 18.0 s, 1856.6 tps, lat 8.637 ms stddev 4.602</div><div class="line">progress: 19.0 s, 1753.9 tps, lat 9.130 ms stddev 5.089</div><div class="line">progress: 20.0 s, 2071.4 tps, lat 7.719 ms stddev 4.375</div><div class="line">transaction type: TPC-B (sort of)</div><div class="line">scaling factor: 1</div><div class="line">query mode: simple</div><div class="line">number of clients: 16</div><div class="line">number of threads: 16</div><div class="line">duration: 20 s</div><div class="line">number of transactions actually processed: 37956</div><div class="line">latency average: 8.430 ms</div><div class="line">latency stddev: 4.822 ms</div><div class="line">tps = 1896.061501 (including connections establishing)</div><div class="line">tps = 1897.040816 (excluding connections establishing)</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在磁盘上性能为207tps<br>在内存上性能为1897tps<br>提升了9倍。</p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
+        <p><span>发布时间:</span>2016-11-29, 12:53:53</p>
+        <p><span>最后更新:</span>2017-01-14, 09:10:47</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/29/PostgreSQL内存盘性能测试/" title="PostgreSQL内存盘性能测试">http://shenyu.wiki/2016/11/29/PostgreSQL内存盘性能测试/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2016/11/29/PostgreSQL内存盘性能测试/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">
+                    【小宇带你学PostgreSQL内核】第一课：课程简介
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">
+                    好书推荐：《Debug hacks——深入调试的技术和工具》
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本配置"><span class="toc-number">1.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#data目录在磁盘上"><span class="toc-number">2.</span> <span class="toc-text">data目录在磁盘上</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#data目录在内存中"><span class="toc-number">3.</span> <span class="toc-text">data目录在内存中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"PostgreSQL内存盘性能测试　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/29/PostgreSQL内存盘性能测试/" data-title="PostgreSQL内存盘性能测试" data-url="http://shenyu.wiki/2016/11/29/PostgreSQL内存盘性能测试/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/" title="上一篇: 【小宇带你学PostgreSQL内核】第一课：课程简介">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/" title="下一篇: 好书推荐：《Debug hacks——深入调试的技术和工具》">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/how to change your linux timezone/">how to set your linux's timezone</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/科学上网——搭建自己的DNS服务器/">科学上网——搭建自己的DNS服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/09/soname/">soname</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/how-to-setup-postgresql-odbc/">How to setup postgresql ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/odbc-programming/">ODBC programming</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/an-introduction-to-odbc/">An introduction to ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/">过年在家写了一个蛮有趣的小程序：codeRunner</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/The-best-career-advice-I’ve-received/">The best career advice I’ve received</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160526/">汇编调试方法-20160526</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160506/">汇编调试方法-20160506</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/修改hosts来访问谷歌/">修改hosts来访问谷歌</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/">如果你要给学生一些学习建议，你会说些什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/16/hexo博客增加菜单栏目/">hexo博客增加菜单栏目</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/13/PostgreSQL中的PL-SQL实现/">PostgreSQL中的PL/SQL实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/PostgreSQL逻辑备份还原/">PostgreSQL逻辑备份还原</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/08/【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）/">【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/git统计代码贡献/">git统计代码贡献</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/02/pg-logical-backup-restore/">PostgreSQL logical backup & restore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/01/【小宇带你学PostgreSQL内核】第四课：parser语法分析/">【小宇带你学PostgreSQL内核】第四课：parser语法分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/29/GDB图形界面大PK/">GDB图形界面大PK</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/">【小宇带你学PostgreSQL内核】第三课：内核架构(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/">【小宇带你学PostgreSQL内核】第三课：内核架构(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/PostgreSQL-internal-roadmap/">PostgresSQL-internal-roadmap</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/14/yshen-s-vim-settings/">yshen's vim settings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/">【小宇带你学PostgreSQL内核】第二课：开发环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">【小宇带你学PostgreSQL内核】第一课：课程简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">好书推荐：《Debug hacks——深入调试的技术和工具》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/26/缓冲区溢出的那些事儿/">缓冲区溢出的那些事儿</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解静态链接库和动态链接库/">深入理解静态链接库和动态链接库</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/12/linux中进程共享内存的2种方法/">linux中进程共享内存的2种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux进程改名/">linux进程改名</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC driver internal</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/20/markdown-test/">markdown test</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2017 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

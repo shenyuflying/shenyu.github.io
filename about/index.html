@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="你好！欢迎来我的博客。
+  
+
+
+工作经历
+2015-至今　人大金仓信息技术股份有限公司　数据库内核研发工程师
+
+学习经历
+2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位
+2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位
+
+参与项目国产数据库Kingbase ES V6\7\8研发
+责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复">
+<meta property="og:type" content="website">
+<meta property="og:title" content="coding for fun">
+<meta property="og:url" content="http://shenyu.wiki/about/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="你好！欢迎来我的博客。
+  
+
+
+工作经历
+2015-至今　人大金仓信息技术股份有限公司　数据库内核研发工程师
+
+学习经历
+2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位
+2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位
+
+参与项目国产数据库Kingbase ES V6\7\8研发
+责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/r0zt7gogesjj2k9khf90r2p2/image_1b5pg6c8rv8ia70e8n1n906f19.png">
+<meta property="og:image" content="http://shenyu.wiki/uploads/link.png">
+<meta property="og:updated_time" content="2017-03-05T03:21:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="coding for fun">
+<meta name="twitter:description" content="你好！欢迎来我的博客。
+  
+
+
+工作经历
+2015-至今　人大金仓信息技术股份有限公司　数据库内核研发工程师
+
+学习经历
+2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位
+2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位
+
+参与项目国产数据库Kingbase ES V6\7\8研发
+责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/r0zt7gogesjj2k9khf90r2p2/image_1b5pg6c8rv8ia70e8n1n906f19.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/uploads/siteicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>coding for fun | 小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+	
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Coding for fun</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-home icon-2x">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/map/">导航</a></li>
+                        
+                            <li><a href="/message/">留言</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL接口/">PostgreSQL接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cctree/">cctree</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cflow/">cflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dnsmasq/">dnsmasq</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/egypt/">egypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gprof/">gprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wget/">wget</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备份还原/">备份还原</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源社区/">开源社区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/接口/">接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，PostgreSQL/">数据库，PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文章/">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地化/">本地化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查询优化/">查询优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/汇编调试方法/">汇编调试方法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爱好/">爱好</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网站/">网站</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言层/">语言层</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调优/">调优</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于基础软件研发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Coding for fun</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/map/">导航</a></li>
+                
+                    <li><a href="/message/">留言</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/about/index.html" class="article-date">
+      <time datetime="2016-09-17T13:21:20.000Z" itemprop="datePublished">2016-09-17</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      coding for fun
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <style>
+    .article-meta { display: none; }
+    #container .article .article-title { padding-right: 0; }
+    .article-header {
+        padding: 0;
+        padding-top: 26px;
+        border-left: none;
+        text-align: center;
+    }
+    .article-header:hover { border-left: none; }
+    .article-title { font-size: 1.6em }
+    .article-entry hr { margin: 0;}
+    .article-meta,
+    #container .article-info-post.article-info { display: none;}
+    #container .article .article-title { padding: 0; }
+</style>
+
+
+          
+        <h2 id="你好！"><a href="#你好！" class="headerlink" title="你好！"></a>你好！</h2><p>欢迎来我的博客。</p>
+<center> <img src="http://static.zybuluo.com/shenyuflying/r0zt7gogesjj2k9khf90r2p2/image_1b5pg6c8rv8ia70e8n1n906f19.png" alt="me"> </center>
+
+
+<h2 id="工作经历"><a href="#工作经历" class="headerlink" title="工作经历"></a>工作经历</h2><ul>
+<li>2015-至今　人大金仓信息技术股份有限公司　数据库内核研发工程师</li>
+</ul>
+<h2 id="学习经历"><a href="#学习经历" class="headerlink" title="学习经历"></a>学习经历</h2><ul>
+<li>2012-2015　大连理工大学(985\211重点大学)　攻读硕士学位</li>
+<li>2008-2012　郑州大学(211重点大学)　　　　　攻读学士学位</li>
+</ul>
+<h2 id="参与项目"><a href="#参与项目" class="headerlink" title="参与项目"></a>参与项目</h2><h3 id="国产数据库Kingbase-ES-V6-7-8研发"><a href="#国产数据库Kingbase-ES-V6-7-8研发" class="headerlink" title="国产数据库Kingbase ES V6\7\8研发"></a>国产数据库Kingbase ES V6\7\8研发</h3><ul>
+<li>责数据库产品内核和工具的需求分析、系统设计、编码、单元测试、bug修复等研发工作<ul>
+<li>熟悉数据库实现技术：查询编译和执行、事务与并发控制、存储引擎、故障恢复</li>
+<li>熟悉数据库进程/线程结构、IPC、Lock、MemoryContext、socket网络通信</li>
+<li>修复parser、rewriter、optimizer、executor、access、storage的若干bug</li>
+</ul>
+</li>
+<li>数据文件分析和修复工具（C语言8k行）<ul>
+<li>根据SMS/DMS存储引擎机制实现数据文件完整性校验和修复</li>
+<li>实现数据文件页面的完整性校验、导入导出，元组级别的离线修改</li>
+<li>使用readline、ncurses库实现Linux命令行工具</li>
+<li>使用valgrind、cunit、diff、shell实现工具的测试框架</li>
+</ul>
+</li>
+<li>数据库coredump handler（C语言3k行）<ul>
+<li>使用汇编、backtrace、gdb实现产品堆栈自诊断</li>
+<li>用gcore实现数据库内核进程镜像转储</li>
+</ul>
+</li>
+<li>PLSQL语言debug模块设计和实现（C语言代码20k行）<ul>
+<li>使用socket网络编程实现了C/S架构的PLSQL debugger</li>
+<li>使用wxWigets跨平台GUI库（C++）开发了linux和windows的调试终端</li>
+<li>兼容Oracle复合类型调试，比如关联数组、嵌套表的调试</li>
+<li>实现条件断点、表达式赋值等高级调试特性</li>
+</ul>
+</li>
+<li>备份还原工具<ul>
+<li>熟悉libpq接口编程</li>
+<li>实现了多进程框架、快照管理器</li>
+<li>实现了基于多进程的并行备份</li>
+</ul>
+</li>
+<li>逻辑同步工具<ul>
+<li>熟悉redolog结构</li>
+<li>解析redolog并利用regexp替换实现DDL语句跨库跨模式同步</li>
+</ul>
+</li>
+<li>ODBC驱动<ul>
+<li>熟悉unixODBC驱动管理器架构</li>
+<li>熟悉odbc、oci等驱动规范和实现</li>
+<li>熟悉基于ODBC的dblink、同步工具、备份工具的实现</li>
+<li>修复若干ODBC驱动bug</li>
+</ul>
+</li>
+<li>负责为技术支持人员提供答疑和研发级的技术支持<ul>
+<li>负责线上项目有关数据库内核、备份还原、同步工具、驱动的研发支持</li>
+<li>解决100+线上问题（非法内存访问、内存泄漏、并发、死锁、性能）</li>
+</ul>
+</li>
+<li>负责进行竞品（Oracle、MySQL、PostgreSQL等）的功能、实现分析<ul>
+<li>输出：《竞品功能矩阵》</li>
+</ul>
+</li>
+<li>负责技术分享和培养新员工<ul>
+<li>输出：《postgres内核架构地图》</li>
+<li>输出：《query optimizer设计与实现》</li>
+<li>输出：《PLSQL设计与实现》</li>
+<li>输出：《汇编调试方法》</li>
+<li>输出：《PostgreSQL逻辑备份还原设计与实现》</li>
+<li>输出：《ODBC编程》、《ODBC实现》</li>
+<li>输出：《小宇带你学PostgreSQL内核》视频1-6集</li>
+</ul>
+</li>
+</ul>
+<h2 id="超大规模无线温度监测系统——硕士课题"><a href="#超大规模无线温度监测系统——硕士课题" class="headerlink" title="超大规模无线温度监测系统——硕士课题"></a>超大规模无线温度监测系统——硕士课题</h2><ul>
+<li>负责无线温度传感器硬件设计<ul>
+<li>使用CC2530芯片设计无线传感模块硬件</li>
+<li>使用Zigbee协议实现无线传感节点组网</li>
+</ul>
+</li>
+<li>负责温度监控软件设计、实现<ul>
+<li>使用C# .NET实现PC客户端管理软件</li>
+</ul>
+</li>
+<li>负责监控平台后端服务器软件开发和展示网站开发<ul>
+<li>使用Linux C实现后端服务器软件</li>
+<li>使用socket网络编程实现多地数据采集</li>
+<li>使用LAMP实现数据展示平台</li>
+</ul>
+</li>
+</ul>
+<h2 id="在校期间获得奖励"><a href="#在校期间获得奖励" class="headerlink" title="在校期间获得奖励"></a>在校期间获得奖励</h2><ul>
+<li>2013年获得研究生国家奖学金（2万元）</li>
+<li>攻读学士学位期间连续3年获得一等奖学金</li>
+<li>攻读硕士学位期间连续3年获得一等奖学金</li>
+<li>2015年辽宁省优秀毕业生、2012年河南省优秀毕业生 </li>
+<li>“华为杯”全国大学生数学建模竞赛优秀奖</li>
+<li>ACM程序设计大赛二等奖</li>
+</ul>
+<h2 id="技能水平"><a href="#技能水平" class="headerlink" title="技能水平"></a>技能水平</h2><h3 id="计算机语言"><a href="#计算机语言" class="headerlink" title="计算机语言"></a>计算机语言</h3><p>ASM　之前搞嵌入式，现在在工作中调试一些困难的问题都是直接看汇编。<br>C　主力开发语言，之前开发嵌入式，现在开发数据库内核是用的Ｃ语言。<br>C++　基本的都了解，书也看了不少，但是还没有在实际的大型项目里面用过。<br>C#　研究生时期的《温度监控系统》客户端就是用它写的。<br>Go　新兴语言，很多思想和自己不谋而合，正在努力学习中。<br>Shell　在日常运维和自动化方面非常有用。</p>
+<h3 id="英语"><a href="#英语" class="headerlink" title="英语"></a>英语</h3><p>大学生英语等级考试四级（CET4）617分/总分710<br>大学生英语等级考试六级（CET6）554分/总分710<br>大学生英语口语等级考试（B级）<br>NECCS 全国大学生英语竞赛二等奖<br>EFSET Quick English Check - Score: Intermediate / Upper Intermediate (CEFR B1/B2<br>2010年\2011年全国大学生英语竞赛二等奖<br>2010年郑州大学英语辩论赛最佳辩手</p>
+<h3 id="日语"><a href="#日语" class="headerlink" title="日语"></a>日语</h3><p>自学了《新版中日交流标准日本语》</p>
+<h3 id="计算机等级考试"><a href="#计算机等级考试" class="headerlink" title="计算机等级考试"></a>计算机等级考试</h3><p>全国计算机等级考试（NCRE）四级 网络工程师<br>全国计算机等级考试（NCRE）三级 网络技术<br>全国计算机等级考试（NCRE）二级 C语言</p>
+<h3 id="硕士课题——超大规模无线温度监测系统"><a href="#硕士课题——超大规模无线温度监测系统" class="headerlink" title="硕士课题——超大规模无线温度监测系统"></a>硕士课题——超大规模无线温度监测系统</h3><p>骨干负责整个系统软硬设计、开发和应用。<br>涉及到了DS18B20数字温度传感器、光纤光栅温度传感器、Zigbee无线通信以及硬件设计，windows应用程序开发（C# .NET），服务器端开发（Linux），网站开发（LAMP架构）和组网技术。</p>
+<h3 id="国家自然科学基金——PVDF无线智能疲劳监测系统"><a href="#国家自然科学基金——PVDF无线智能疲劳监测系统" class="headerlink" title="国家自然科学基金——PVDF无线智能疲劳监测系统"></a>国家自然科学基金——PVDF无线智能疲劳监测系统</h3><p>负责算法设计（matlab）、PVDF放大电路设计、DSP算法实现（C语言）。</p>
+<h2 id="开源社区"><a href="#开源社区" class="headerlink" title="开源社区"></a>开源社区</h2><p><a href="https://github.com/shenyuflying" target="_blank" rel="external">Github</a>: <a href="https://github.com/shenyuflying" target="_blank" rel="external">https://github.com/shenyuflying</a></p>
+<h3 id="pgNodeGraph-–-a-postgreSQL-node-tree-print-tool"><a href="#pgNodeGraph-–-a-postgreSQL-node-tree-print-tool" class="headerlink" title="pgNodeGraph – a postgreSQL node tree print tool"></a>pgNodeGraph – a postgreSQL node tree print tool</h3><p>The output of postgreSQL node tree can be very long for the developer to investigate. pgNodeGraph tool can covert the output of the node tree into jpg formatted pictiure which is quite convenient for developing or debugging purposess.<br><a href="https://github.com/shenyuflying/pgNodeGraph" target="_blank" rel="external">view source on github</a></p>
+<h3 id="yap-–-yet-another-poor-man’s-profiler"><a href="#yap-–-yet-another-poor-man’s-profiler" class="headerlink" title="yap – yet another poor man’s profiler"></a>yap – yet another poor man’s profiler</h3><p>Help to print stack ranking or function ranking to find out the slow part of your running program.<br><a href="https://github.com/shenyuflying/yap" target="_blank" rel="external">view source on github</a></p>
+<h3 id="indent-–-an-interactive-C-code-formatter"><a href="#indent-–-an-interactive-C-code-formatter" class="headerlink" title="indent – an interactive C code formatter"></a>indent – an interactive C code formatter</h3><p>Help to check your code against C coding standered and to correct your code in an interactive way.<br><a href="https://github.com/shenyuflying/indent" target="_blank" rel="external">view source on github</a></p>
+<h2 id="攻读硕士学位期间发表论文"><a href="#攻读硕士学位期间发表论文" class="headerlink" title="攻读硕士学位期间发表论文"></a>攻读硕士学位期间发表论文</h2><ol>
+<li><a href="/uploads/master-degree.pdf">大体积混凝土超大规模无线温度监测系统研究</a>. 申宇 大连理工大学硕士论文 2014</li>
+<li><a href="/uploads/mass-concrete.pdf">大体积混凝土无线温度监测系统.</a> 申宇，王滋元，谢朝晖，周智. 工业建筑，2015年，卷（期）：10-11 中文核心期刊</li>
+<li><a href="/uploads/fp-sensor.pdf">Advances of Optic Fiber Fabry-perot Interferometry sensors.</a> Yu Shen, Zhi Zhou. Pacific Science Review, 2013年，卷（期）15：108-116.</li>
+<li><a href="/uploads/of-strain-sensor.pdf">Polydimethylsiloxane fabricated Optical Fiber Sensor capable of measuring both large axial and shear strain.</a> Yu Shen, Ziyuan Wang, Zhi Zhou. Photonic Asia, 2014年，Proceedings of SPIE</li>
+<li><a href="/uploads/deepwater-riser.pdf">深海立管姿态监测的分布式光纤传感技术.</a> 任鹏，申宇，李轩，周智. 中国海洋平台，2014年, 卷（期）：02:26-32. EI检索 国家自然科学基金</li>
+<li><a href="/uploads/pvdf.pdf">基于PVDF的无线智能疲劳监测系统.</a> 白石，周智，申宇，欧进萍  航空学报，2014 EI检索 国家自然科学基金</li>
+<li><a href="http://xueshu.baidu.com/s?wd=paperuri%3A%2892a355a76bdbff845dc2b434e6eb6f20%29&amp;filter=sc_long_sign&amp;tn=SE_xueshusource_2kduw22v&amp;sc_vurl=http%3A%2F%2Fwww.cnki.com.cn%2FArticle%2FCJFDTotal-ZGXJ201501022.htm&amp;ie=utf-8&amp;sc_us=10946082183093074643" target="_blank" rel="external">基于磁偶极子的磁场梯度张量缩并的试验验证及相关参数确定.</a> 江胜华,申宇,褚玉程 中国惯性技术学报,2015年 CSCD,CSTPCD,PKU 检索  国家自然科学基金</li>
+</ol>
+<h2 id="攻读学士学位期间发表论文"><a href="#攻读学士学位期间发表论文" class="headerlink" title="攻读学士学位期间发表论文"></a>攻读学士学位期间发表论文</h2><ol>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=1&amp;recid=&amp;FileName=KJXX201120093&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">基于51单片机的智能交通信号灯控制系统.</a> 申宇 科技信息.期刊  </li>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=2&amp;recid=&amp;FileName=XXDL201105061&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">高速公路隧道群远程监控系统联网技术研究——基于RPR、POS技术.</a> 申宇; 王丽蒙 信息与电脑(理论版)</li>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=3&amp;recid=&amp;FileName=KJXX201114224&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">基于C#的平面桁架静力分析程序设计与应用</a> 申宇 科技信息</li>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=4&amp;recid=&amp;FileName=KJXX201110095&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">基于MCS-51的土壤电阻与含水量关系的分析</a> 申宇 科技信息 </li>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=5&amp;recid=&amp;FileName=KJXX201118188&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">信息化交通运输系统模型设计</a> 申宇; 王丽蒙 科技信息 </li>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=6&amp;recid=&amp;FileName=HNKJ201109042&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">IEEE802.11n技术在城市交通监控系统联网中的应用</a>   申宇; 王丽蒙    河南科技</li>
+<li><a href="http://epub.cnki.net/kns/detail/detail.aspx?QueryID=5&amp;CurRec=7&amp;recid=&amp;FileName=HLKX201121092&amp;DbName=CJFD2011&amp;DbCode=CJFQ&amp;pr=" target="_blank" rel="external">杆件结构的面向对象编程方法</a> 申宇 黑龙江科技信息</li>
+</ol>
+<h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><p>Email: shenyufly@163.com<br>QQ   : 316472763</p>
+<p><img src="/uploads/link.png" alt="link"></p>
+<p><a href="/uploads/申宇的简历database.pdf">pdf版本</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+  
+</article>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"coding for fun　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2017 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
