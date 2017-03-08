@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/03/08/For-developers-how-to-build-run-Greenplum-for-debugging-purposes/</loc>
+    
+    <lastmod>2017-03-08T02:33:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/database.html</loc>
+    
+    <lastmod>2017-03-08T02:31:32.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/01/02/pg-logical-backup-restore/</loc>
     
     <lastmod>2017-03-05T12:08:40.000Z</lastmod>
@@ -75,13 +89,6 @@
     <loc>http://shenyu.wiki/2017/02/09/soname/</loc>
     
     <lastmod>2017-02-09T09:07:53.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/map/database.html</loc>
-    
-    <lastmod>2017-02-06T07:20:42.000Z</lastmod>
     
   </url>
   
