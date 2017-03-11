@@ -282,6 +282,77 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-PostgreSQL内存盘性能测试" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/29/PostgreSQL内存盘性能测试/" class="article-date">
+      <time datetime="2016-11-29T12:53:53.000Z" itemprop="datePublished">2016-11-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <blockquote>
+<p>磁盘IO是数据库性能的瓶颈。如果把数据放在内存盘上性能能提升多少呢？我也很好奇，于是用pg自带的pgbench测试了一下，结果表明在SSD硬盘上性能为207tps；在内存盘上性能为1897tps；性能提升了9倍。</p>
+</blockquote>
+<h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>电脑品牌：Thinkpad X201<br>CPU:Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHz<br>SSD磁盘性能：<br>随机写：4k，162M/s，iops=40656<br>随机读：4k，178M/s，iops=55240<br>顺序写：362M/s<br>内存盘性能： 2.0 GB/s<br>内存：8G<br>数据库采用默认配置</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调优/">调优</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/11/29/PostgreSQL内存盘性能测试/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-好书推荐：《Debug-hacks——深入调试的技术和工具》" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -903,83 +974,6 @@
         <p class="article-more-link">
           <a href="/2016/11/12/linux中进程共享内存的2种方法/#more">阅读全文 >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-linux进程改名" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/10/linux进程改名/" class="article-date">
-      <time datetime="2016-11-10T08:16:26.000Z" itemprop="datePublished">2016-11-10</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/10/linux进程改名/">linux进程改名</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>在多进程程序中，用ps命令能看到进程的名字。这样能够方便管理，不会因为看到好多同样的进程而不知道他们在干什么而茫然，同时也能避免管理员kill掉错误的进程。</p>
-</blockquote>
-<p>比如PostgreSQL刚启动时共有7个进程，通过ps可以清楚的看到每个进程是干什么的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ ps ax | grep postgres</div><div class="line">26300 pts/26   S      0:00 ./postgres -D ../data</div><div class="line">26301 ?        Ss     0:00 postgres: logger process  </div><div class="line">26303 ?        Ss     0:00 postgres: checkpointer process  </div><div class="line">26304 ?        Ss     0:00 postgres: writer process  </div><div class="line">26305 ?        Ss     0:00 postgres: wal writer process  </div><div class="line">26306 ?        Ss     0:00 postgres: autovacuum launcher process  </div><div class="line">26307 ?        Ss     0:00 postgres: stats collector process</div></pre></td></tr></table></figure>
-<p>那么在linux下是如何做到进程改名的呢？</p>
-<h2 id="方法1–修改argv-0"><a href="#方法1–修改argv-0" class="headerlink" title="方法1–修改argv[0]"></a>方法1–修改argv[0]</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span>                                                                             #<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">memcpy</span>(argv[<span class="number">0</span>],<span class="string">"hello world"</span>,<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="built_in">strlen</span>(argv[<span class="number">0</span>]));</div><div class="line">    sleep(<span class="number">100</span>);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-office:~/test/procname$ ./main &amp;</div><div class="line">[2] 26903</div><div class="line">yshen@yshen-office:~/test/procname$ ps</div><div class="line">  PID TTY          TIME CMD</div><div class="line">26903 pts/14   00:00:00 main</div><div class="line">yshen@yshen-office:~/test/procname$ ps ax | grep hello</div><div class="line">26903 pts/14   S      0:00 hello</div></pre></td></tr></table></figure>
-<p>问题：ps不起效果，ps ax才能看到。不知到为啥。<br>其实PostgreSQL中就是用的这种方法，详见ps_status.c这个文件。</p>
-<h2 id="方法2–用prctl"><a href="#方法2–用prctl" class="headerlink" title="方法2–用prctl"></a>方法2–用prctl</h2><p>需要Linux 2.1.57版本以上。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/prctl.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;errno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/wait.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">char</span> *progname = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">setproctitle</span><span class="params">(<span class="keyword">char</span> *title)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> buf[<span class="number">256</span>];</div><div class="line"></div><div class="line">	<span class="built_in">sprintf</span>(buf,<span class="string">"%s: %s"</span>, progname, title);</div><div class="line">	<span class="keyword">if</span> (<span class="number">0</span> != prctl(PR_SET_NAME,buf,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>))</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"error prctl, errno=%d, errstr=%s\n"</span>, errno, strerror(errno));</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">getproctitle</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> *ret = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>)*<span class="number">16</span>);</div><div class="line">	<span class="keyword">if</span> (<span class="number">0</span> != prctl(PR_GET_NAME,ret,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>))</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"error prctl, errno=%d, errstr=%s\n"</span>, errno, strerror(errno));</div><div class="line">		<span class="built_in">free</span>(ret);</div><div class="line">		ret = <span class="literal">NULL</span>;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> ret;</div><div class="line"></div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">pid_t</span> pid;</div><div class="line">	progname = strdup(argv[<span class="number">0</span>]);</div><div class="line">	</div><div class="line">	<span class="keyword">switch</span>(pid = fork())</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">case</span> <span class="number">0</span>:</div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* child */</span></div><div class="line">			setproctitle(<span class="string">"child"</span>);</div><div class="line">			sleep(<span class="number">100</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">case</span> <span class="number">-1</span>:</div><div class="line">		&#123;</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"fork falied!\n"</span>);</div><div class="line">			<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">default</span>:</div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* parent */</span></div><div class="line">			setproctitle(<span class="string">"parent"</span>);</div><div class="line">			sleep(<span class="number">100</span>);</div><div class="line">			wait(<span class="literal">NULL</span>);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ ./main  &amp;</div><div class="line">[1] 26917</div><div class="line">$ ps</div><div class="line">  PID TTY          TIME CMD</div><div class="line">16399 pts/14   00:00:00 bash</div><div class="line">25668 pts/14   00:00:02 gedit</div><div class="line">26917 pts/14   00:00:00 ./main2: parent</div><div class="line">26918 pts/14   00:00:00 ./main2: child</div><div class="line">$ ps ax | grep main</div><div class="line">26917 pts/14   S      0:00 ./main</div><div class="line">26918 pts/14   S      0:00 ./main</div></pre></td></tr></table></figure>
-<p>问题：ps ax不起效果，ps 看到。不知到为啥。</p>
-<p>看来综合用这两种方法才行啊。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>

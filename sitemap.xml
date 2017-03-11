@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/03/11/Readings-of-query-optimizer/</loc>
+    
+    <lastmod>2017-03-11T13:54:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/03/08/For-developers-how-to-build-run-Greenplum-for-debugging-purposes/</loc>
     
     <lastmod>2017-03-08T09:05:27.000Z</lastmod>
