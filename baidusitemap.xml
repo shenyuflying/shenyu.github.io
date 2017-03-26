@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2017/03/26/awesome-awesome-lots-of-good-stuff/</loc>
+    <lastmod>2017-03-26T11:19:28.000Z</lastmod>
+    <data>
+        <display>
+        <title>awesome awesome lots of good stuff</title>
+        <pubTime>2017-03-26T10:32:06.000Z</pubTime>
+        
+        <tag>编程</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术分享" url="http://shenyu.wiki/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://shenyu.wiki/2017/03/11/Readings-of-query-optimizer/</loc>
     <lastmod>2017-03-25T12:11:39.000Z</lastmod>
     <data>
@@ -98,9 +118,9 @@
         <title>PostgreSQL logical backup & restore</title>
         <pubTime>2017-01-02T07:08:24.000Z</pubTime>
         
-        <tag>技术分享</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL内核</tag>
          
@@ -126,9 +146,9 @@
         <title>An introduction to ODBC</title>
         <pubTime>2017-02-06T07:08:24.000Z</pubTime>
         
-        <tag>技术分享</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL</tag>
          
@@ -154,9 +174,9 @@
         <title>How to setup postgresql ODBC</title>
         <pubTime>2017-02-06T07:08:24.000Z</pubTime>
         
-        <tag>技术分享</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL</tag>
          
@@ -313,9 +333,9 @@
         <title>ODBC programming</title>
         <pubTime>2017-02-06T07:08:24.000Z</pubTime>
         
-        <tag>技术分享</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL接口</tag>
          
@@ -620,9 +640,9 @@
         <title>PostgreSQL ODBC driver internal</title>
         <pubTime>2016-11-09T03:04:32.000Z</pubTime>
         
-        <tag>技术分享</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL内核</tag>
          
@@ -648,9 +668,9 @@
         
         <tag>c</tag>
          
-        <tag>技术分享</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL</tag>
          

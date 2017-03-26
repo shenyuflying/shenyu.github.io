@@ -282,6 +282,118 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-PostgreSQL中的PL-SQL实现" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/13/PostgreSQL中的PL-SQL实现/" class="article-date">
+      <time datetime="2017-01-13T01:15:30.000Z" itemprop="datePublished">2017-01-13</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/13/PostgreSQL中的PL-SQL实现/">PostgreSQL中的PL/SQL实现</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h2><ol>
+<li>函数创建<br>1.1 create function的语法解析<br>1.2 创建plsql函数 ProcessUtility-&gt;CreateFunction-&gt;CreateProcedure</li>
+<li>调用plsql函数<br>2.1 编译<br>2.2 执行</li>
+</ol>
+<h2 id="函数创建"><a href="#函数创建" class="headerlink" title="函数创建"></a>函数创建</h2><h3 id="create-function的语法解析"><a href="#create-function的语法解析" class="headerlink" title="create function的语法解析"></a>create function的语法解析</h3><p>创建plsql存储过程的基本语法：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> [<span class="keyword">or</span> <span class="keyword">replace</span>] <span class="keyword">function</span> &lt;fname&gt;</div><div class="line">		[(&lt;<span class="keyword">type</span><span class="number">-1</span>&gt; &#123; , &lt;<span class="keyword">type</span>-n&gt;&#125;)]</div><div class="line">		<span class="keyword">returns</span> &lt;<span class="keyword">type</span>-r&gt;</div><div class="line">		<span class="keyword">as</span> &lt;filename <span class="keyword">or</span> code <span class="keyword">in</span> <span class="keyword">language</span> <span class="keyword">as</span> appropriate&gt;</div><div class="line">		<span class="keyword">language</span> &lt;lang&gt; [<span class="keyword">with</span> <span class="keyword">parameters</span>]</div></pre></td></tr></table></figure></p>
+<p>对应到实现gram.y:6770 中有<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">CreateFunctionStmt:</div><div class="line">			CREATE opt_or_replace FUNCTION func_name func_args_with_defaults</div><div class="line">			RETURNS func_return createfunc_opt_list opt_definition</div><div class="line">				&#123;</div><div class="line">					CreateFunctionStmt *n = makeNode(CreateFunctionStmt);</div><div class="line">					n-&gt;replace = $2;</div><div class="line">					n-&gt;funcname = $4;</div><div class="line">					n-&gt;parameters = $5;</div><div class="line">					n-&gt;returnType = $7;</div><div class="line">					n-&gt;options = $8;</div><div class="line">					n-&gt;withClause = $9;</div><div class="line">					$$ = (Node *)n;</div></pre></td></tr></table></figure></p>
+<p>可以看到是主要解析如下内容：</p>
+<ol>
+<li>func_name 函数名</li>
+<li>fuc_args 参数</li>
+<li>fuc_return 返回值</li>
+<li>createfunc_opt_list 内容，对于plsql来说</li>
+</ol>
+<h3 id="插入系统表"><a href="#插入系统表" class="headerlink" title="插入系统表"></a>插入系统表</h3><p>解析完了之后调用CreateFunction函数来实现实际的创建，然后调用ProcedureCreate来插入系统表pg_proc中<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function">ObjectAddress</span></div><div class="line"><span class="title">CreateFunction</span><span class="params">(CreateFunctionStmt *stmt,  <span class="comment">//入参就是语法解析返回的结构体</span></span></div><div class="line">                <span class="keyword">const</span> <span class="keyword">char</span> *queryString)</div><div class="line">&#123;</div><div class="line">...做一些检查和转换</div><div class="line">ProcedureCreate() <span class="comment">//来完成实际的创建工作，其实就是插入到了系统表pg_proc</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意：此时只是把plsql的文本存下来了，并没有编译。编译会在后续进行</p>
+<h2 id="调用plsql函数"><a href="#调用plsql函数" class="headerlink" title="调用plsql函数"></a>调用plsql函数</h2><p>plpgsql语言对应的处理函数，已经在系统初始化时通过脚本加载。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./backend/catalog/postgres.bki:insert ( <span class="string">"plpgsql"</span> t t <span class="string">"plpgsql_call_handler"</span> <span class="string">"plpgsql_inline_handler"</span> <span class="string">"plpgsql_validator"</span> <span class="string">"$libdir/plpgsql"</span> <span class="number">_</span>null_ )</div></pre></td></tr></table></figure></p>
+<p>所以，当调用plsql函数就会调用相应的处理程序。相关函数在pl_handler.c文件中。<br>在该文件中我们看到如下函数：</p>
+<p>_PG_init  系统启动加载plpgsql.so动态链接库之后，即调用该函数完成一系列初始化工作<br>plpgsql_call_handler 编译执行plsql函数<br>plpgsql_inline_handler 编译执行plsql匿名块<br>plpgsql_validator 在Create Function时检验函数的有效性</p>
+<p>可以看到，当用户调用plsql函数时就会进入plpgsql_call_handler函数中,经过精简的函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function">Datum</span></div><div class="line"><span class="title">plpgsql_call_handler</span><span class="params">(PG_FUNCTION_ARGS)</span></div><div class="line">&#123;</div><div class="line">...</div><div class="line">	SPI_connect()  <span class="comment">// SPI 用于实际执行sql语句</span></div><div class="line"></div><div class="line">	func = plpgsql_compile(fcinfo, <span class="literal">false</span>); <span class="comment">// 编译plsql</span></div><div class="line">...</div><div class="line">	retval = plpgsql_exec_function(func, fcinfo, <span class="literal">NULL</span>); <span class="comment">//执行plsql</span></div><div class="line">...</div><div class="line">	SPI_finish() <span class="comment">// 断开SPI</span></div><div class="line">	<span class="keyword">return</span> retval;</div></pre></td></tr></table></figure>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function">PLpgSQL_function *</span></div><div class="line"><span class="title">plpgsql_compile</span><span class="params">(FunctionCallInfo fcinfo, <span class="keyword">bool</span> forValidator)</span></div><div class="line">&#123;</div><div class="line">...</div><div class="line">先看hash表里面有没缓存，以及缓存是否失效，如果有效则直接返回，不用再编译啦。</div><div class="line">否则需要编译，调用do_compile()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> PLpgSQL_function *</span></div><div class="line"><span class="title">do_compile</span><span class="params">(FunctionCallInfo fcinfo,</span></div><div class="line">		   HeapTuple procTup,</div><div class="line">		   PLpgSQL_function *function,</div><div class="line">		   PLpgSQL_func_hashkey *hashkey,</div><div class="line">		   <span class="keyword">bool</span> forValidator)</div><div class="line">&#123;</div><div class="line">	plpgsql_scanner_init(proc_source); <span class="comment">// 这里的proc_source就是plsql函数文本</span></div><div class="line">	plpgsql_ns_init(); <span class="comment">// 初始化name stack</span></div><div class="line">	plpgsql_ns_push(NameStr(procStruct-&gt;proname), PLPGSQL_LABEL_BLOCK); <span class="comment">//name stack 中的第一个值就是proname</span></div><div class="line">	plpgsql_start_datums(); <span class="comment">// 初始化本地变量，默认先分配128个变量空间</span></div><div class="line">	plpgsql_resolve_polymorphic_argtypes(); <span class="comment">//解析函数参数</span></div><div class="line">	plpgsql_build_datatype(); <span class="comment">// 建立对应的数据类型</span></div><div class="line">	plpgsql_build_variable(); <span class="comment">// 分配入参的存储，加入变量空间，加入命名空间</span></div><div class="line">    plpgsql_build_variable(<span class="string">"found"</span>... <span class="comment">// 建立以后要用到的found变量</span></div><div class="line"> 	parse_rc = plpgsql_yyparse(); <span class="comment">// 词法、语法解析</span></div><div class="line"> 	<span class="keyword">if</span> (plpgsql_DumpExecTree)</div><div class="line">		plpgsql_dumptree(function);  <span class="comment">// 调试模式:打出编译树</span></div><div class="line">	plpgsql_HashTableInsert(function, hashkey); <span class="comment">// 加到编译缓存里面</span></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ps：调试模式很有用，可以通过下面方式打开：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">CREATE FUNCTION less_than(a text, b text) RETURNS boolean AS $$</div><div class="line"># option dump</div><div class="line">BEGIN</div><div class="line">RETURN a &lt; b;</div><div class="line">END;</div><div class="line">$$ LANGUAGE plpgsql;</div></pre></td></tr></table></figure>
+<p>在函数体里面加上# option dump即可。执行会显示出来<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">STATEMENT:  select less_than (1 ,2);</div><div class="line"></div><div class="line">Execution tree of successfully compiled PL/pgSQL function less_than(text,text):</div><div class="line"></div><div class="line">Function's data area:</div><div class="line">    entry 0: VAR $1               type text (typoid 25) atttypmod -1</div><div class="line">    entry 1: VAR $2               type text (typoid 25) atttypmod -1</div><div class="line">    entry 2: VAR found            type bool (typoid 16) atttypmod -1</div><div class="line"></div><div class="line">Function's statements:</div><div class="line">  3:BLOCK &lt;&lt;*unnamed*&gt;&gt;</div><div class="line">  4:  RETURN 'SELECT a &lt; b'</div><div class="line">    END -- *unnamed*</div><div class="line"></div><div class="line">End of execution tree of function less_than(text,text)</div></pre></td></tr></table></figure></p>
+<h3 id="语法解析"><a href="#语法解析" class="headerlink" title="语法解析"></a>语法解析</h3><p>postgreSQL 9.5的用户文档<br><a href="https://www.postgresql.org/docs/9.5/static/plpgsql.html" target="_blank" rel="external">https://www.postgresql.org/docs/9.5/static/plpgsql.html</a><br>可以对照用法来看实现<br>一个plsql形如<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[ &lt;&lt;label&gt;&gt; ]         -- [标签，可选]</div><div class="line">[ DECLARE             -- [DELARE开头</div><div class="line">    declarations ]    -- 中间是变量的声明，这部分是可选的]</div><div class="line">BEGIN                 -- BEGIN</div><div class="line">    statements        -- 各语句</div><div class="line">END [ label ];        -- END [标签，可选]</div></pre></td></tr></table></figure></p>
+<p>对应到实现<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">pl_block		: decl_sect K_BEGIN proc_sect exception_sect K_END opt_label</div><div class="line">					&#123;</div><div class="line">						PLpgSQL_stmt_block *<span class="keyword">new</span>;</div><div class="line"></div><div class="line">						<span class="keyword">new</span> = palloc0(<span class="keyword">sizeof</span>(PLpgSQL_stmt_block));</div><div class="line">...各种成员填充</div><div class="line">						check_labels($<span class="number">1.l</span>abel, $<span class="number">6</span>, @<span class="number">6</span>);</div><div class="line">						plpgsql_ns_pop();</div><div class="line"></div><div class="line">						$$ = (PLpgSQL_stmt *)<span class="keyword">new</span>;</div><div class="line">					&#125;</div><div class="line">				;</div></pre></td></tr></table></figure></p>
+<p>可以看到是按如下顺序解析的</p>
+<ol>
+<li>decl_sec 声明部分   –重点</li>
+<li>prc_sec  语句部分   –重点</li>
+<li>exception 异常部分</li>
+<li>opt_label 标签部分<br>解析完成之后PLpgSQL_stmt_block强制转为一个PLpgSQL_stmt类型的结构返回，可以认为一个declare…begin…end对应一个PLpgSQL_stmt结构。</li>
+</ol>
+<h3 id="声明部分解析"><a href="#声明部分解析" class="headerlink" title="声明部分解析"></a>声明部分解析</h3><p>用户声明一个变量语法：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">name [ CONSTANT ] type [ COLLATE collation_name ] [ NOT NULL ] [ &#123; DEFAULT | := | = &#125; expression ];</div></pre></td></tr></table></figure></p>
+<p>例子：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">quantity integer DEFAULT 32;</div><div class="line">url varchar := 'http://mysite.com';</div><div class="line">user_id CONSTANT integer := 10;</div></pre></td></tr></table></figure></p>
+<p>先介绍下面两个全局变量用来存放plsql中的变量<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PLpgSQL_datum **plpgsql_Datums;  <span class="comment">//变量数组</span></div><div class="line"><span class="keyword">int</span>			plpgsql_nDatums;     <span class="comment">//数组长度</span></div></pre></td></tr></table></figure></p>
+<p>在pl_gram.y：478解析变量，并加入全局变量数组<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">decl_statement	: decl_varname decl_const decl_datatype decl_collate decl_notnull decl_defval</div><div class="line">		&#123;</div><div class="line">			PLpgSQL_variable	*var;</div><div class="line">...</div><div class="line">			var = plpgsql_build_variable($<span class="number">1.</span>name, $<span class="number">1.l</span>ineno,</div><div class="line">													 $<span class="number">3</span>, <span class="literal">true</span>);</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>对于解析的变量，加到变量数组里面<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function">PLpgSQL_variable *</span></div><div class="line"><span class="title">plpgsql_build_variable</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *refname, <span class="keyword">int</span> lineno, PLpgSQL_type *dtype,</span></div><div class="line">					   <span class="keyword">bool</span> add2namespace)</div><div class="line">&#123;</div><div class="line">	PLpgSQL_variable *result;</div><div class="line"></div><div class="line">	<span class="keyword">switch</span> (dtype-&gt;ttype)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">case</span> PLPGSQL_TTYPE_SCALAR:</div><div class="line">			&#123;</div><div class="line">				<span class="comment">/* Ordinary scalar datatype */</span></div><div class="line">				PLpgSQL_var *var;</div><div class="line">...</div><div class="line">				plpgsql_adddatum((PLpgSQL_datum *) var);</div><div class="line">				<span class="keyword">if</span> (add2namespace)</div><div class="line">					plpgsql_ns_additem(PLPGSQL_NSTYPE_VAR,</div><div class="line">									   var-&gt;dno,</div><div class="line">									   refname);</div><div class="line">				result = (PLpgSQL_variable *) var;</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>变量解析重点关注<br>decl_varname    – 变量名解析<br>decl_datatype   – 变量类型解析</p>
+<h3 id="语句部分解析"><a href="#语句部分解析" class="headerlink" title="语句部分解析"></a>语句部分解析</h3><p>可以看到如下，是按每个语句规则匹配，不再详细展开了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">proc_stmt		: pl_block <span class="string">';'</span></div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_assign</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_if</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_case</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_loop</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_while</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_for</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_foreach_a</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_exit</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_return</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_raise</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_assert</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_execsql</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_dynexecute</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_perform</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_getdiag</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_open</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_fetch</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_move</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_close</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				| stmt_null</div><div class="line">						&#123; $$ = $<span class="number">1</span>; &#125;</div><div class="line">				;</div></pre></td></tr></table></figure>
+<h2 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h2><p>编译完了之后我们回到plpgsql_call_handler看到接下来要进入这个函数 plpgsql_exec_function来实际执行编译好的语句。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function">Datum</span></div><div class="line"><span class="title">plpgsql_exec_function</span><span class="params">(PLpgSQL_function *func, FunctionCallInfo fcinfo,</span></div><div class="line">					  EState *simple_eval_estate)</div><div class="line">&#123;</div><div class="line"></div><div class="line">	plpgsql_estate_setup();<span class="comment">//填充PLpgSQL_execstate estat结构体，该结构体里面保存了执行状态的基本信息。</span></div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; estate.ndatums; i++)</div><div class="line">		estate.datums[i] = copy_plpgsql_datum(func-&gt;datums[i]); <span class="comment">//注意：这里把func里面的本地变量挨个拷贝到了estate  里面</span></div><div class="line">	...</div><div class="line">	把入参的值赋给对应的本地变量</div><div class="line">    ...</div><div class="line">    rc = exec_stmt_block(&amp;estate, func-&gt;action); <span class="comment">//实际执行阶段</span></div><div class="line">    </div><div class="line">    <span class="comment">// 对返回值进行处理</span></div></pre></td></tr></table></figure>
+<p>接下来看看 exec_stmt_block 这个函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">exec_stmt_block</span><span class="params">(PLpgSQL_execstate *estate, PLpgSQL_stmt_block *block)</span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="comment">// 先对本地变量进行初始化</span></div><div class="line">    rc = exec_stmts(estate, block-&gt;body); <span class="comment">//执行语句</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">exec_stmts</span><span class="params">(PLpgSQL_execstate *estate, List *stmts)</span></div><div class="line">&#123;</div><div class="line">	ListCell   *s;</div><div class="line"></div><div class="line">	foreach(s, stmts)  <span class="comment">// 遍历每个语句</span></div><div class="line">	&#123;</div><div class="line">		PLpgSQL_stmt *stmt = (PLpgSQL_stmt *) lfirst(s);</div><div class="line">		<span class="keyword">int</span>			rc = exec_stmt(estate, stmt);   <span class="comment">//执行一个单独的语句</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> (rc != PLPGSQL_RC_OK)</div><div class="line">			<span class="keyword">return</span> rc;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> PLPGSQL_RC_OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>exec_stmt 针对每种类型的语句来实际执行，可以看下列函数的源码，不再赘述。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span></span></div><div class="line"><span class="title">exec_stmt</span><span class="params">(PLpgSQL_execstate *estate, PLpgSQL_stmt *stmt)</span></div><div class="line">&#123;</div><div class="line">	PLpgSQL_stmt *save_estmt;</div><div class="line">	<span class="keyword">int</span>			rc = <span class="number">-1</span>;</div><div class="line"></div><div class="line">	save_estmt = estate-&gt;err_stmt;</div><div class="line">	estate-&gt;err_stmt = stmt;</div><div class="line"></div><div class="line">	<span class="comment">/* Let the plugin know that we are about to execute this statement */</span></div><div class="line">	<span class="keyword">if</span> (*plpgsql_plugin_ptr &amp;&amp; (*plpgsql_plugin_ptr)-&gt;stmt_beg)</div><div class="line">		((*plpgsql_plugin_ptr)-&gt;stmt_beg) (estate, stmt);</div><div class="line"></div><div class="line">	CHECK_FOR_INTERRUPTS();</div><div class="line"></div><div class="line">	<span class="keyword">switch</span> ((<span class="keyword">enum</span> PLpgSQL_stmt_types) stmt-&gt;cmd_type)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_BLOCK:</div><div class="line">			rc = exec_stmt_block(estate, (PLpgSQL_stmt_block *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_ASSIGN:</div><div class="line">			rc = exec_stmt_assign(estate, (PLpgSQL_stmt_assign *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_PERFORM:</div><div class="line">			rc = exec_stmt_perform(estate, (PLpgSQL_stmt_perform *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_GETDIAG:</div><div class="line">			rc = exec_stmt_getdiag(estate, (PLpgSQL_stmt_getdiag *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_IF:</div><div class="line">			rc = exec_stmt_if(estate, (PLpgSQL_stmt_if *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_CASE:</div><div class="line">			rc = exec_stmt_case(estate, (PLpgSQL_stmt_case *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_LOOP:</div><div class="line">			rc = exec_stmt_loop(estate, (PLpgSQL_stmt_loop *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_WHILE:</div><div class="line">			rc = exec_stmt_while(estate, (PLpgSQL_stmt_while *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_FORI:</div><div class="line">			rc = exec_stmt_fori(estate, (PLpgSQL_stmt_fori *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_FORS:</div><div class="line">			rc = exec_stmt_fors(estate, (PLpgSQL_stmt_fors *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_FORC:</div><div class="line">			rc = exec_stmt_forc(estate, (PLpgSQL_stmt_forc *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_FOREACH_A:</div><div class="line">			rc = exec_stmt_foreach_a(estate, (PLpgSQL_stmt_foreach_a *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_EXIT:</div><div class="line">			rc = exec_stmt_exit(estate, (PLpgSQL_stmt_exit *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_RETURN:</div><div class="line">			rc = exec_stmt_return(estate, (PLpgSQL_stmt_return *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_RETURN_NEXT:</div><div class="line">			rc = exec_stmt_return_next(estate, (PLpgSQL_stmt_return_next *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_RETURN_QUERY:</div><div class="line">			rc = exec_stmt_return_query(estate, (PLpgSQL_stmt_return_query *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_RAISE:</div><div class="line">			rc = exec_stmt_raise(estate, (PLpgSQL_stmt_raise *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_ASSERT:</div><div class="line">			rc = exec_stmt_assert(estate, (PLpgSQL_stmt_assert *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_EXECSQL:</div><div class="line">			rc = exec_stmt_execsql(estate, (PLpgSQL_stmt_execsql *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_DYNEXECUTE:</div><div class="line">			rc = exec_stmt_dynexecute(estate, (PLpgSQL_stmt_dynexecute *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_DYNFORS:</div><div class="line">			rc = exec_stmt_dynfors(estate, (PLpgSQL_stmt_dynfors *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_OPEN:</div><div class="line">			rc = exec_stmt_open(estate, (PLpgSQL_stmt_open *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_FETCH:</div><div class="line">			rc = exec_stmt_fetch(estate, (PLpgSQL_stmt_fetch *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">case</span> PLPGSQL_STMT_CLOSE:</div><div class="line">			rc = exec_stmt_close(estate, (PLpgSQL_stmt_close *) stmt);</div><div class="line">			<span class="keyword">break</span>;</div><div class="line"></div><div class="line">		<span class="keyword">default</span>:</div><div class="line">			estate-&gt;err_stmt = save_estmt;</div><div class="line">			elog(ERROR, <span class="string">"unrecognized cmdtype: %d"</span>, stmt-&gt;cmd_type);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">/* Let the plugin know that we have finished executing this statement */</span></div><div class="line">	<span class="keyword">if</span> (*plpgsql_plugin_ptr &amp;&amp; (*plpgsql_plugin_ptr)-&gt;stmt_end)</div><div class="line">		((*plpgsql_plugin_ptr)-&gt;stmt_end) (estate, stmt);</div><div class="line"></div><div class="line">	estate-&gt;err_stmt = save_estmt;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> rc;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-PostgreSQL逻辑备份还原" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -908,92 +1020,6 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li></ul>
     </div>
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-yshen-s-vim-settings" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/12/14/yshen-s-vim-settings/" class="article-date">
-      <time datetime="2016-12-14T01:59:33.000Z" itemprop="datePublished">2016-12-14</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/14/yshen-s-vim-settings/">yshen&#39;s vim settings</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p>写代码的时候手需要时刻保持在键盘上,随机定位代码、随机删除代码、移动代码、插入代码的操作大大多于阅读、翻页操作，中间卡顿一下效率就大大降低了；vim通过其强大的快捷键，可以完全摆脱鼠标。真是编程利器。通过插件，可以实现强大的IDE的功能。可以说每一个geek都有自己的vim配置，在这里我把我的配置共享出来。</p>
-</blockquote>
-<p><img src="http://static.zybuluo.com/shenyuflying/cj63bslrkuvv0nidd53wser8/image_1b3rg746h1dpr29dsdu74o1u4qm.png" alt="image_1b3rg746h1dpr29dsdu74o1u4qm.png-396.6kB"></p>
-<p>安装的插件有</p>
-<ol>
-<li>插件管理<br>Vundle</li>
-<li>索引提示<br>ctag             生成工程的符号文件<br>cscope           生成工程符号文件引用关系<br>Tagbar           右边栏显示文件中的符号</li>
-<li>自动完成<br>echofunc.vim     显示函数定义<br>OmniCppComplete  提示结构体成员<br>SuperTab         TAB键自动完成</li>
-<li>文件浏览<br>The-NERD-tree<br>ctrlp.vim</li>
-<li>其他<br>molokai          配色主题<br>c-standard-functions-highlight  高亮C语言函数</li>
-</ol>
-<p>使用方法：</p>
-<ol>
-<li>安装Vundle</li>
-<li>复制如下脚本到vimrc</li>
-<li>进入vim之后运行:PluginUpdate</li>
-</ol>
-<p>配置文件开源在git上：<a href="https://github.com/shenyuflying/vim">https://github.com/shenyuflying/vim</a></p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/12/14/yshen-s-vim-settings/#more">阅读全文 >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>
