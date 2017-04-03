@@ -282,6 +282,76 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-bit-map-sets-sorting" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/04/03/bit-map-sets-sorting/" class="article-date">
+      <time datetime="2017-04-03T10:32:06.000Z" itemprop="datePublished">2017-04-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/03/bit-map-sets-sorting/">bitmap sets sorting</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <blockquote>
+<p>BitMapSet can be a very powerful when used for sorting/finding. Because work can be done in O(N) time for sorting and O(1) for finding. Compared to quick sort algorithm, the data is stored in BitMapSet once the data is read into memory. Compared to hash finding, the data is sorted in BitMapSet. In my test, 1,000,000 numbers can be sorted in less than 0.09s on my respberripi and only occupy 125k of memory.</p>
+</blockquote>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程/">编程</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/04/03/bit-map-sets-sorting/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-awesome-awesome-lots-of-good-stuff" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -772,81 +842,6 @@
 
 
   
-    <article id="post-how to change your linux timezone" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/02/16/how to change your linux timezone/" class="article-date">
-      <time datetime="2017-02-16T08:16:22.000Z" itemprop="datePublished">2017-02-16</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/16/how to change your linux timezone/">how to set your linux&#39;s timezone</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>my blog post time seems not correct these days. but time is fetched from the internet, so it is verly likely caused by an incorrect timezone setting of the linux server.</p>
-</blockquote>
-<p>type a few commands to see which timezone is set.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ date</div><div class="line">2017年  3月  4日 星期六 13:47:09 UTC</div><div class="line">pi@raspberrypi:~/hexo-blog $ date -R</div><div class="line">Sat, 04 Mar 2017 13:47:14 +0000</div></pre></td></tr></table></figure></p>
-<p>opps, the timezone is +0, but we are in china, the timezone shoud be +8</p>
-<p>then use <code>tzselect</code> to set the correct timezone now!</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ sudo tzselect</div><div class="line">Please identify a location so that time zone rules can be set correctly.</div><div class="line">Please select a continent, ocean, &quot;coord&quot;, or &quot;TZ&quot;.</div><div class="line"> 1) Africa</div><div class="line"> 2) Americas</div><div class="line"> 3) Antarctica</div><div class="line"> 4) Arctic Ocean</div><div class="line"> 5) Asia</div><div class="line"> 6) Atlantic Ocean</div><div class="line"> 7) Australia</div><div class="line"> 8) Europe</div><div class="line"> 9) Indian Ocean</div><div class="line">10) Pacific Ocean</div><div class="line">11) coord - I want to use geographical coordinates.</div><div class="line">12) TZ - I want to specify the time zone using the Posix TZ format.</div><div class="line">#? 5</div><div class="line">Please select a country whose clocks agree with yours.</div><div class="line"> 1) Afghanistan		  18) Israel		    35) Palestine</div><div class="line"> 2) Armenia		  19) Japan		    36) Philippines</div><div class="line"> 3) Azerbaijan		  20) Jordan		    37) Qatar</div><div class="line"> 4) Bahrain		  21) Kazakhstan	    38) Russia</div><div class="line"> 5) Bangladesh		  22) Korea (North)	    39) Saudi Arabia</div><div class="line"> 6) Bhutan		  23) Korea (South)	    40) Singapore</div><div class="line"> 7) Brunei		  24) Kuwait		    41) Sri Lanka</div><div class="line"> 8) Cambodia		  25) Kyrgyzstan	    42) Syria</div><div class="line"> 9) China		  26) Laos		    43) Taiwan</div><div class="line">10) Cyprus		  27) Lebanon		    44) Tajikistan</div><div class="line">11) East Timor		  28) Macau		    45) Thailand</div><div class="line">12) Georgia		  29) Malaysia		    46) Turkmenistan</div><div class="line">13) Hong Kong		  30) Mongolia		    47) United Arab Emirates</div><div class="line">14) India		  31) Myanmar (Burma)	    48) Uzbekistan</div><div class="line">15) Indonesia		  32) Nepal		    49) Vietnam</div><div class="line">16) Iran		  33) Oman		    50) Yemen</div><div class="line">17) Iraq		  34) Pakistan</div><div class="line">#? 9</div><div class="line">Please select one of the following time zone regions.</div><div class="line">1) Beijing Time</div><div class="line">2) Xinjiang Time</div><div class="line">#? 1</div><div class="line"></div><div class="line">The following information has been given:</div><div class="line"></div><div class="line">	China</div><div class="line">	Beijing Time</div><div class="line"></div><div class="line">Therefore TZ=&apos;Asia/Shanghai&apos; will be used.</div><div class="line">Local time is now:	Sat Mar  4 21:46:15 CST 2017.</div><div class="line">Universal Time is now:	Sat Mar  4 13:46:15 UTC 2017.</div><div class="line">Is the above information OK?</div><div class="line">1) Yes</div><div class="line">2) No</div><div class="line">#? 1</div><div class="line"></div><div class="line">You can make this change permanent for yourself by appending the line</div><div class="line">	TZ=&apos;Asia/Shanghai&apos;; export TZ</div><div class="line">to the file &apos;.profile&apos; in your home directory; then log out and log in again.</div><div class="line"></div><div class="line">Here is that TZ value again, this time on standard output so that you</div><div class="line">can use the /usr/bin/tzselect command in shell scripts:</div><div class="line">Asia/Shanghai</div></pre></td></tr></table></figure>
-<p>let’s see if the time is correct now:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ date</div><div class="line">2017年  3月  4日 星期六 13:47:09 UTC</div><div class="line">pi@raspberrypi:~/hexo-blog $ date -R</div><div class="line">Sat, 04 Mar 2017 13:47:14 +0000</div></pre></td></tr></table></figure>
-<p>still incorrect! may be we should follow the instruction above, say we have to set TZ in the .profile and logout/login.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ echo &quot;TZ=&apos;Asia/Shanghai&apos;; export TZ&quot; &gt;&gt; ~/.profile </div><div class="line">pi@raspberrypi:~/hexo-blog $ exit</div><div class="line">logout</div><div class="line"></div><div class="line">Connection closed by foreign host.</div><div class="line"></div><div class="line">Disconnected from remote host(pi) at 21:48:00.</div><div class="line"></div><div class="line">Type `help&apos; to learn how to use Xshell prompt.</div><div class="line">[d:\~]$ </div><div class="line"></div><div class="line">Connecting to 192.168.1.10:22...</div><div class="line">Connection established.</div><div class="line">To escape to local shell, press &apos;Ctrl+Alt+]&apos;.</div><div class="line"></div><div class="line"></div><div class="line">The programs included with the Debian GNU/Linux system are free software;</div><div class="line">the exact distribution terms for each program are described in the</div><div class="line">individual files in /usr/share/doc/*/copyright.</div><div class="line"></div><div class="line">Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent</div><div class="line">permitted by applicable law.</div><div class="line">Last login: Sat Mar  4 12:09:50 2017 from 192.168.1.111</div><div class="line">pi@raspberrypi:~ $ date</div><div class="line">2017年  3月  4日 星期六 21:48:13 CST</div></pre></td></tr></table></figure>
-<p>ok, we are done!</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
     <article id="post-科学上网——搭建自己的DNS服务器" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -966,6 +961,81 @@
 
 
   
+    <article id="post-how to change your linux timezone" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/02/16/how to change your linux timezone/" class="article-date">
+      <time datetime="2017-02-16T08:16:22.000Z" itemprop="datePublished">2017-02-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/16/how to change your linux timezone/">how to set your linux&#39;s timezone</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>my blog post time seems not correct these days. but time is fetched from the internet, so it is verly likely caused by an incorrect timezone setting of the linux server.</p>
+</blockquote>
+<p>type a few commands to see which timezone is set.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ date</div><div class="line">2017年  3月  4日 星期六 13:47:09 UTC</div><div class="line">pi@raspberrypi:~/hexo-blog $ date -R</div><div class="line">Sat, 04 Mar 2017 13:47:14 +0000</div></pre></td></tr></table></figure></p>
+<p>opps, the timezone is +0, but we are in china, the timezone shoud be +8</p>
+<p>then use <code>tzselect</code> to set the correct timezone now!</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ sudo tzselect</div><div class="line">Please identify a location so that time zone rules can be set correctly.</div><div class="line">Please select a continent, ocean, &quot;coord&quot;, or &quot;TZ&quot;.</div><div class="line"> 1) Africa</div><div class="line"> 2) Americas</div><div class="line"> 3) Antarctica</div><div class="line"> 4) Arctic Ocean</div><div class="line"> 5) Asia</div><div class="line"> 6) Atlantic Ocean</div><div class="line"> 7) Australia</div><div class="line"> 8) Europe</div><div class="line"> 9) Indian Ocean</div><div class="line">10) Pacific Ocean</div><div class="line">11) coord - I want to use geographical coordinates.</div><div class="line">12) TZ - I want to specify the time zone using the Posix TZ format.</div><div class="line">#? 5</div><div class="line">Please select a country whose clocks agree with yours.</div><div class="line"> 1) Afghanistan		  18) Israel		    35) Palestine</div><div class="line"> 2) Armenia		  19) Japan		    36) Philippines</div><div class="line"> 3) Azerbaijan		  20) Jordan		    37) Qatar</div><div class="line"> 4) Bahrain		  21) Kazakhstan	    38) Russia</div><div class="line"> 5) Bangladesh		  22) Korea (North)	    39) Saudi Arabia</div><div class="line"> 6) Bhutan		  23) Korea (South)	    40) Singapore</div><div class="line"> 7) Brunei		  24) Kuwait		    41) Sri Lanka</div><div class="line"> 8) Cambodia		  25) Kyrgyzstan	    42) Syria</div><div class="line"> 9) China		  26) Laos		    43) Taiwan</div><div class="line">10) Cyprus		  27) Lebanon		    44) Tajikistan</div><div class="line">11) East Timor		  28) Macau		    45) Thailand</div><div class="line">12) Georgia		  29) Malaysia		    46) Turkmenistan</div><div class="line">13) Hong Kong		  30) Mongolia		    47) United Arab Emirates</div><div class="line">14) India		  31) Myanmar (Burma)	    48) Uzbekistan</div><div class="line">15) Indonesia		  32) Nepal		    49) Vietnam</div><div class="line">16) Iran		  33) Oman		    50) Yemen</div><div class="line">17) Iraq		  34) Pakistan</div><div class="line">#? 9</div><div class="line">Please select one of the following time zone regions.</div><div class="line">1) Beijing Time</div><div class="line">2) Xinjiang Time</div><div class="line">#? 1</div><div class="line"></div><div class="line">The following information has been given:</div><div class="line"></div><div class="line">	China</div><div class="line">	Beijing Time</div><div class="line"></div><div class="line">Therefore TZ=&apos;Asia/Shanghai&apos; will be used.</div><div class="line">Local time is now:	Sat Mar  4 21:46:15 CST 2017.</div><div class="line">Universal Time is now:	Sat Mar  4 13:46:15 UTC 2017.</div><div class="line">Is the above information OK?</div><div class="line">1) Yes</div><div class="line">2) No</div><div class="line">#? 1</div><div class="line"></div><div class="line">You can make this change permanent for yourself by appending the line</div><div class="line">	TZ=&apos;Asia/Shanghai&apos;; export TZ</div><div class="line">to the file &apos;.profile&apos; in your home directory; then log out and log in again.</div><div class="line"></div><div class="line">Here is that TZ value again, this time on standard output so that you</div><div class="line">can use the /usr/bin/tzselect command in shell scripts:</div><div class="line">Asia/Shanghai</div></pre></td></tr></table></figure>
+<p>let’s see if the time is correct now:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ date</div><div class="line">2017年  3月  4日 星期六 13:47:09 UTC</div><div class="line">pi@raspberrypi:~/hexo-blog $ date -R</div><div class="line">Sat, 04 Mar 2017 13:47:14 +0000</div></pre></td></tr></table></figure>
+<p>still incorrect! may be we should follow the instruction above, say we have to set TZ in the .profile and logout/login.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">pi@raspberrypi:~/hexo-blog $ echo &quot;TZ=&apos;Asia/Shanghai&apos;; export TZ&quot; &gt;&gt; ~/.profile </div><div class="line">pi@raspberrypi:~/hexo-blog $ exit</div><div class="line">logout</div><div class="line"></div><div class="line">Connection closed by foreign host.</div><div class="line"></div><div class="line">Disconnected from remote host(pi) at 21:48:00.</div><div class="line"></div><div class="line">Type `help&apos; to learn how to use Xshell prompt.</div><div class="line">[d:\~]$ </div><div class="line"></div><div class="line">Connecting to 192.168.1.10:22...</div><div class="line">Connection established.</div><div class="line">To escape to local shell, press &apos;Ctrl+Alt+]&apos;.</div><div class="line"></div><div class="line"></div><div class="line">The programs included with the Debian GNU/Linux system are free software;</div><div class="line">the exact distribution terms for each program are described in the</div><div class="line">individual files in /usr/share/doc/*/copyright.</div><div class="line"></div><div class="line">Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent</div><div class="line">permitted by applicable law.</div><div class="line">Last login: Sat Mar  4 12:09:50 2017 from 192.168.1.111</div><div class="line">pi@raspberrypi:~ $ date</div><div class="line">2017年  3月  4日 星期六 21:48:13 CST</div></pre></td></tr></table></figure>
+<p>ok, we are done!</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-如何阅读程序源码之——call-graph" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1041,77 +1111,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cctree/">cctree</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cflow/">cflow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/egypt/">egypt</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gprof/">gprof</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-soname" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/02/09/soname/" class="article-date">
-      <time datetime="2017-02-09T09:06:12.000Z" itemprop="datePublished">2017-02-09</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/09/soname/">soname</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>客户反映一个动态库改名为后，编译时链接也是正确的。但在编译出来的应用做依赖分析时(ldd)，发现加载的还是改名之前的动态库。经过分析，是由于编译时带了<code>-Wl,-soname -Wl,libclntsh.so</code>选项：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -shared  .libs/bind.o ... .libs/kociapi.o  -L/lib  -Wl,--version-script=koci.lds -Wl,-soname -Wl,libclntsh.so -o .libs/libclntsh.so</div></pre></td></tr></table></figure></p>
-<p>那么这样在连接时传给<code>ld</code>的参数就会是<code>ld -soname libclntsh.so</code><br>生成的动态库也就带上了<code>SONAME</code>这个字段。</p>
-<p><center> <img src="http://static.zybuluo.com/shenyuflying/lklzdw5gskd5dmuzlnpazkl8/image_1b8gve8oi15h91nd0qjsb5eaju9.png" alt="image_1b8gve8oi15h91nd0qjsb5eaju9.png-52.2kB"> </center><br>关于这个选项手册<code>man ld</code>里面解释是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">-hname</div><div class="line">-soname=name</div><div class="line">    When creating an ELF shared object, set the internal DT_SONAME field  to  the  specified</div><div class="line">    name.   When  an  executable is linked with a shared object which has a DT_SONAME field,</div><div class="line">    then when the executable is run the dynamic linker  will  attempt  to  load  the  shared</div><div class="line">    object specified by the DT_SONAME field rather than the using the file name given to the</div><div class="line">    linker.</div></pre></td></tr></table></figure></p>
-<p>意思是如创建动态链接库的时候，如果加了<code>soname</code>按么生成的ELF文件中就会有<code>SONAME</code>这个字段。之后可执行文件加载这个动态链接库的时候，就会按照<code>SONAME</code>这个字段来找对应的文件，而不是当初链接可执行文件时候指定的动态链接库的文件名。这就是问题发生的原因。</p>
-<p>那么<code>soname</code>有什么作用呢？<br><a href="https://en.wikipedia.org/wiki/Soname" target="_blank" rel="external">google</a>上的解释是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">The soname is often used to provide version backwards-compatibility information. For instance, if versions 1.0 through 1.9 of the shared library libx provide identical interface, they would all have the same soname, e.g. libx.so.1. If the system only includes version 1.3 of that shared object, with filename libx.so.1.3, the soname field of the shared object tells the system that it can be used to fill the dependency for a binary which was originally compiled using version 1.2.</div></pre></td></tr></table></figure></p>
-<p>也就是说<code>soname</code>是为了向下兼容的目的，比如老版本的名字是lib1.2，升级之后lib1.3。如果没有加-soname那么系统还会找lib1.2，也就没有达到升级的目的。如果-soname lib1那么系统认为lib1.2和lib1.3是兼容的，找的时候文件名只要是匹配lib1这个soname前缀就可以了。</p>
-<p>考虑到目前我们的动态链接库目前都是叫libclntsh.so，并没有名字的区分。最后的解决方法很简单，就是增加编译选项: <code>--disable-soname</code>在编译的时候不加<code>-soname</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./configure --disable-soname</div><div class="line"> make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程/">编程</a></li></ul>
     </div>
 
       
