@@ -32,6 +32,11 @@
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
+<!-- for mermaid -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" />
+<script src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({d:true});</script>
+
 
     <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
 
@@ -120,7 +125,7 @@
         
 
 
-        <p class="header-subtitle">文章: 96 字数: 488886</p>
+        <p class="header-subtitle">文章: 96 字数: 488911</p>
         
             <div id="switch-btn" class="switch-btn">
                 <div class="icon">
@@ -287,7 +292,7 @@
   
     <div class="article-meta">
       <a href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/" class="article-date">
-      <time datetime="2017-04-22T13:58:59.000Z" itemprop="datePublished">2017-04-22</time>
+      <time datetime="2017-04-22T05:58:59.000Z" itemprop="datePublished">2017-04-22</time>
 </a>
 
 
@@ -339,7 +344,9 @@
 <p>根据报错信息，对应到odbc代码中898行位置：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">in function</div><div class="line">   <span class="number">886</span> ›   ›   ›   <span class="built_in">sprintf</span>(fetch, <span class="string">"fetch %d in %s"</span>, fetch_size, self-&gt;cursor);</div><div class="line">   <span class="number">887</span></div><div class="line">   <span class="number">888</span> ›   ›   ›   mylog(<span class="string">"next_tuple: sending actual fetch (%d) query '%s'\n"</span>, fetch_size, fetch);</div><div class="line">   <span class="number">889</span></div><div class="line">   <span class="number">890</span> ›   ›   ›   <span class="comment">/* don't read ahead for the next tuple (self) ! */</span></div><div class="line">   <span class="number">891</span> ›   ›   ›   qi.row_size = self-&gt;cache_size;</div><div class="line">   <span class="number">892</span> ›   ›   ›   qi.result_in = self;</div><div class="line">   <span class="number">893</span> ›   ›   ›   qi.cursor = <span class="literal">NULL</span>;</div><div class="line">   <span class="number">894</span> ›   ›   ›   res = DBC_send_query(self-&gt;conn, fetch, &amp;qi, CLEAR_RESULT_ON_ABORT);</div><div class="line">   <span class="number">895</span> ›   ›   ›   <span class="keyword">if</span> (res == <span class="literal">NULL</span>)</div><div class="line">   <span class="number">896</span> ›   ›   ›   &#123;</div><div class="line">   <span class="number">897</span> ›   ›   ›   ›   self-&gt;status = KBRES_FATAL_ERROR;</div><div class="line">   <span class="number">898</span> ›   ›   ›   ›   QR_set_message(self, <span class="string">"Error fetching next group."</span>, <span class="number">1</span>);</div><div class="line">   <span class="number">899</span> ›   ›   ›   ›   <span class="keyword">return</span> FALSE;</div><div class="line">   <span class="number">900</span> ›   ›   ›   &#125;</div><div class="line">   <span class="number">901</span> ›   ›   ›   self-&gt;inTuples = TRUE;</div></pre></td></tr></table></figure></p>
 <p>根据代码，可以看到当时<code>DBC_send_query</code>在执行<code>fetch %d in %s</code>的时候失败。</p>
 <h3 id="宕机前调用堆栈"><a href="#宕机前调用堆栈" class="headerlink" title="宕机前调用堆栈"></a>宕机前调用堆栈</h3><p>目前看到的是宕记时候的堆栈，现在根据已知信息还原coredump前调用的堆栈：</p>
-<figure class="highlight graph"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DBC_send_query   --失败返回NULL--&gt;                                QR_next_tuple</div><div class="line">QR_next_tuple    --报错信息Error fetching_next group 返回FALSE--&gt; STMT_Fetch</div><div class="line">STMT_Fetch       --SQLSTATE设为HY000返回SQLERROR--&gt;               MY_ExtendedFetch</div><div class="line">MY_ExtendedFetch --返回SQLERROR--&gt;                                SQLFetch</div><div class="line">SQLFetch         --返回SQLERROR--&gt;                                dblink_record</div><div class="line">dblink_record    --调用--&gt;                                        DBLinkReport</div><div class="line">DBLinkReport     --调用--&gt;                                        SQLFreeHandle</div><div class="line">SQLFreeHandle    --经过若干调用--&gt;                                QR_free_memory</div></pre></td></tr></table></figure>
+<div class="mermaid"><br>graph TD<br>DBC_send_query   –失败返回NULL–&gt;                                QR_next_tuple<br>QR_next_tuple    –报错信息Error fetching_next group 返回FALSE–&gt; STMT_Fetch<br>STMT_Fetch       –SQLSTATE设为HY000返回SQLERROR–&gt;               MY_ExtendedFetch<br>MY_ExtendedFetch –返回SQLERROR–&gt;                                SQLFetch<br>SQLFetch         –返回SQLERROR–&gt;                                dblink_record<br>dblink_record    –调用–&gt;                                        DBLinkReport<br>DBLinkReport     –调用–&gt;                                        SQLFreeHandle<br>SQLFreeHandle    –经过若干调用–&gt;                                QR_free_memory<br></div>
+
+
 <h2 id="问题重现"><a href="#问题重现" class="headerlink" title="问题重现"></a>问题重现</h2><p>仿照上一节的推理，如果DBC_send_query失败，问题会不会重现？<br>那么在DBC_send_query处打断点，接下来c，直到有fetch 1024的时候，强制DBC_send_query返回0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">(gdb) b DBC_send_query</div><div class="line">Function &quot;DBC_send_query&quot; not defined.</div><div class="line">Make breakpoint pending on future shared library load? (y or [n]) y</div><div class="line">Breakpoint 1 (DBC_send_query) pending.</div><div class="line">(gdb) c</div><div class="line">Continuing.</div><div class="line">[New Thread 0x40a74940 (LWP 15989)]</div><div class="line">[Switching to Thread 0x42332940 (LWP 15981)]</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x2aaade6554d9 &quot; &quot;, qi=0x0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb) c</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x9ebed80 &quot;set DateStyle to &apos;ISO&apos;&quot;, qi=0x0, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x9ee1240 &quot;declare SQL_CUR0x9ec1c20 scroll cursor for SELECT * FROM \&quot;TB1\&quot; WHERE 1 = 0&quot;, qi=0x0, flag=4) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x2aaade6548e5 &quot;BEGIN&quot;, qi=0x0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229ee50 &quot;fetch 0 in SQL_CUR0x9ec1c20&quot;, qi=0x4229eee0, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229f160 &quot;close SQL_CUR0x9ec1c20&quot;, qi=0x0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x9ec1ba0 &quot;declare SQL_CUR0x9ee1240 scroll cursor for SELECT * FROM \&quot;TB1\&quot;&quot;, qi=0x0, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229ebc0 &quot;fetch 0 in SQL_CUR0x9ee1240&quot;, qi=0x4229ec50, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229cad0 &quot;fetch 1024 in SQL_CUR0x9ee1240&quot;, qi=0x4229cab0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb) return 0</div></pre></td></tr></table></figure></p>
 <p>接下来就会core掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#0  0x0000003a93e7273e in free () from /lib64/libc.so.6</div><div class="line">#1  0x00002aaade575312 in QR_free_memory (self=0x1b7a17a0) at qresult.c:511</div><div class="line">#2  0x00002aaade574c04 in QR_Destructor (self=0x1b7a17a0, closeCursor=1) at qresult.c:296</div><div class="line">#3  0x00002aaade58d5f2 in STMT_Destructor (self=0x1b7bfe30) at statement.c:507</div><div class="line">#4  0x00002aaade58cec4 in MY_FreeStmt (hstmt=0x1b7bfe30, fOption=1) at statement.c:313</div><div class="line">#5  0x00002aaade59a1ad in SQLFreeHandle (HandleType=3, Handle=0x1b7bfe30) at odbcapi30.c:252</div><div class="line">#6  0x0000003a94e170ed in __SQLFreeHandle (handle_type=&lt;value optimized out&gt;, handle=0x1b7c1650) at SQLFreeHandle.c:435</div><div class="line">#7  0x0000003a94e1768c in SQLFreeHandle (handle_type=17, handle=0x0) at SQLFreeHandle.c:598</div><div class="line">#8  0x0000000000b3591b in FreeQueryHandle (conn=0x1b4117a8) at dblinkutl.c:161</div><div class="line">#9  0x0000000000b36c1c in DBLinkReport (query=0x1b79e8c0, cell=0x1b412348) at dblinkerr.c:68</div><div class="line">#10 0x0000000000b34f5a in dblink_record (fcinfo=0x417853c0) at dblink.c:789</div><div class="line">#11 0x00000000006b3b44 in ExecMakeTableFunctionResult (funcexpr=0x1b79e240, econtext=0x1b79de10, expectedDesc=0x1b79e0d0, returnDesc=0x41785820) at execQual.c:1431</div><div class="line">#12 0x00000000006d055f in FunctionNext (node=0x1b79dcf0) at nodeFunctionscan.c:68</div><div class="line">#13 0x00000000006bd964 in ExecScan (node=0x1b79dcf0, accessMtd=0x6d04f8 &lt;FunctionNext&gt;) at execScan.c:70</div></pre></td></tr></table></figure></p>
 <p>那么可以说明我们目前的判断基本正确。出现故障的原因更加清晰了：当时在执行一条pbe语句，在execute阶段通过dblink获取数据时，由于DBC_send_query失败，释放内存不当导致。接下来我们需要找到那块不当释放的内存。</p>
@@ -407,7 +414,7 @@
   
     <div class="article-meta">
       <a href="/2017/04/12/a-nice-progressbar-with-time-estimation/" class="article-date">
-      <time datetime="2017-04-12T19:51:14.000Z" itemprop="datePublished">2017-04-12</time>
+      <time datetime="2017-04-12T11:51:14.000Z" itemprop="datePublished">2017-04-12</time>
 </a>
 
 
@@ -479,7 +486,7 @@
   
     <div class="article-meta">
       <a href="/2017/04/09/vim-build-from-source/" class="article-date">
-      <time datetime="2017-04-09T09:06:12.000Z" itemprop="datePublished">2017-04-09</time>
+      <time datetime="2017-04-09T01:06:12.000Z" itemprop="datePublished">2017-04-09</time>
 </a>
 
 
@@ -550,7 +557,7 @@
   
     <div class="article-meta">
       <a href="/2017/04/03/bit-map-sets-sorting/" class="article-date">
-      <time datetime="2017-04-03T10:32:06.000Z" itemprop="datePublished">2017-04-03</time>
+      <time datetime="2017-04-03T02:32:06.000Z" itemprop="datePublished">2017-04-03</time>
 </a>
 
 
@@ -620,7 +627,7 @@
   
     <div class="article-meta">
       <a href="/2017/03/26/awesome-awesome-lots-of-good-stuff/" class="article-date">
-      <time datetime="2017-03-26T10:32:06.000Z" itemprop="datePublished">2017-03-26</time>
+      <time datetime="2017-03-26T02:32:06.000Z" itemprop="datePublished">2017-03-26</time>
 </a>
 
 
@@ -684,7 +691,7 @@
   
     <div class="article-meta">
       <a href="/2017/03/25/traversing-tree-in-preorder-inorder-postorder-and-level-order/" class="article-date">
-      <time datetime="2017-03-25T21:32:06.000Z" itemprop="datePublished">2017-03-25</time>
+      <time datetime="2017-03-25T13:32:06.000Z" itemprop="datePublished">2017-03-25</time>
 </a>
 
 
@@ -769,7 +776,7 @@
   
     <div class="article-meta">
       <a href="/2017/03/12/source-insight-color-theme/" class="article-date">
-      <time datetime="2017-03-12T10:32:06.000Z" itemprop="datePublished">2017-03-12</time>
+      <time datetime="2017-03-12T02:32:06.000Z" itemprop="datePublished">2017-03-12</time>
 </a>
 
 
@@ -839,7 +846,7 @@
   
     <div class="article-meta">
       <a href="/2017/03/11/Readings-of-query-optimizer/" class="article-date">
-      <time datetime="2017-03-11T10:32:06.000Z" itemprop="datePublished">2017-03-11</time>
+      <time datetime="2017-03-11T02:32:06.000Z" itemprop="datePublished">2017-03-11</time>
 </a>
 
 
@@ -908,7 +915,7 @@
   
     <div class="article-meta">
       <a href="/2017/03/08/For-developers-how-to-build-run-Greenplum-for-debugging-purposes/" class="article-date">
-      <time datetime="2017-03-08T10:32:06.000Z" itemprop="datePublished">2017-03-08</time>
+      <time datetime="2017-03-08T02:32:06.000Z" itemprop="datePublished">2017-03-08</time>
 </a>
 
 
@@ -1025,7 +1032,7 @@
   
     <div class="article-meta">
       <a href="/2017/03/05/nextcloud——搭建自己的云盘/" class="article-date">
-      <time datetime="2017-03-05T18:50:22.000Z" itemprop="datePublished">2017-03-05</time>
+      <time datetime="2017-03-05T10:50:22.000Z" itemprop="datePublished">2017-03-05</time>
 </a>
 
 
