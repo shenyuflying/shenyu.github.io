@@ -40,7 +40,7 @@
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/0ys6sy1fy85kiq8eofdgpu4m/image_1be76mofi1gucdfu1n8214dl17809.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/gdrztnkejhms20aij08fnaxd/image_1be770h6n1jdqp6u12ja1ltp1cvvm.png">
 <meta property="og:image" content="http://static.zybuluo.com/shenyuflying/hprhegmbg94f8vat7jggh3jq/image_1bea3hfad80cat3mmr1u0q5ko2a.png">
-<meta property="og:updated_time" content="2017-04-22T06:06:02.000Z">
+<meta property="og:updated_time" content="2017-04-22T06:36:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="裤子把人搞死？一个库引发的悲剧">
 <meta name="twitter:description" content="穿个裤子，裤子破个洞，人应该没事吧？现实是人有可能挂掉！悲剧正在发生，一些破库经常搞挂服务器。
@@ -145,6 +145,7 @@
         
 
 
+        <p class="header-subtitle">posts: $numpost words: $numwords</p>
         
             <div id="switch-btn" class="switch-btn">
                 <div class="icon">
@@ -309,7 +310,7 @@
   
     <div class="article-meta">
       <a href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/" class="article-date">
-      <time datetime="2017-04-22T13:58:59.000Z" itemprop="datePublished">2017-04-22</time>
+      <time datetime="2017-04-22T05:58:59.000Z" itemprop="datePublished">2017-04-22</time>
 </a>
 
 
@@ -391,6 +392,13 @@
 <li>tuple-&gt;value是否指向有效地址？比如指向已经释放过的地址（释放了必须置NULL），或者无效地址（比如栈空间）。</li>
 </ol>
 <p>通过看代码，确实存在问题，比如realloc了内存忘记清空，num_backend_rows在读取成功之前就存在递增的情况，如果DBC_send_query失败那么就会有上面第二个问题出现。<br>另外，tuple-&gt;value确实存在指向栈上空间的情况。</p>
+<p>查找value指针指向的内存：</p>
+<p>1、绝大部分地方value在free之后都置NULL了，但是在TL_Destructor以及STMT_pos_reload_needed函数中，value释放过后没置NULL，可能引起多次释放的问题。</p>
+<p>2、在QR_read_tuple函数中，buffer指向的位置是由如下逻辑确定的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">char</span>    tidoidbuf[<span class="number">32</span>];</div><div class="line"><span class="keyword">if</span> (field_lf &gt;= effective_cols)</div><div class="line">      buffer = tidoidbuf;   --buffer指向<span class="built_in">stack</span>位置</div><div class="line"><span class="keyword">else</span></div><div class="line"> &#123;</div><div class="line">    buffer = (<span class="keyword">char</span> *) <span class="built_in">malloc</span>(len + <span class="number">1</span>); --buffer指向heap位置</div><div class="line">    <span class="keyword">if</span>(buffer == <span class="literal">NULL</span>)</div><div class="line">        <span class="keyword">return</span> FALSE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果满足field_lf &gt;= effective_cols那么是指向stack上的内存，否则是指向heap上的内存。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (field_lf &gt;= effective_cols &amp;&amp; self-&gt;haskeyset)</div><div class="line">&#123;</div><div class="line">           &#125;</div><div class="line"><span class="keyword">else</span></div><div class="line">&#123;</div><div class="line">    this_tuplefield[field_lf].len = len;</div><div class="line">    this_tuplefield[field_lf].value = buffer;   --buffer有可能指向<span class="built_in">stack</span></div><div class="line">          &#125;</div></pre></td></tr></table></figure>
+<p>但是如上代码在实际使用过程中，当<code>self-&gt;haskeyset = false</code>的时候，就会返回stack上的内存。</p>
 <h2 id="问题修复"><a href="#问题修复" class="headerlink" title="问题修复"></a>问题修复</h2><p>主要是对上面提出的3个问题进行修复：</p>
 <ol>
 <li>记录malloc,realloc分配内存的范围，检查tuple是否在这个范围之中。</li>
@@ -410,7 +418,7 @@
         <p><span>本文标题:</span><a href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/">裤子把人搞死？一个库引发的悲剧</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
         <p><span>发布时间:</span>2017-04-22, 13:58:59</p>
-        <p><span>最后更新:</span>2017-04-22, 06:06:02</p>
+        <p><span>最后更新:</span>2017-04-22, 14:36:09</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/" title="裤子把人搞死？一个库引发的悲剧">http://shenyu.wiki/2017/04/22/裤子把人搞死？一个库引发的悲剧/</a>
             <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/04/22/裤子把人搞死？一个库引发的悲剧/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
