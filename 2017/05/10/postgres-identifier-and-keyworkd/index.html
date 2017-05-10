@@ -15,38 +15,42 @@
 
 
 
-<meta name="description" content="任务
-将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。
+<meta name="description" content="identifieridentifier is defined in scan.l just like below
 
-ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。
-数据格式数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。
 
-数据库设计为如下12345678910create d">
+it is a string start with letter or - and might following with numbers.
+keywordkeywords is defined in kwlist.h just like below
+
+
+the name of">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql数据处理">
-<meta property="og:url" content="http://shenyu.wiki/2015/02/17/mysql大数据处理/index.html">
+<meta property="og:title" content="postgres identifier and keyworkd">
+<meta property="og:url" content="http://shenyu.wiki/2017/05/10/postgres-identifier-and-keyworkd/index.html">
 <meta property="og:site_name" content="小宇的博客">
-<meta property="og:description" content="任务
-将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。
+<meta property="og:description" content="identifieridentifier is defined in scan.l just like below
 
-ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。
-数据格式数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。
 
-数据库设计为如下12345678910create d">
-<meta property="og:image" content="http://img.blog.csdn.net/20141125135942138?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
-<meta property="og:image" content="http://img.blog.csdn.net/20141125140008127?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
-<meta property="og:image" content="http://img.blog.csdn.net/20141125140019422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
-<meta property="og:updated_time" content="2017-01-14T09:07:06.000Z">
+it is a string start with letter or - and might following with numbers.
+keywordkeywords is defined in kwlist.h just like below
+
+
+the name of">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/r9ofw87pnanbqn41qm0zib7e/image_1bfnvt1dsi911hs41pml1qmm1sf2m.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ikrcc22t1eko062lv1l818dd/image_1bfo0372n16ohq9165i18k518sl13.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/a147jgs1l59oz60obsmlbbjd/image_1bfnvkmf2kog7pd1ihf29j7ca9.png">
+<meta property="og:image" content="http://static.zybuluo.com/shenyuflying/ywt2xxzhx52c2wra5o189cx3/image_1bfo1o0g11nq44chrtqa9f1ane1t.png">
+<meta property="og:updated_time" content="2017-05-10T02:20:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql数据处理">
-<meta name="twitter:description" content="任务
-将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。
+<meta name="twitter:title" content="postgres identifier and keyworkd">
+<meta name="twitter:description" content="identifieridentifier is defined in scan.l just like below
 
-ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。
-数据格式数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。
 
-数据库设计为如下12345678910create d">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20141125135942138?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+it is a string start with letter or - and might following with numbers.
+keywordkeywords is defined in kwlist.h just like below
+
+
+the name of">
+<meta name="twitter:image" content="http://static.zybuluo.com/shenyuflying/r9ofw87pnanbqn41qm0zib7e/image_1bfnvt1dsi911hs41pml1qmm1sf2m.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
@@ -80,7 +84,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>mysql数据处理 | 小宇的博客</title>
+<title>postgres identifier and keyworkd | 小宇的博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -303,11 +307,11 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-mysql大数据处理" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-postgres-identifier-and-keyworkd" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/02/17/mysql大数据处理/" class="article-date">
-      <time datetime="2015-02-17T10:10:00.000Z" itemprop="datePublished">2015-02-17</time>
+      <a href="/2017/05/10/postgres-identifier-and-keyworkd/" class="article-date">
+      <time datetime="2017-05-10T02:17:58.000Z" itemprop="datePublished">2017-05-10</time>
 </a>
 
 
@@ -322,7 +326,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
         
   
     <h1 class="article-title" itemprop="name">
-      mysql数据处理
+      postgres identifier and keyworkd
     </h1>
   
 
@@ -337,7 +341,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言层/">语言层</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -347,20 +351,38 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><blockquote>
-<p>将近10天的温度数据，9个温度测点，采样间隔为1分钟，共计12万行数据，需要导出每小时的温度数据。</p>
-</blockquote>
-<p>ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导入的工作。这里用ｃ语言把数据转为insert语句，是为了更好的解释其中的工作原理。</p>
-<h2 id="数据格式"><a href="#数据格式" class="headerlink" title="数据格式"></a>数据格式</h2><p>数据格式如下：有3列，分别是日期，时间，温度。文件名是测点编号。</p>
-<p><img src="http://img.blog.csdn.net/20141125135942138?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="ddd"></p>
-<h2 id="数据库设计为如下"><a href="#数据库设计为如下" class="headerlink" title="数据库设计为如下"></a>数据库设计为如下</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">database</span> sensorDB;  </div><div class="line"><span class="keyword">use</span> sensorDB;  </div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> sensor  </div><div class="line">(  </div><div class="line">    <span class="keyword">ID</span> <span class="built_in">smallint</span> ,  </div><div class="line">    dt <span class="built_in">Date</span>,  </div><div class="line">    tm <span class="keyword">Time</span>,  </div><div class="line">    temp <span class="built_in">float</span>,  </div><div class="line">    primary <span class="keyword">key</span> (<span class="keyword">ID</span>,dt,tm)  </div><div class="line">);</div></pre></td></tr></table></figure>
-<p>建立一个视图把dt和tm两个字段合并<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">view</span> temperature  </div><div class="line"><span class="keyword">as</span>  </div><div class="line"><span class="keyword">select</span> <span class="keyword">ID</span>, <span class="keyword">cast</span>(<span class="keyword">CONCAT</span>(dt,<span class="string">' '</span>,tm) <span class="keyword">as</span> datetime) <span class="string">'时间'</span> , temp <span class="keyword">from</span> sensor   ;</div></pre></td></tr></table></figure></p>
-<h2 id="txt格式文件导入数据库"><a href="#txt格式文件导入数据库" class="headerlink" title="txt格式文件导入数据库"></a>txt格式文件导入数据库</h2><p>用C语言写了一个小工具，可以把txt转成sql语句【见后面的源代码】        运行后，输入txt的文件名，要插入的表名，和传感器的编号即可。   程序运行完毕之后，自动生成sql语句如下：<br><img src="http://img.blog.csdn.net/20141125140008127?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="d"><br>然后直接运行sql语句，数据就导入到数据库中了。</p>
-<h2 id="按指定间隔查询数据"><a href="#按指定间隔查询数据" class="headerlink" title="按指定间隔查询数据"></a>按指定间隔查询数据</h2><p>利用了timestampdiff（）来计算时间间隔 ，并利用%来逐个判断</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> temperature <span class="keyword">where</span> <span class="keyword">ID</span> = <span class="number">9</span> <span class="keyword">and</span>  <span class="keyword">timestampdiff</span>(<span class="keyword">MINUTE</span>,时间,<span class="string">'2014-04-19 15:00:00'</span>)%<span class="number">60</span> =<span class="number">0</span>;</div></pre></td></tr></table></figure>
-<p>如下便是间隔1小时的温度数据</p>
-<p><img src="http://img.blog.csdn.net/20141125140019422?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbnl1Zmx5aW5n/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt="dd"></p>
-<h2 id="附件：txt转sql源代码-C"><a href="#附件：txt转sql源代码-C" class="headerlink" title="附件：txt转sql源代码 C"></a>附件：txt转sql源代码 C</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span>  </span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span>  </span></div><div class="line">  </div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFFER_LEN 2048  </span></div><div class="line"><span class="keyword">const</span> <span class="keyword">char</span> sp[] = &#123; <span class="string">' '</span>, <span class="string">'\t'</span>, <span class="string">';'</span>,<span class="string">'\r'</span>,<span class="string">'\n'</span> &#125;;  </div><div class="line">  </div><div class="line">   </div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error</span><span class="params">(<span class="keyword">char</span> *msg)</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"ERROR:%s"</span>,msg);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    getchar();  </div><div class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">isSeperator</span><span class="params">(<span class="keyword">char</span>  ch)</span>  </span></div><div class="line">&#123;  </div><div class="line">      </div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="keyword">sizeof</span>(sp) / <span class="keyword">sizeof</span>(<span class="keyword">char</span>); i++)  </div><div class="line">    &#123;  </div><div class="line">        <span class="keyword">if</span> ( ch == sp[i])  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </div><div class="line">&#125;  </div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>  </span></div><div class="line">&#123;  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"=============================\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"          txt2sql\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"=============================\n"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"data fielname: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> filename_in[<span class="number">256</span>], filename_out[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>,filename_in);  </div><div class="line">    <span class="built_in">strcpy</span>(filename_out, filename_in);  </div><div class="line">    <span class="built_in">strcat</span>(filename_out, <span class="string">"_sql.txt"</span>);  </div><div class="line">    <span class="built_in">strcat</span>(filename_in, <span class="string">".txt"</span>);  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"table name: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> table_name[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>, table_name);  </div><div class="line">  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"sensor ID: "</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    <span class="keyword">char</span> sensor_ID[<span class="number">256</span>];  </div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%s"</span>, sensor_ID);  </div><div class="line">  </div><div class="line">  </div><div class="line">    FILE *fin = fopen(filename_in, <span class="string">"r"</span>);  </div><div class="line">    FILE *fout = fopen(filename_out, <span class="string">"w"</span>);  </div><div class="line">    <span class="keyword">if</span> (fin == <span class="literal">NULL</span> || fout == <span class="literal">NULL</span>)  </div><div class="line">    &#123;  </div><div class="line">        error(<span class="string">"cannot open file"</span>);  </div><div class="line">    &#125;  </div><div class="line">    <span class="keyword">char</span> buffer[BUFFER_LEN];  </div><div class="line">    <span class="keyword">while</span> (fgets(buffer, BUFFER_LEN, fin) != <span class="number">0</span>)  </div><div class="line">    &#123;  </div><div class="line">        <span class="comment">//除去多余的分隔符  </span></div><div class="line">        <span class="keyword">char</span> elem[BUFFER_LEN];  </div><div class="line">        <span class="keyword">int</span> k = <span class="number">0</span>;  </div><div class="line">        <span class="built_in">memset</span>(elem, <span class="number">0</span>, <span class="keyword">sizeof</span>(elem));  </div><div class="line">  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(buffer); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (buffer[i] == <span class="string">'\n'</span> || buffer[i] == <span class="string">'\r'</span> || buffer[i]==<span class="string">'\0'</span>) buffer[i] = <span class="string">' '</span>;  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(buffer); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (!isSeperator(buffer[i]))  </div><div class="line">            &#123;  </div><div class="line">                elem[k++] = buffer[i];  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">else</span>  </div><div class="line">            &#123;  </div><div class="line">                <span class="comment">//如果最后一个是分隔符则跳过  </span></div><div class="line">                <span class="keyword">if</span> (i == <span class="built_in">strlen</span>(buffer) &amp;&amp; isSeperator(buffer[i]))  </div><div class="line">                    <span class="keyword">continue</span>;  </div><div class="line">                <span class="comment">//如果下一个还是分隔符，则跳过。  </span></div><div class="line">                <span class="keyword">if</span> (i != <span class="built_in">strlen</span>(buffer) - <span class="number">1</span> &amp;&amp; isSeperator(buffer[i + <span class="number">1</span>]))  </div><div class="line">                    <span class="keyword">continue</span>;  </div><div class="line">                <span class="keyword">if</span> (i != <span class="built_in">strlen</span>(buffer) - <span class="number">1</span> &amp;&amp; !isSeperator(buffer[i + <span class="number">1</span>]))  </div><div class="line">                                elem[k++] = buffer[i];  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="comment">/*printf("\"%s\"",elem);*/</span>  </div><div class="line">        <span class="comment">//经过处理的elem只有包含一个分隔符在一起的情况，最后没有空元素  </span></div><div class="line">  </div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"INSERT INTO %s VALUES ('%s',"</span>, table_name,sensor_ID);  </div><div class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(elem); i++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">if</span> (isSeperator(elem[i]))  </div><div class="line">            &#123;  </div><div class="line">                  </div><div class="line">                <span class="built_in">fprintf</span>(fout, <span class="string">"\'"</span>);  </div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = left; j &lt; i; j++)  </div><div class="line">                &#123;  </div><div class="line">                    <span class="built_in">fprintf</span>(fout, <span class="string">"%c"</span>, elem[j]);  </div><div class="line">                &#125;  </div><div class="line">                <span class="built_in">fprintf</span>(fout, <span class="string">"\',"</span>);  </div><div class="line">                left = i + <span class="number">1</span>;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">        <span class="comment">//the last one  </span></div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"\'"</span>);  </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = left; j &lt; <span class="built_in">strlen</span>(elem); j++)  </div><div class="line">        &#123;  </div><div class="line">            <span class="built_in">fprintf</span>(fout, <span class="string">"%c"</span>, elem[j]);  </div><div class="line">        &#125;  </div><div class="line">        <span class="built_in">fprintf</span>(fout, <span class="string">"\');\n"</span>);  </div><div class="line">           </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">  </div><div class="line">  </div><div class="line">    fclose(fin);   </div><div class="line">    fclose(fout);  </div><div class="line">  </div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Done!"</span>);  </div><div class="line">    fflush(<span class="built_in">stdin</span>);  </div><div class="line">    getchar();  </div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h2 id="identifier"><a href="#identifier" class="headerlink" title="identifier"></a>identifier</h2><p>identifier is defined in scan.l just like below</p>
+<center><img src="http://static.zybuluo.com/shenyuflying/r9ofw87pnanbqn41qm0zib7e/image_1bfnvt1dsi911hs41pml1qmm1sf2m.png" alt="image_1bfnvt1dsi911hs41pml1qmm1sf2m.png-21.2kB"></center>
+
+<p>it is a string start with <code>letter</code> or <code>-</code> and might following with numbers.</p>
+<h2 id="keyword"><a href="#keyword" class="headerlink" title="keyword"></a>keyword</h2><p>keywords is defined in <code>kwlist.h</code> just like below</p>
+<center><img src="http://static.zybuluo.com/shenyuflying/ikrcc22t1eko062lv1l818dd/image_1bfo0372n16ohq9165i18k518sl13.png" alt="image_1bfo0372n16ohq9165i18k518sl13.png-91.6kB"></center>
+
+<p>the name of keyword is the string scanned by the lexer.<br>the value is defined in the lexer <code>%token &lt;keyword&gt;</code> session and later convert to an enum value.<br>we have four categories of keyword:</p>
+<ul>
+<li>reserved key workd: keywords that are usable only as ColLabel( select a as col1 …)</li>
+<li>unreserved keyword : keyword can be used as any type of name.</li>
+<li>column keyword: keywords that can be column, table, etc, names</li>
+<li>function name keyword: keywords that can be function names</li>
+</ul>
+<h2 id="relation-of-identifier-and-keyword"><a href="#relation-of-identifier-and-keyword" class="headerlink" title="relation of identifier and keyword"></a>relation of identifier and keyword</h2><p>in short, keyword is a subset of identifiers. in the lex scanner, when we have an identifier matched, we first check to see if it is a keyword by <code>ScanKeywordLookup</code>. the function take a binary search in the keyword list. if a keyword is found the enum value of the keyword is returned to the parser.</p>
+<p>if the identifier is not a keyword, we truncate the string in to NAMEDATELEN(which is 64 byte long) and convert into lower case. after we have done the casting, we store the string value of the identifier into <code>yylval-&gt;str</code> and return <code>IDENT</code> to the parser.</p>
+<center><img src="http://static.zybuluo.com/shenyuflying/a147jgs1l59oz60obsmlbbjd/image_1bfnvkmf2kog7pd1ihf29j7ca9.png" alt="image_1bfnvkmf2kog7pd1ihf29j7ca9.png-99.5kB"></center>
+
+<h2 id="more-about-key-word-categories"><a href="#more-about-key-word-categories" class="headerlink" title="more about key word categories"></a>more about key word categories</h2><p>the reason why we have four categories of keyword is to allow keyword to use in more cases. suppose we only have one category keyword, the reserved keyword. the keyword, for example <code>NUMERIC</code> might not be used as colnames.</p>
+<p>by putting <code>NUMERIC</code> into unreserved keyword category we allow it to be used as column names.</p>
+<center><img src="http://static.zybuluo.com/shenyuflying/ywt2xxzhx52c2wra5o189cx3/image_1bfo1o0g11nq44chrtqa9f1ane1t.png" alt="image_1bfo1o0g11nq44chrtqa9f1ane1t.png-34.7kB"></center>
+
+<p>however, the <code>SELECT</code> is a reserved keyword which cannot be used as column names, else we might have a sql query like this<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select select from select;</div></pre></td></tr></table></figure></p>
+<p>this will make the parser confused.</p>
+<h2 id="add-new-key-word"><a href="#add-new-key-word" class="headerlink" title="add new key word"></a>add new key word</h2><p>if you want to make any keyword changes, for example add a new keyword, you can do it like this:</p>
+<ol>
+<li>add it in <code>kwlist.h</code> and fill in the right category</li>
+<li>add it in <code>gram.y</code> <code>%token</code> section so a enum value for it can be generated</li>
+<li>add your keyword into the right place of the rules in <code>gram.y</code></li>
+<li>complie and test</li>
+</ol>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 
       
     </div>
@@ -369,13 +391,13 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2015/02/17/mysql大数据处理/">mysql数据处理</a></p>
+        <p><span>本文标题:</span><a href="/2017/05/10/postgres-identifier-and-keyworkd/">postgres identifier and keyworkd</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
-        <p><span>发布时间:</span>2015-02-17, 18:10:00</p>
-        <p><span>最后更新:</span>2017-01-14, 17:07:06</p>
+        <p><span>发布时间:</span>2017-05-10, 10:17:58</p>
+        <p><span>最后更新:</span>2017-05-10, 10:20:16</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2015/02/17/mysql大数据处理/" title="mysql数据处理">http://shenyu.wiki/2015/02/17/mysql大数据处理/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2015/02/17/mysql大数据处理/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/05/10/postgres-identifier-and-keyworkd/" title="postgres identifier and keyworkd">http://shenyu.wiki/2017/05/10/postgres-identifier-and-keyworkd/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/05/10/postgres-identifier-and-keyworkd/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -387,16 +409,10 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/20/markdown-test/">
-                    markdown test
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/01/31/动态增长的栈/">
-                    动态增长的栈
+                <a href="/2017/05/06/获取字段分组个数/">
+                    获取字段分组个数
                 </a>
             </div>
         
@@ -408,7 +424,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#任务"><span class="toc-number">1.</span> <span class="toc-text">任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据格式"><span class="toc-number">2.</span> <span class="toc-text">数据格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库设计为如下"><span class="toc-number">3.</span> <span class="toc-text">数据库设计为如下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#txt格式文件导入数据库"><span class="toc-number">4.</span> <span class="toc-text">txt格式文件导入数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#按指定间隔查询数据"><span class="toc-number">5.</span> <span class="toc-text">按指定间隔查询数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附件：txt转sql源代码-C"><span class="toc-number">6.</span> <span class="toc-text">附件：txt转sql源代码 C</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#identifier"><span class="toc-number">1.</span> <span class="toc-text">identifier</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#keyword"><span class="toc-number">2.</span> <span class="toc-text">keyword</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#relation-of-identifier-and-keyword"><span class="toc-number">3.</span> <span class="toc-text">relation of identifier and keyword</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#more-about-key-word-categories"><span class="toc-number">4.</span> <span class="toc-text">more about key word categories</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#add-new-key-word"><span class="toc-number">5.</span> <span class="toc-text">add new key word</span></a></li></ol>
         
     </div>
     <style>
@@ -444,7 +460,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"mysql数据处理　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"postgres identifier and keyworkd　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -460,7 +476,7 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
     
       <div class="duoshuo" id="comments">
     <div id="comment-box" ></div>
-    <div class="ds-thread" id="ds-thread" data-thread-key="2015/02/17/mysql大数据处理/" data-title="mysql数据处理" data-url="http://shenyu.wiki/2015/02/17/mysql大数据处理/"></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/05/10/postgres-identifier-and-keyworkd/" data-title="postgres identifier and keyworkd" data-url="http://shenyu.wiki/2017/05/10/postgres-identifier-and-keyworkd/"></div>
     <script>
         var duoshuoQuery = {short_name:"shenyuflying"};
         var loadComment = function(){
@@ -483,15 +499,13 @@ ps: 现在有很多工具，比如mysql workbench可以很方便完成数据导�
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/20/markdown-test/" title="上一篇: markdown test">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/01/31/动态增长的栈/" title="下一篇: 动态增长的栈">
+            <a href="/2017/05/06/获取字段分组个数/" title="下一篇: 获取字段分组个数">
                 <i class="fa fa-angle-right"></i>
             </a>
         
