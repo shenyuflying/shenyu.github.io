@@ -4,6 +4,31 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2017/05/25/DTCC2017/</loc>
+    <lastmod>2017-05-25T11:58:22.000Z</lastmod>
+    <data>
+        <display>
+        <title>DTCC2017</title>
+        <pubTime>2017-05-25T11:36:14.000Z</pubTime>
+        
+        <tag>数据库</tag>
+         
+        <tag>DTCC</tag>
+         
+        <tag>events</tag>
+         
+         
+           
+             
+              <breadCrumb title="events" url="http://shenyu.wiki/categories/events/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://shenyu.wiki/2017/05/10/postgres-identifier-and-keyworkd/</loc>
     <lastmod>2017-05-10T02:24:45.000Z</lastmod>
     <data>
@@ -387,7 +412,6 @@
     </data>
     </url>
 
-    
     
   <url>
     <loc>http://shenyu.wiki/2017/02/16/how-to-change-your-linux-timezone/</loc>
@@ -800,9 +824,9 @@
         <title>pgNodeGraph -- a postgreSQL node tree print tool</title>
         <pubTime>2016-11-03T21:43:06.000Z</pubTime>
         
-        <tag>c</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>c</tag>
          
         <tag>技术分享</tag>
          

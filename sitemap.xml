@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/05/25/DTCC2017/</loc>
+    
+    <lastmod>2017-05-25T11:58:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/about/index.html</loc>
+    
+    <lastmod>2017-05-25T11:35:43.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/05/10/postgres-identifier-and-keyworkd/</loc>
     
     <lastmod>2017-05-10T02:24:45.000Z</lastmod>
@@ -117,13 +131,6 @@
     <loc>http://shenyu.wiki/2017/03/05/nextcloud%E2%80%94%E2%80%94%E6%90%AD%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BA%91%E7%9B%98/</loc>
     
     <lastmod>2017-03-05T10:58:19.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/about/index.html</loc>
-    
-    <lastmod>2017-03-05T03:21:03.000Z</lastmod>
     
   </url>
   
