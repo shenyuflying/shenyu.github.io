@@ -122,7 +122,7 @@
         
 
 
-        <p class="header-subtitle">文章: 101 字数: 507390</p>
+        <p class="header-subtitle">文章: 101 字数: 507393</p>
         
             <div id="switch-btn" class="switch-btn">
                 <div class="icon">
@@ -285,10 +285,10 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-with-hold-cusor" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-with-hold-cursor" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/06/12/with-hold-cusor/" class="article-date">
+      <a href="/2017/06/12/with-hold-cursor/" class="article-date">
       <time datetime="2017-06-12T03:42:26.000Z" itemprop="datePublished">2017-06-12</time>
 </a>
 
@@ -304,7 +304,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/12/with-hold-cusor/">with hold cusor</a>
+      <a class="article-title" href="/2017/06/12/with-hold-cursor/">with hold cursor</a>
     </h1>
   
 
@@ -317,7 +317,8 @@
         <blockquote>
 <p>最近在协助光大银行研发国产化平台，遇到了一个问题：客户这边需要fetch一条数据，然后根据取到的数据做update等等（不一定是对这刚取到的数据进行update），然后再fetch下一条，然后下一条取不出来。经过看客户这边的代码是因为多个fetch操作之间有update语句进行commit操作。commit会把cursor删掉，之后的fetch无法使用cursor。这时候with hold cursor就派上用场了。</p>
 </blockquote>
-<p>重现用例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">		int dboid;</div><div class="line">		char dbname[256] = &#123;0&#125;;</div><div class="line">	EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">	EXEC SQL CONNECT TO postgres USER yshen;</div><div class="line"></div><div class="line">	EXEC SQL PREPARE stmt1 FROM &quot;SELECT oid,datname FROM pg_database WHERE oid &gt; ?&quot;;</div><div class="line">	EXEC SQL DECLARE foo_bar CURSOR FOR stmt1;</div><div class="line"></div><div class="line">	/* when end of result set reached, break out of while loop */</div><div class="line">	EXEC SQL WHENEVER NOT FOUND DO BREAK;</div><div class="line">	EXEC SQL WHENEVER SQLERROR STOP;</div><div class="line"></div><div class="line">	EXEC SQL OPEN foo_bar USING 100;</div><div class="line">	while (1)</div><div class="line">	&#123;</div><div class="line">		    EXEC SQL FETCH NEXT FROM foo_bar INTO :dboid, :dbname;</div><div class="line">			printf(&quot;%d %s\n&quot;, dboid, dbname);</div><div class="line">		    EXEC SQL COMMIT;</div><div class="line">	&#125;</div><div class="line">	EXEC SQL CLOSE foo_bar;</div><div class="line">	EXEC SQL DEALLOCATE PREPARE stmt1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>重现用例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">		<span class="keyword">int</span> dboid;</div><div class="line">		<span class="keyword">char</span> dbname[<span class="number">256</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line">	EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">	EXEC SQL CONNECT TO postgres USER yshen;</div><div class="line"></div><div class="line">	EXEC SQL PREPARE stmt1 FROM <span class="string">"SELECT oid,datname FROM pg_database WHERE oid &gt; ?"</span>;</div><div class="line">	EXEC SQL DECLARE foo_bar CURSOR FOR stmt1;</div><div class="line"></div><div class="line">	<span class="comment">/* when end of result set reached, break out of while loop */</span></div><div class="line">	EXEC SQL WHENEVER NOT FOUND DO BREAK;</div><div class="line">	EXEC SQL WHENEVER SQLERROR STOP;</div><div class="line"></div><div class="line">	EXEC SQL OPEN foo_bar USING <span class="number">100</span>;</div><div class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		    EXEC SQL FETCH NEXT FROM foo_bar INTO :dboid, :dbname;</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%d %s\n"</span>, dboid, dbname);</div><div class="line">		    EXEC SQL COMMIT;</div><div class="line">	&#125;</div><div class="line">	EXEC SQL CLOSE foo_bar;</div><div class="line">	EXEC SQL DEALLOCATE PREPARE stmt1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这是数据库日志：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">LOG:  statement: begin transaction</div><div class="line">LOG:  execute &lt;unnamed&gt;: declare foo_bar cursor for SELECT oid,datname FROM sys_database WHERE oid &gt; $1</div><div class="line">DETAIL:  parameters: $1 = &apos;100&apos;</div><div class="line">LOG:  statement: fetch next from foo_bar</div><div class="line">LOG:  statement: commit</div><div class="line">LOG:  statement: begin transaction</div><div class="line">LOG:  statement: fetch next from foo_bar</div><div class="line">ERROR:  cursor &quot;foo_bar&quot; does not exist</div><div class="line">STATEMENT:  fetch next from foo_bar</div></pre></td></tr></table></figure>
 <p>可以看到，commit会删掉定义的cursor，所以服务器报<code>ERROR:  cursor &quot;foo_bar&quot; does not exist</code>错误。</p>
