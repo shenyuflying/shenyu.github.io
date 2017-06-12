@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/06/12/with-hold-cusor/</loc>
+    
+    <lastmod>2017-06-12T03:46:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/about/index.html</loc>
+    
+    <lastmod>2017-06-09T13:19:44.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/05/25/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BD%BF%E7%94%A8bytea%E7%B1%BB%E5%9E%8B%E5%AD%98%E5%8F%96%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6/</loc>
     
     <lastmod>2017-05-25T13:06:39.000Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>http://shenyu.wiki/2017/05/25/DTCC2017/</loc>
     
     <lastmod>2017-05-25T11:58:22.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/about/index.html</loc>
-    
-    <lastmod>2017-05-25T11:35:43.000Z</lastmod>
     
   </url>
   
