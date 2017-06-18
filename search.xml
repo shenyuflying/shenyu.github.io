@@ -4,6 +4,14 @@
   
     
     <entry>
+      <title><![CDATA[postgres-xc concept implementation and achievements]]></title>
+      <url>http://shenyu.wiki/2017/06/18/postgres-xc-concept-implementation-and-achievements/</url>
+      <content type="html"><![CDATA[<p>This paper covers the very idea of pg-xc, which is a good place to start for pg-xc developers.</p>
+<p><a href="/uploads/Postgres-XC-Concept-Implementation-and-Achievements.pdf">postgres-XC concept implementation and achievements</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[with hold cursor]]></title>
       <url>http://shenyu.wiki/2017/06/12/with-hold-cursor/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -490,18 +498,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[An introduction to ODBC]]></title>
-      <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
-      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe><br></center>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[ODBC programming]]></title>
       <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
       <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" scrolling="no" frameborder="0" width="800" height="600"> </iframe><br></center>
 
 
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[An introduction to ODBC]]></title>
+      <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
+      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe><br></center>
 ]]></content>
     </entry>
     

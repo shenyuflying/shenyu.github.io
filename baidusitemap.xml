@@ -3,6 +3,30 @@
 
 
     
+  <url>
+    <loc>http://shenyu.wiki/2017/06/18/postgres-xc-concept-implementation-and-achievements/</loc>
+    <lastmod>2017-06-18T10:52:40.000Z</lastmod>
+    <data>
+        <display>
+        <title>postgres-xc concept implementation and achievements</title>
+        <pubTime>2017-06-18T10:48:20.000Z</pubTime>
+        
+        <tag>数据库</tag>
+         
+        <tag>架构</tag>
+         
+        <tag>pgxc</tag>
+         
+         
+           
+             
+              <breadCrumb title="readings" url="http://shenyu.wiki/categories/readings/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://shenyu.wiki/2017/06/12/with-hold-cursor/</loc>
