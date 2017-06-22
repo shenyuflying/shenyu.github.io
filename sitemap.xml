@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/</loc>
+    
+    <lastmod>2017-06-22T02:44:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/06/18/postgres-xc-concept-implementation-and-achievements/</loc>
     
     <lastmod>2017-06-18T10:52:40.000Z</lastmod>

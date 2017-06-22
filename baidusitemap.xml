@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/</loc>
+    <lastmod>2017-06-22T02:44:50.000Z</lastmod>
+    <data>
+        <display>
+        <title>Efficient Locking for Concurrent Operations on B-Trees</title>
+        <pubTime>2017-06-22T02:41:34.000Z</pubTime>
+        
+        <tag>数据库</tag>
+         
+        <tag>数据结构与算法</tag>
+         
+         
+           
+             
+              <breadCrumb title="readings" url="http://shenyu.wiki/categories/readings/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://shenyu.wiki/2017/06/18/postgres-xc-concept-implementation-and-achievements/</loc>
     <lastmod>2017-06-18T10:52:40.000Z</lastmod>
     <data>
@@ -898,9 +920,9 @@
         <title>pgNodeGraph -- a postgreSQL node tree print tool</title>
         <pubTime>2016-11-03T21:43:06.000Z</pubTime>
         
-        <tag>c</tag>
-         
         <tag>数据库</tag>
+         
+        <tag>c</tag>
          
         <tag>技术分享</tag>
          

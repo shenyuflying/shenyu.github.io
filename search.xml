@@ -4,6 +4,14 @@
   
     
     <entry>
+      <title><![CDATA[Efficient Locking for Concurrent Operations on B-Trees]]></title>
+      <url>http://shenyu.wiki/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/</url>
+      <content type="html"><![CDATA[<p><a href="/uploads/Efficient-Locking-for-Concurrent-Operations-on-B-Trees.pdf">Efficient Locking for Concurrent Operations on B-Trees</a></p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[postgres-xc concept implementation and achievements]]></title>
       <url>http://shenyu.wiki/2017/06/18/postgres-xc-concept-implementation-and-achievements/</url>
       <content type="html"><![CDATA[<p>This paper covers the very idea of pg-xc, which is a good place to start for pg-xc developers.</p>
@@ -491,18 +499,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[How to setup postgresql ODBC]]></title>
-      <url>http://shenyu.wiki/2017/02/06/how-to-setup-postgresql-odbc/</url>
-      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/how-to-setup-postgresql-odbc.html" width="800" height="600"> </iframe><br></center>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[ODBC programming]]></title>
       <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
       <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" scrolling="no" frameborder="0" width="800" height="600"> </iframe><br></center>
 
 
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[How to setup postgresql ODBC]]></title>
+      <url>http://shenyu.wiki/2017/02/06/how-to-setup-postgresql-odbc/</url>
+      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/how-to-setup-postgresql-odbc.html" width="800" height="600"> </iframe><br></center>
 ]]></content>
     </entry>
     
