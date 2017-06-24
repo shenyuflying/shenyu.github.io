@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/06/24/hanoi/</loc>
+    
+    <lastmod>2017-06-24T04:48:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shenyu.wiki/map/programming.html</loc>
+    
+    <lastmod>2017-06-23T08:53:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/</loc>
     
     <lastmod>2017-06-22T02:44:50.000Z</lastmod>
@@ -229,13 +243,6 @@
     <loc>http://shenyu.wiki/2017/01/22/The-best-career-advice-I%E2%80%99ve-received/</loc>
     
     <lastmod>2017-01-22T01:20:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shenyu.wiki/map/programming.html</loc>
-    
-    <lastmod>2017-01-20T05:03:25.000Z</lastmod>
     
   </url>
   
@@ -807,14 +814,14 @@
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/googlebe1133fd56386bb0.html</loc>
+    <loc>http://shenyu.wiki/baidu_verify_A3D6N86qkv.html</loc>
     
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://shenyu.wiki/baidu_verify_A3D6N86qkv.html</loc>
+    <loc>http://shenyu.wiki/googlebe1133fd56386bb0.html</loc>
     
     <lastmod>2016-10-05T10:28:39.000Z</lastmod>
     
