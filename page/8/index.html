@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：106字数：514194</p>
+        <p class="header-subtitle">文章：107字数：515650</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：106字数：514194</p>
+            <p class="header-subtitle">文章：107字数：515650</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,96 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-yap-yet-another-program-profiling-tool" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/14/yap-yet-another-program-profiling-tool/" class="article-date">
+      <time datetime="2016-10-13T23:59:13.000Z" itemprop="datePublished">2016-10-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>Sampling tools like oprofile or dtrace’s profile provider don’t really provide methods to see what [multithreaded] programs are blocking on - only where they spend CPU time. Though there exist advanced techniques (such as systemtap and dtrace call level probes), it is overkill to build upon that. Poor man doesn’t have time. Poor man needs food.  –quoted from <a href="https://poormansprofiler.org/" target="_blank" rel="external">poor man’s profiler</a></p>
+</blockquote>
+<p>Just as the name implies, this is an enhenced version of poor man’s profiler with the following new features added:</p>
+<ol>
+<li>support command line argument, which make it easier to use and easier to integrate to your program.</li>
+<li>support multi process profiling, which is good for PostgreSQL profiling.</li>
+<li>user can choose how many stack level to print, which make the result set shorter and easier to read.</li>
+<li>when stack level is set to 1 , instead of the stack ranking, the function ranking is printed</li>
+<li>the result set is neater and much more pretty.</li>
+</ol>
+<h2 id="INSTALL"><a href="#INSTALL" class="headerlink" title="INSTALL"></a>INSTALL</h2><p>Download it from <code>https://github.com/shenyuflying/yap.git</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/shenyuflying/yap.git</div></pre></td></tr></table></figure></p>
+<p>Type <code>yap -h</code> to show the help message.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># ./yap -h</div><div class="line">================================================================</div><div class="line">                          YAP    ver0.1                         </div><div class="line">================================================================</div><div class="line">  yap -- yet another profiling tool based on poor man&apos;s profiler</div><div class="line">         to generate stack rank of your program.                </div><div class="line">                                                                </div><div class="line">                             yshen 2016 see http://shenyu.wiki  </div><div class="line">================================================================</div><div class="line">                                                         </div><div class="line">usage: yap options=values</div><div class="line">        -s | --samples=n      how many samples to collect</div><div class="line">        -t | --sleeptime=n    how many time to sleep during each sample</div><div class="line">        -f | --stackframe=n   how deep the stack frame to output</div><div class="line">        -p | --pid=pid        which pid to analyze</div><div class="line">        -n | --progname=name  which program to analyze, good for multi-process profiling</div><div class="line">        -h | --help           show this help</div></pre></td></tr></table></figure></p>
+<p>if the message is shown, the yap is ready to work.</p>
+<h2 id="HOW-TO-USE"><a href="#HOW-TO-USE" class="headerlink" title="HOW TO USE"></a>HOW TO USE</h2><p>You need at least specify a progname or a pid to let yap attach to your program.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div></pre></td></tr></table></figure></p>
+<p>will be enough for the yap to run. after you have choosen a program to profile, you will be run with the default configurations, and <code>yap</code> is start working.<br>the default configurations are<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">samples=100   # take 100 samples of your program</div><div class="line">sleeptime=0   # no sleep during each iteration</div><div class="line">stackframe=5  # the stack frame depth is 5</div></pre></td></tr></table></figure></p>
+<p>it will take a while and there will be a progress indicator on the screen, so take your time.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># ./yap  --progname=postgres</div><div class="line">1/100 completed.</div><div class="line">2/100 completed.</div><div class="line">3/100 completed.</div><div class="line">4/100 completed.</div><div class="line">5/100 completed.</div><div class="line">...</div><div class="line">100/100 complete.</div></pre></td></tr></table></figure></p>
+<p>when done, the stack ranking is printed.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">40 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	WaitLatch</div><div class="line">10 __select_nocancel	ServerLoop	PostmasterMain	main</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	SysLoggerMain</div><div class="line">10 __epoll_wait_nocancel	WaitEventSetWaitBlock	WaitEventSetWait	WaitLatchOrSocket	PgstatCollectorMain</div><div class="line">1</div></pre></td></tr></table></figure></p>
+<p>if you want to seek the function ranking rather than stack ranking, use <code>--stackframe=1</code> and re-run yap</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">60 __epoll_wait_nocancel</div><div class="line">10 __select_nocancel</div><div class="line"> 1</div></pre></td></tr></table></figure>
+<p>the function ranking is much sorter and easier to find the slowest functions.</p>
+<h2 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h2><ol>
+<li>shall be run in a time duration, add -b | –begin and -e | –end and -d | –duration</li>
+<li>shall be exit when the profiling program exit</li>
+<li>…</li>
+</ol>
+<p>report bugs to shenyufly@163.com</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/开源社区/">开源社区</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/">Shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-PostgreSQL性能分析" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -985,75 +1075,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书/">读书</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-linux下配置IP地址子网掩码和网关" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/05/linux下配置IP地址子网掩码和网关/" class="article-date">
-      <time datetime="2016-10-05T03:09:42.000Z" itemprop="datePublished">2016-10-05</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="命令配置"><a href="#命令配置" class="headerlink" title="命令配置"></a>命令配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ifconfig eth0 ipaddr 192.12.12.12 netmask 255.255.255.0 </div><div class="line">route add default gw 192.12.12.1</div><div class="line">ifconfig eth0 down</div><div class="line">ifconfig eht0 up</div></pre></td></tr></table></figure>
-<p>该方法重启过之后就失效了，如果要永久生效，方法有：</p>
-<ol>
-<li>把以上配置命令加入到启动脚本里面</li>
-<li>修改网络配置文件</li>
-</ol>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
     </div>
 
       

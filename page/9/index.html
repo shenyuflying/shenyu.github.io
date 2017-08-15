@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：106字数：514194</p>
+        <p class="header-subtitle">文章：107字数：515650</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：106字数：514194</p>
+            <p class="header-subtitle">文章：107字数：515650</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,75 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-linux下配置IP地址子网掩码和网关" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/05/linux下配置IP地址子网掩码和网关/" class="article-date">
+      <time datetime="2016-10-05T03:09:42.000Z" itemprop="datePublished">2016-10-05</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="命令配置"><a href="#命令配置" class="headerlink" title="命令配置"></a>命令配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ifconfig eth0 ipaddr 192.12.12.12 netmask 255.255.255.0 </div><div class="line">route add default gw 192.12.12.1</div><div class="line">ifconfig eth0 down</div><div class="line">ifconfig eht0 up</div></pre></td></tr></table></figure>
+<p>该方法重启过之后就失效了，如果要永久生效，方法有：</p>
+<ol>
+<li>把以上配置命令加入到启动脚本里面</li>
+<li>修改网络配置文件</li>
+</ol>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-ssh免密码登陆linux主机" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -945,76 +1014,6 @@
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
     </div>
 
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-贪吃蛇-基于SDL" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/17/贪吃蛇-基于SDL/" class="article-date">
-      <time datetime="2016-09-17T10:15:58.000Z" itemprop="datePublished">2016-09-17</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>贪吃蛇不用多说了吧，就是一条蛇吃水果，吃一个他的长度就加１。</p>
-<h2 id="无图无真相"><a href="#无图无真相" class="headerlink" title="无图无真相"></a>无图无真相</h2><p><img src="/uploads/snake.png" alt="tup"></p>
-<p>目前只是先实现了基本的功能，移动，长度加１。还没有实现碰撞检测的功能。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/09/17/贪吃蛇-基于SDL/#more">阅读全文 >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>

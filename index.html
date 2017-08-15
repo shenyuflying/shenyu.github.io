@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：106字数：514194</p>
+        <p class="header-subtitle">文章：107字数：515650</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：106字数：514194</p>
+            <p class="header-subtitle">文章：107字数：515650</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,80 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-a-very-handy-logging-function" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/15/a-very-handy-logging-function/" class="article-date">
+      <time datetime="2017-08-15T08:56:35.000Z" itemprop="datePublished">2017-08-15</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/15/a-very-handy-logging-function/">a very handy logging function</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>print a log prefixed with a timestamp.</p>
+</blockquote>
+<h2 id="sample"><a href="#sample" class="headerlink" title="sample"></a>sample</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">2017-08-10 16:00:28.1050: hello</div><div class="line">2017-08-10 16:00:28.1050: 123</div></pre></td></tr></table></figure>
+<h2 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h2><ol>
+<li>add thread/process info</li>
+<li>add log level</li>
+<li>add strerror info “%m”</li>
+</ol>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;sys/timeb.h&gt;</div><div class="line">#include &lt;stdarg.h&gt;</div><div class="line">#include &lt;time.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line"></div><div class="line">char *systime();</div><div class="line">void logging(char *fmt, ...);</div><div class="line"></div><div class="line">void</div><div class="line">logging(char *fmt, ...)</div><div class="line">&#123;</div><div class="line">	va_list		ap;</div><div class="line"></div><div class="line">	fprintf(stderr, &quot;%s: &quot;, systime());</div><div class="line">	va_start(ap, fmt);</div><div class="line">	vfprintf(stderr, fmt, ap);</div><div class="line">	va_end(ap);</div><div class="line">	fprintf(stderr, &quot;\n&quot;);</div><div class="line">	fflush(stderr);</div><div class="line">&#125;</div><div class="line"></div><div class="line">char * </div><div class="line">systime()</div><div class="line">&#123;</div><div class="line">	static char DataTime[25];                           /* &quot;%Y-%m-%d %H:%M:%S&quot; is just nineteen number */</div><div class="line">	char Millis[8];                                     /* Millisecond */</div><div class="line"></div><div class="line">	time_t rawtime;</div><div class="line">	struct tm *timeinfo;</div><div class="line">	struct timeb timebuffer;</div><div class="line"></div><div class="line">	ftime(&amp;timebuffer);</div><div class="line">	rawtime=timebuffer.time;</div><div class="line">	timeinfo=localtime(&amp;rawtime);                       /* get localtime */</div><div class="line">	</div><div class="line">	strftime(DataTime,25,&quot;%Y-%m-%d %H:%M:%S&quot;,timeinfo); /* Customize the system time format */</div><div class="line">	sprintf(Millis,&quot;.%+3.3hu0&quot;,timebuffer.millitm);</div><div class="line">	strncpy(DataTime+19,Millis,5);</div><div class="line">	</div><div class="line">	return DataTime;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	logging(&quot;hello&quot;);</div><div class="line">	logging(&quot;%d&quot;,123);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-postgres-keepalive" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -953,80 +1027,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言层/">语言层</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-获取字段分组个数" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/05/06/获取字段分组个数/" class="article-date">
-      <time datetime="2017-05-06T07:30:57.000Z" itemprop="datePublished">2017-05-06</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/05/06/获取字段分组个数/">获取字段分组个数</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>现场应用有一个需求，是获取字段分组个数。这里简单介绍2种实现方法。</p>
-</blockquote>
-<p>表中的数据如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">TEST=# select * from tab1;</div><div class="line"> COL</div><div class="line">-----</div><div class="line">  10</div><div class="line">  20</div><div class="line">  10</div><div class="line">  20</div><div class="line">  10</div><div class="line">(5 rows)</div></pre></td></tr></table></figure></p>
-<h2 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h2><p>先用<code>group by</code>进行分组，可以看到有2组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">TEST=# select  count(*) from tab1 group by col;</div><div class="line"> COUNT</div><div class="line">-------</div><div class="line">     2</div><div class="line">     3</div><div class="line">(2 rows)</div></pre></td></tr></table></figure></p>
-<p>在这个基础上来获取记录条数，这里用到了子查询。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">TEST=# select count(*) from (select  count(*) from tab1 group by col);</div><div class="line"> COUNT</div><div class="line">-------</div><div class="line">     2</div><div class="line">(1 row)</div></pre></td></tr></table></figure></p>
-<p>结果就是有两个分组。</p>
-<h2 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h2><p>先用<code>distinct</code>来去重复，再<code>count</code>计算去重后的条数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">TEST=#  select count(distinct(col)) from tab1 ;</div><div class="line"> COUNT</div><div class="line">-------</div><div class="line">     2</div><div class="line">(1 row)</div></pre></td></tr></table></figure></p>
-<h2 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">TEST=# explain analyze select count(*) from (select  count(*) from tab1 group by col);</div><div class="line">                                                       QUERY PLAN</div><div class="line">------------------------------------------------------------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=3080.65..3080.66 rows=1 width=0) (actual time=173.733..173.733 rows=1 loops=1)</div><div class="line">   -&gt;  HashAggregate  (cost=3080.60..3080.62 rows=2 width=4) (actual time=173.723..173.726 rows=2 loops=1)</div><div class="line">         -&gt;  Seq Scan on TAB1  (cost=0.00..2261.40 rows=163840 width=4) (actual time=0.015..54.264 rows=163840 loops=1)</div><div class="line"> Total runtime: 173.841 ms</div><div class="line">(4 rows)</div><div class="line"></div><div class="line">TEST=# explain analyze  select count(distinct(col)) from tab1 ;</div><div class="line">                                                    QUERY PLAN</div><div class="line">------------------------------------------------------------------------------------------------------------------</div><div class="line"> Aggregate  (cost=2671.00..2671.01 rows=1 width=4) (actual time=189.389..189.389 rows=1 loops=1)</div><div class="line">   -&gt;  Seq Scan on TAB1  (cost=0.00..2261.40 rows=163840 width=4) (actual time=0.021..54.395 rows=163840 loops=1)</div><div class="line"> Total runtime: 189.468 ms</div><div class="line">(3 rows)</div></pre></td></tr></table></figure>
-<p>可见第一种方法性能更好，区别主要是第一种方法用的HashAggregate  start time 比较小。但是区别不是很明显。</p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
     </div>
 
       
