@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shenyu.wiki/2017/08/15/postgres-keepalive/</loc>
+    
+    <lastmod>2017-08-15T08:19:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shenyu.wiki/2017/06/27/where-does-bug-come-from/</loc>
     
     <lastmod>2017-06-27T08:40:28.000Z</lastmod>

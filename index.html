@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：105字数：510467</p>
+        <p class="header-subtitle">文章：106字数：514194</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：105字数：510467</p>
+            <p class="header-subtitle">文章：106字数：514194</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,117 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-postgres-keepalive" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/15/postgres-keepalive/" class="article-date">
+      <time datetime="2017-08-15T08:15:18.000Z" itemprop="datePublished">2017-08-15</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/15/postgres-keepalive/">postgres keepalive</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>在客户端连接服务器后，由于各种异常情况，如客户端出现断网、死机、系统崩溃等情况，服务器可能并不知道对端的情况而一直维护这个连接，造成资源的浪费，因此设置了keepalive后，服务器可以探知对端发生的意外情况而释放这个连接。</p>
+</blockquote>
+<h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><p>有三个参数可以配置：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th style="text-align:center">说明</th>
+<th style="text-align:center">单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcp_keepalives_idle</td>
+<td style="text-align:center">最后一次数据交换到发送第一个探测包的间隔</td>
+<td style="text-align:center">秒</td>
+</tr>
+<tr>
+<td>tcp_keepalives_interval</td>
+<td style="text-align:center">没有接收到对方确认，继续发送探测包的次数</td>
+<td style="text-align:center">次</td>
+</tr>
+<tr>
+<td>tcp_keepalives_count</td>
+<td style="text-align:center">没有接收到对方确认，继续发送探测包的频率</td>
+<td style="text-align:center">秒</td>
+</tr>
+</tbody>
+</table>
+<p>即在经过最后一次数据交换后，服务器会等待tcp_keepalive_idle秒的时间，然后发送第一个探测包，若没有收到确认就每隔tcp_keepalive_intvl秒发送下一个，当第tcp_keepalive_probes个探测包没有收到确认后，服务器就会释放这个连接</p>
+<h2 id="配置方法"><a href="#配置方法" class="headerlink" title="配置方法"></a>配置方法</h2><p>在服务器的配置文件中加入三行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">tcp_keepalives_idle = 180</div><div class="line">tcp_keepalives_interval = 30</div><div class="line">tcp_keepalives_count = 3</div><div class="line">```   </div><div class="line">在上例中，服务器先等待180秒后会每隔30秒发送一个探测包，若三个探测包均无确认，服务器会在总计240秒后断开连接。</div><div class="line"></div><div class="line">**注意**：以上配置需要重启服务器。</div><div class="line"></div><div class="line">接下来登陆山</div></pre></td></tr></table></figure></p>
+<p>$ ./isql -USYSTEM -WMANAGER -h192.168.2.121 -p61123 TEST<br>TEST=# show tcp_keepalives_idle;</p>
+<h2 id="tcp-keepalives-idle"><a href="#tcp-keepalives-idle" class="headerlink" title=" tcp_keepalives_idle "></a> tcp_keepalives_idle </h2><p> 180<br>(1 行)</p>
+<p>TEST=# show tcp_keepalives_count;</p>
+<h2 id="tcp-keepalives-count"><a href="#tcp-keepalives-count" class="headerlink" title=" tcp_keepalives_count "></a> tcp_keepalives_count </h2><p> 3<br>(1 行)</p>
+<p>TEST=# show tcp_keepalives_interval;</p>
+<h2 id="tcp-keepalives-interval"><a href="#tcp-keepalives-interval" class="headerlink" title=" tcp_keepalives_interval "></a> tcp_keepalives_interval </h2><p> 30<br>(1 行)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">内部实现</div><div class="line">------------</div><div class="line">keepalive是通过`pq_setkeepalive`函数来设置的，该函数的调用关系如下图。</div><div class="line">![image_1bniabaj2bp1ms11ni33pc43s9.png-26.2kB][1]</div><div class="line">可以看到是在连接ConnCreate的时候来设置的。具体的看`pg_setkeepalivesidle`可以看到：</div><div class="line">```c</div><div class="line">int</div><div class="line">pq_setkeepalivesidle(int idle, Port *port)</div><div class="line">&#123;</div><div class="line">	if (port == NULL || IS_AF_UNIX(port-&gt;laddr.addr.ss_family))</div><div class="line">		return STATUS_OK;</div><div class="line"></div><div class="line">	if (idle == port-&gt;keepalives_idle)</div><div class="line">		return STATUS_OK;</div><div class="line"></div><div class="line">	if (setsockopt(port-&gt;sock, IPPROTO_TCP, TCP_KEEPIDLE,</div><div class="line">				   (char *) &amp;idle, sizeof(idle)) &lt; 0)</div><div class="line">	&#123;</div><div class="line">		elog(LOG, &quot;setsockopt(TCP_KEEPIDLE) failed: %m&quot;);</div><div class="line">		return STATUS_ERROR;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	port-&gt;keepalives_idle = idle;</div><div class="line">	return STATUS_OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>首先会判断是不是空端口（比如本地fork出来的进程），和是不是本地的端口（IS_AF_UNIX）。如果是这两种情况就不会设。</li>
+<li>如果已经设上那么直接返回。</li>
+<li>接下来用<code>setsockopt</code>来设置。</li>
+</ol>
+<p><strong>注意</strong>：以上代码是简化版本。</p>
+<h2 id="其他说明"><a href="#其他说明" class="headerlink" title="其他说明"></a>其他说明</h2><p>有反应show keepalive出来的值是0. show是利用getsockopt来获取端口实际的值。如果连接是本机的话，其实是没设上idle interval count，所以show出来是0. 连接是远程的话，才能设上，show也能显示出来。</p>
+<p>根据如上代码分析：本机的连接不需要设keepalive，只有远程的连接才会设。<br>show的时候是用getsockopt来获取当前连接的keepalive值。所以本机的getsockopt获取的是0。其实是没设上。远程的正常。</p>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-where-does-bug-come-from" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -916,126 +1027,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-裤子把人搞死？一个库引发的悲剧" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/" class="article-date">
-      <time datetime="2017-04-22T05:58:59.000Z" itemprop="datePublished">2017-04-22</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/">裤子把人搞死？一个库引发的悲剧</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>穿个裤子，裤子破个洞，人应该没事吧？现实是人有可能挂掉！悲剧正在发生，一些破库经常搞挂服务器。</p>
-</blockquote>
-<h2 id="问题现象"><a href="#问题现象" class="headerlink" title="问题现象"></a>问题现象</h2><p>服务器coredump，堆栈显示如下：</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/kxnvjyy0kkifws502en6rkvu/image_1bea3g6li19431k0dpq61fag16pn1t.png" alt="**x**"><br>数据库宕记前日志显示如下：</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/7ut8qfw12wql4rrb5x1hxl54/image_1be7j5vnq1iqh1ub1b0bcqm17oi9.png" alt="image_1be7j5vnq1iqh1ub1b0bcqm17oi9.png-3786.2kB"></p>
-<p>通过数据库日志来看，这条语句为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from D5000.OP_ANA_STAT_SAMPLE_MONTH@kdb;</div></pre></td></tr></table></figure></p>
-<p>手动执行这条语句，并没有引发coredump。可见并不是一个频繁发生的问题。</p>
-<p>堆栈信息可知，当时在执行一条pbe语句，在execute阶段通过dblink获取数据时，由于某种原因失败，在释放内存的时候core在了odbc驱动之中。栈顶函数为free，怀疑是odbc驱动内存释放不当导致。</p>
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><h3 id="错误行定位"><a href="#错误行定位" class="headerlink" title="错误行定位"></a>错误行定位</h3><p>由于odbc没有显示行号，需要根据反汇编来确定出错行的位置。根据堆栈信息，出错的指令地址位于0x2aba66c31370位置。</p>
-<p>该处汇编显示为：</p>
-<center> <img src="http://static.zybuluo.com/shenyuflying/0ys6sy1fy85kiq8eofdgpu4m/image_1be76mofi1gucdfu1n8214dl17809.png" alt="image_1be76mofi1gucdfu1n8214dl17809.png-3387.8kB"> </center>
-
-<p>当时的寄存器显示为：</p>
-<center> <img src="http://static.zybuluo.com/shenyuflying/gdrztnkejhms20aij08fnaxd/image_1be770h6n1jdqp6u12ja1ltp1cvvm.png" alt="image_1be770h6n1jdqp6u12ja1ltp1cvvm.png-3299.7kB"> </center>
-
-<p>通过反汇编定位到出错行为：511行。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="number">491</span> <span class="keyword">void</span></div><div class="line"><span class="number">492</span> QR_free_memory(QResultClass *self)</div><div class="line"><span class="number">493</span> &#123;</div><div class="line"><span class="number">494</span> ›   <span class="keyword">register</span> <span class="keyword">int</span> lf,</div><div class="line"><span class="number">495</span> ›   ›   ›   ›   row;</div><div class="line"><span class="number">496</span> ›   <span class="keyword">register</span> TupleField *tuple = self-&gt;backend_tuples;</div><div class="line"><span class="number">497</span> ›   SQLLEN› ›   num_backend_rows = self-&gt;num_backend_rows;</div><div class="line"><span class="number">498</span> ›   <span class="keyword">int</span>››   ›   num_fields = self-&gt;num_fields;</div><div class="line"><span class="number">499</span></div><div class="line"><span class="number">500</span> ›   mylog(<span class="string">"QResult: free memory in %x, fcount = %d\n"</span>, self, num_backend_rows);</div><div class="line"><span class="number">501</span> ›   <span class="keyword">if</span> (self-&gt;backend_tuples)</div><div class="line"><span class="number">502</span> ›   &#123;</div><div class="line"><span class="number">503</span> ›   ›   <span class="keyword">for</span> (row = <span class="number">0</span>; row &lt; num_backend_rows; row++)</div><div class="line"><span class="number">504</span> ›   ›   &#123;</div><div class="line"><span class="number">505</span> ›   ›   ›   mylog(<span class="string">"row = %d, num_fields = %d\n"</span>, row, num_fields);</div><div class="line"><span class="number">506</span> ›   ›   ›   <span class="keyword">for</span> (lf = <span class="number">0</span>; lf &lt; num_fields; lf++)</div><div class="line"><span class="number">507</span> ›   ›   ›   &#123;</div><div class="line"><span class="number">508</span> ›   ›   ›   ›   <span class="keyword">if</span> (tuple[lf].value != <span class="literal">NULL</span>)</div><div class="line"><span class="number">509</span> ›   ›   ›   ›   &#123;</div><div class="line"><span class="number">510</span> ›   ›   ›   ›   ›   mylog(<span class="string">"free [lf=%d] %x\n"</span>, lf, tuple[lf].value);</div><div class="line"><span class="number">511</span> ›   ›   ›   ›   ›   <span class="built_in">free</span>(tuple[lf].value);    ---出错行</div><div class="line"><span class="number">512</span> ›   ›   ›   ›   ›   tuple[lf].value = <span class="literal">NULL</span>;</div><div class="line"><span class="number">513</span> ›   ›   ›   ›   &#125;</div><div class="line"><span class="number">514</span> ›   ›   ›   &#125;</div><div class="line"><span class="number">515</span> ›   ›   ›   tuple += num_fields;›   <span class="comment">/* next row */</span></div><div class="line"><span class="number">516</span> ›   ›   &#125;</div><div class="line"><span class="number">517</span></div><div class="line"><span class="number">518</span> ›   ›   <span class="built_in">free</span>(self-&gt;backend_tuples);</div><div class="line"><span class="number">519</span> ›   ›   <span class="comment">//added by YJL 2003-03-18</span></div><div class="line"><span class="number">520</span> ›   ›   self-&gt;backend_tuples=<span class="literal">NULL</span>;</div><div class="line"><span class="number">521</span> ›   ›   self-&gt;count_backend_allocated = <span class="number">0</span>;</div><div class="line"><span class="number">522</span> ›   ›   self-&gt;backend_tuples = <span class="literal">NULL</span>;</div><div class="line"><span class="number">523</span> ›   &#125;</div></pre></td></tr></table></figure></p>
-<p>free的地址为：0x286f1。</p>
-<p>通过对比堆上地址来看:<br>堆地址范围：  0x2eb465c8<br>指令地址范围：0x5f0e9c 附近</p>
-<p>显然free的地址0x286f1为无效地址。</p>
-<h3 id="错误行dblink-c-789"><a href="#错误行dblink-c-789" class="headerlink" title="错误行dblink.c:789"></a>错误行dblink.c:789</h3><p>该处能够直接对应到行号，该行附近的代码如下：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="number">780</span></div><div class="line"><span class="number">781</span> ›   ›   ›   tuplebuf = palloc(<span class="keyword">sizeof</span>(<span class="keyword">char</span> *) * query-&gt;colcount);</div><div class="line"><span class="number">782</span></div><div class="line"><span class="number">783</span> ›   ›   ›   <span class="keyword">while</span>((rc = SQLFetch(query-&gt;hstmt)) != SQL_NO_DATA)</div><div class="line"><span class="number">784</span> ›   ›   ›   &#123;</div><div class="line"><span class="number">785</span> ›   ›   ›   ›   HeapTuple›  tuple;</div><div class="line"><span class="number">786</span> ›   ›   ›   ›   <span class="keyword">int</span>         offset;</div><div class="line"><span class="number">787</span> ›   ›   ›   ›</div><div class="line"><span class="number">788</span> ›   ›   ›   ›   <span class="keyword">if</span> (rc != SQL_SUCCESS &amp;&amp; rc != SQL_SUCCESS_WITH_INFO)</div><div class="line"><span class="number">789</span> ›   ›   ›   ›   ›   DBLinkReport(query, handle);</div><div class="line"><span class="number">790</span></div><div class="line"><span class="number">791</span> ›   ›   ›   ›   <span class="keyword">for</span>(offset = <span class="number">0</span>; offset &lt; query-&gt;fetchedrows; offset++)</div><div class="line"><span class="number">792</span> ›   ›   ›   ›   &#123;</div><div class="line"><span class="number">793</span> ›   ›   ›   ›   ›   <span class="keyword">for</span>(i = <span class="number">0</span>; i&lt; query-&gt;colcount; i++)</div><div class="line"><span class="number">794</span> ›   ›   ›   ›   ›   &#123;</div></pre></td></tr></table></figure></p>
-<p>可见，SQLFetch函数失败，程序调用DBLinkReport报错退出。报错信息通过gdb能够看到如下内容：</p>
-<p><img src="http://static.zybuluo.com/shenyuflying/hprhegmbg94f8vat7jggh3jq/image_1bea3hfad80cat3mmr1u0q5ko2a.png" alt="image_1bea3hfad80cat3mmr1u0q5ko2a.png-186.6kB"></p>
-<p>报的错误为：<code>Error Fetching next group</code></p>
-<p>根据报错信息，对应到odbc代码中898行位置：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">in function</div><div class="line">   <span class="number">886</span> ›   ›   ›   <span class="built_in">sprintf</span>(fetch, <span class="string">"fetch %d in %s"</span>, fetch_size, self-&gt;cursor);</div><div class="line">   <span class="number">887</span></div><div class="line">   <span class="number">888</span> ›   ›   ›   mylog(<span class="string">"next_tuple: sending actual fetch (%d) query '%s'\n"</span>, fetch_size, fetch);</div><div class="line">   <span class="number">889</span></div><div class="line">   <span class="number">890</span> ›   ›   ›   <span class="comment">/* don't read ahead for the next tuple (self) ! */</span></div><div class="line">   <span class="number">891</span> ›   ›   ›   qi.row_size = self-&gt;cache_size;</div><div class="line">   <span class="number">892</span> ›   ›   ›   qi.result_in = self;</div><div class="line">   <span class="number">893</span> ›   ›   ›   qi.cursor = <span class="literal">NULL</span>;</div><div class="line">   <span class="number">894</span> ›   ›   ›   res = DBC_send_query(self-&gt;conn, fetch, &amp;qi, CLEAR_RESULT_ON_ABORT);</div><div class="line">   <span class="number">895</span> ›   ›   ›   <span class="keyword">if</span> (res == <span class="literal">NULL</span>)</div><div class="line">   <span class="number">896</span> ›   ›   ›   &#123;</div><div class="line">   <span class="number">897</span> ›   ›   ›   ›   self-&gt;status = KBRES_FATAL_ERROR;</div><div class="line">   <span class="number">898</span> ›   ›   ›   ›   QR_set_message(self, <span class="string">"Error fetching next group."</span>, <span class="number">1</span>);</div><div class="line">   <span class="number">899</span> ›   ›   ›   ›   <span class="keyword">return</span> FALSE;</div><div class="line">   <span class="number">900</span> ›   ›   ›   &#125;</div><div class="line">   <span class="number">901</span> ›   ›   ›   self-&gt;inTuples = TRUE;</div></pre></td></tr></table></figure></p>
-<p>根据代码，可以看到当时<code>DBC_send_query</code>在执行<code>fetch %d in %s</code>的时候失败。</p>
-<h3 id="宕机前调用堆栈"><a href="#宕机前调用堆栈" class="headerlink" title="宕机前调用堆栈"></a>宕机前调用堆栈</h3><p>目前看到的是宕记时候的堆栈，现在根据已知信息还原coredump前调用的堆栈：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DBC_send_query   --失败返回NULL--&gt;                                QR_next_tuple</div><div class="line">QR_next_tuple    --报错信息Error fetching_next group 返回FALSE--&gt; STMT_Fetch</div><div class="line">STMT_Fetch       --SQLSTATE设为HY000返回SQLERROR--&gt;               MY_ExtendedFetch</div><div class="line">MY_ExtendedFetch --返回SQLERROR--&gt;                                SQLFetch</div><div class="line">SQLFetch         --返回SQLERROR--&gt;                                dblink_record</div><div class="line">dblink_record    --调用--&gt;                                        DBLinkReport</div><div class="line">DBLinkReport     --调用--&gt;                                        SQLFreeHandle</div><div class="line">SQLFreeHandle    --经过若干调用--&gt;                                QR_free_memory</div></pre></td></tr></table></figure>
-<h2 id="问题重现"><a href="#问题重现" class="headerlink" title="问题重现"></a>问题重现</h2><p>仿照上一节的推理，如果DBC_send_query失败，问题会不会重现？<br>那么在DBC_send_query处打断点，接下来c，直到有fetch 1024的时候，强制DBC_send_query返回0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">(gdb) b DBC_send_query</div><div class="line">Function &quot;DBC_send_query&quot; not defined.</div><div class="line">Make breakpoint pending on future shared library load? (y or [n]) y</div><div class="line">Breakpoint 1 (DBC_send_query) pending.</div><div class="line">(gdb) c</div><div class="line">Continuing.</div><div class="line">[New Thread 0x40a74940 (LWP 15989)]</div><div class="line">[Switching to Thread 0x42332940 (LWP 15981)]</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x2aaade6554d9 &quot; &quot;, qi=0x0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb) c</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x9ebed80 &quot;set DateStyle to &apos;ISO&apos;&quot;, qi=0x0, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x9ee1240 &quot;declare SQL_CUR0x9ec1c20 scroll cursor for SELECT * FROM \&quot;TB1\&quot; WHERE 1 = 0&quot;, qi=0x0, flag=4) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x2aaade6548e5 &quot;BEGIN&quot;, qi=0x0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229ee50 &quot;fetch 0 in SQL_CUR0x9ec1c20&quot;, qi=0x4229eee0, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229f160 &quot;close SQL_CUR0x9ec1c20&quot;, qi=0x0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x9ec1ba0 &quot;declare SQL_CUR0x9ee1240 scroll cursor for SELECT * FROM \&quot;TB1\&quot;&quot;, qi=0x0, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229ebc0 &quot;fetch 0 in SQL_CUR0x9ee1240&quot;, qi=0x4229ec50, flag=0) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb)</div><div class="line">Continuing.</div><div class="line"></div><div class="line">Breakpoint 1, DBC_send_query (self=0x9cf5e40, query=0x4229cad0 &quot;fetch 1024 in SQL_CUR0x9ee1240&quot;, qi=0x4229cab0, flag=1) at connection.c:3820</div><div class="line">3820		QResultClass *cmdres = NULL,</div><div class="line">(gdb) return 0</div></pre></td></tr></table></figure></p>
-<p>接下来就会core掉<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#0  0x0000003a93e7273e in free () from /lib64/libc.so.6</div><div class="line">#1  0x00002aaade575312 in QR_free_memory (self=0x1b7a17a0) at qresult.c:511</div><div class="line">#2  0x00002aaade574c04 in QR_Destructor (self=0x1b7a17a0, closeCursor=1) at qresult.c:296</div><div class="line">#3  0x00002aaade58d5f2 in STMT_Destructor (self=0x1b7bfe30) at statement.c:507</div><div class="line">#4  0x00002aaade58cec4 in MY_FreeStmt (hstmt=0x1b7bfe30, fOption=1) at statement.c:313</div><div class="line">#5  0x00002aaade59a1ad in SQLFreeHandle (HandleType=3, Handle=0x1b7bfe30) at odbcapi30.c:252</div><div class="line">#6  0x0000003a94e170ed in __SQLFreeHandle (handle_type=&lt;value optimized out&gt;, handle=0x1b7c1650) at SQLFreeHandle.c:435</div><div class="line">#7  0x0000003a94e1768c in SQLFreeHandle (handle_type=17, handle=0x0) at SQLFreeHandle.c:598</div><div class="line">#8  0x0000000000b3591b in FreeQueryHandle (conn=0x1b4117a8) at dblinkutl.c:161</div><div class="line">#9  0x0000000000b36c1c in DBLinkReport (query=0x1b79e8c0, cell=0x1b412348) at dblinkerr.c:68</div><div class="line">#10 0x0000000000b34f5a in dblink_record (fcinfo=0x417853c0) at dblink.c:789</div><div class="line">#11 0x00000000006b3b44 in ExecMakeTableFunctionResult (funcexpr=0x1b79e240, econtext=0x1b79de10, expectedDesc=0x1b79e0d0, returnDesc=0x41785820) at execQual.c:1431</div><div class="line">#12 0x00000000006d055f in FunctionNext (node=0x1b79dcf0) at nodeFunctionscan.c:68</div><div class="line">#13 0x00000000006bd964 in ExecScan (node=0x1b79dcf0, accessMtd=0x6d04f8 &lt;FunctionNext&gt;) at execScan.c:70</div></pre></td></tr></table></figure></p>
-<p>那么可以说明我们目前的判断基本正确。出现故障的原因更加清晰了：当时在执行一条pbe语句，在execute阶段通过dblink获取数据时，由于DBC_send_query失败，释放内存不当导致。接下来我们需要找到那块不当释放的内存。</p>
-<h2 id="问题根因"><a href="#问题根因" class="headerlink" title="问题根因"></a>问题根因</h2><p>我们找到backend_tuples分配内存的地方：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self-&gt;backend_tuples = (TupleField *) malloc(self-&gt;num_fields * sizeof(TupleField) * row);</div></pre></td></tr></table></figure></p>
-<p>TupleField定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/*› Used by backend data AND manual result sets */</div><div class="line">struct TupleField_</div><div class="line">&#123;</div><div class="line">›   Int4›   ›   len;›   ›   ›   /* length of the current Tuple */</div><div class="line">›   void›      *value;› ›   ›   /* an array representing the value */</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>可见是分配了列数×行数这么大小的空间，可以看作一个表格：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">backend_tuples</div><div class="line">|---------------|---------------|---------------|---------------|</div><div class="line">|tuple[0].len   |tuple[1].len   |tuple[2].len   |tuple[3].len   |</div><div class="line">|tuple[0].value |tuple[1].value |tuple[2].value |tuple[3].value | row1</div><div class="line">|---------------|---------------|---------------|---------------|</div><div class="line">|tuple[0].len   |tuple[1].len   |tuple[2].len   |tuple[3].len   |</div><div class="line">|tuple[0].value |tuple[1].value |tuple[2].value |tuple[3].value | row2</div><div class="line">|---------------|---------------|---------------|---------------|</div><div class="line">.</div><div class="line">.</div><div class="line">.</div></pre></td></tr></table></figure></p>
-<p>每个格子都是一个TupleField<br>结合<code>QR_free_memory</code>这个函数来看<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="number">491</span> <span class="keyword">void</span></div><div class="line"><span class="number">492</span> QR_free_memory(QResultClass *self)</div><div class="line"><span class="number">493</span> &#123;</div><div class="line"><span class="number">494</span> ›   <span class="keyword">register</span> <span class="keyword">int</span> lf,</div><div class="line"><span class="number">495</span> ›   ›   ›   ›   row;</div><div class="line"><span class="number">496</span> ›   <span class="keyword">register</span> TupleField *tuple = self-&gt;backend_tuples;</div><div class="line"><span class="number">497</span> ›   SQLLEN› ›   num_backend_rows = self-&gt;num_backend_rows;</div><div class="line"><span class="number">498</span> ›   <span class="keyword">int</span>››   ›   num_fields = self-&gt;num_fields;</div><div class="line"><span class="number">499</span></div><div class="line"><span class="number">500</span> ›   mylog(<span class="string">"QResult: free memory in %x, fcount = %d\n"</span>, self, num_backend_rows);</div><div class="line"><span class="number">501</span> ›   <span class="keyword">if</span> (self-&gt;backend_tuples)</div><div class="line"><span class="number">502</span> ›   &#123;</div><div class="line"><span class="number">503</span> ›   ›   <span class="keyword">for</span> (row = <span class="number">0</span>; row &lt; num_backend_rows; row++)</div><div class="line"><span class="number">504</span> ›   ›   &#123;</div><div class="line"><span class="number">505</span> ›   ›   ›   mylog(<span class="string">"row = %d, num_fields = %d\n"</span>, row, num_fields);</div><div class="line"><span class="number">506</span> ›   ›   ›   <span class="keyword">for</span> (lf = <span class="number">0</span>; lf &lt; num_fields; lf++)</div><div class="line"><span class="number">507</span> ›   ›   ›   &#123;</div><div class="line"><span class="number">508</span> ›   ›   ›   ›   <span class="keyword">if</span> (tuple[lf].value != <span class="literal">NULL</span>)</div><div class="line"><span class="number">509</span> ›   ›   ›   ›   &#123;</div><div class="line"><span class="number">510</span> ›   ›   ›   ›   ›   mylog(<span class="string">"free [lf=%d] %x\n"</span>, lf, tuple[lf].value);</div><div class="line"><span class="number">511</span> ›   ›   ›   ›   ›   <span class="built_in">free</span>(tuple[lf].value);    ---出错行</div><div class="line"><span class="number">512</span> ›   ›   ›   ›   ›   tuple[lf].value = <span class="literal">NULL</span>;</div><div class="line"><span class="number">513</span> ›   ›   ›   ›   &#125;</div><div class="line"><span class="number">514</span> ›   ›   ›   &#125;</div><div class="line"><span class="number">515</span> ›   ›   ›   tuple += num_fields;›   <span class="comment">/* next row */</span></div></pre></td></tr></table></figure></p>
-<p>是需要挨个释放 tuple-&gt;value这个指针指向的地址。释放多少个tuple呢？是根据num_backend_rows来判断的。<br>那么就存在如下2个问题：</p>
-<ol>
-<li>malloc分配的空间，必须置空0，否则tuple.value是一个垃圾值。</li>
-<li>num_backend_rows 是否准确？过小则造成内存泄漏，过大则会引起tuple.value指向未知内存。</li>
-<li>tuple-&gt;value是否指向有效地址？比如指向已经释放过的地址（释放了必须置NULL），或者无效地址（比如栈空间）。</li>
-</ol>
-<p>通过看代码，确实存在问题，比如realloc了内存忘记清空，num_backend_rows在读取成功之前就存在递增的情况，如果DBC_send_query失败那么就会有上面第二个问题出现。<br>另外，tuple-&gt;value确实存在指向栈上空间的情况。</p>
-<p>查找value指针指向的内存：</p>
-<p>1、绝大部分地方value在free之后都置NULL了，但是在TL_Destructor以及STMT_pos_reload_needed函数中，value释放过后没置NULL，可能引起多次释放的问题。</p>
-<p>2、在QR_read_tuple函数中，buffer指向的位置是由如下逻辑确定的：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">char</span>    tidoidbuf[<span class="number">32</span>];</div><div class="line"><span class="keyword">if</span> (field_lf &gt;= effective_cols)</div><div class="line">      buffer = tidoidbuf;   --buffer指向<span class="built_in">stack</span>位置</div><div class="line"><span class="keyword">else</span></div><div class="line"> &#123;</div><div class="line">    buffer = (<span class="keyword">char</span> *) <span class="built_in">malloc</span>(len + <span class="number">1</span>); --buffer指向heap位置</div><div class="line">    <span class="keyword">if</span>(buffer == <span class="literal">NULL</span>)</div><div class="line">        <span class="keyword">return</span> FALSE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果满足field_lf &gt;= effective_cols那么是指向stack上的内存，否则是指向heap上的内存。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (field_lf &gt;= effective_cols &amp;&amp; self-&gt;haskeyset)</div><div class="line">&#123;</div><div class="line">           &#125;</div><div class="line"><span class="keyword">else</span></div><div class="line">&#123;</div><div class="line">    this_tuplefield[field_lf].len = len;</div><div class="line">    this_tuplefield[field_lf].value = buffer;   --buffer有可能指向<span class="built_in">stack</span></div><div class="line">          &#125;</div></pre></td></tr></table></figure>
-<p>但是如上代码在实际使用过程中，当<code>self-&gt;haskeyset = false</code>的时候，就会返回stack上的内存。</p>
-<h2 id="问题修复"><a href="#问题修复" class="headerlink" title="问题修复"></a>问题修复</h2><p>主要是对上面提出的3个问题进行修复：</p>
-<ol>
-<li>记录malloc,realloc分配内存的范围，检查tuple是否在这个范围之中。</li>
-<li>malloc,realloc之后，用memset置空内存，防止垃圾值影响tuple.value。</li>
-<li>确保tuple.value不会指向栈上的内存。</li>
-</ol>
-<p>修复过后，在DBC_send_query失败之后就不会core了，错误正常返回给客户端。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">TEST=# SELECT count(*) from tb1@kdb;</div><div class="line">ERROR:  error in database link &quot;KDB&quot;, SQLSTATE=[HY000] Error fetching next group.</div><div class="line">STATEMENT:  SELECT count(*) from tb1@kdb;</div><div class="line">LOG:  statement: ROLLBACK</div><div class="line">ERROR:  error in database link &quot;KDB&quot;, SQLSTATE=[HY000] Error fetching next group.</div><div class="line">TEST=#</div></pre></td></tr></table></figure></p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/debug/">debug</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gdb/">gdb</a></li></ul>
     </div>
 
       
