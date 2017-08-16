@@ -4,6 +4,44 @@
 
     
   <url>
+    <loc>http://shenyu.wiki/2017/08/16/OID%E8%B6%85%E8%BF%8740%E4%BA%BF%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F/</loc>
+    <lastmod>2017-08-16T09:07:16.000Z</lastmod>
+    <data>
+        <display>
+        <title>OID超过40亿会发生什么？</title>
+        <pubTime>2017-08-16T09:04:40.000Z</pubTime>
+        
+        <tag>数据库</tag>
+         
+        <tag>PostgreSQL</tag>
+         
+         
+           
+             
+              <breadCrumb title="技术分享" url="http://shenyu.wiki/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://shenyu.wiki/2017/08/15/%E5%9B%BD%E5%AE%B6%E7%94%B5%E5%AD%90%E6%94%BF%E5%8A%A1%E5%A4%96%E7%BD%91%E5%9B%BD%E4%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%82%E9%85%8D/</loc>
+    <lastmod>2017-08-15T12:28:27.000Z</lastmod>
+    <data>
+        <display>
+        <title>国家电子政务外网国产数据库适配</title>
+        <pubTime>2017-08-15T12:28:27.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>http://shenyu.wiki/2017/08/15/a-very-handy-logging-function/</loc>
     <lastmod>2017-08-15T08:58:08.000Z</lastmod>
     <data>
@@ -33,9 +71,9 @@
         
         <tag>数据库</tag>
          
-        <tag>技术分享</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>技术分享</tag>
          
          
            
@@ -226,9 +264,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>语言层</tag>
          
@@ -466,11 +504,11 @@
         
         <tag>数据库</tag>
          
+        <tag>PostgreSQL</tag>
+         
         <tag>技术分享</tag>
          
         <tag>PostgreSQL内核</tag>
-         
-        <tag>PostgreSQL</tag>
          
         <tag>备份还原</tag>
          
@@ -494,9 +532,9 @@
         
         <tag>数据库</tag>
          
-        <tag>技术分享</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL接口</tag>
          
@@ -522,9 +560,9 @@
         
         <tag>数据库</tag>
          
-        <tag>技术分享</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>PostgreSQL接口</tag>
          
@@ -719,7 +757,6 @@
     </data>
     </url>
 
-    
     
     
     
@@ -938,9 +975,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>查询优化</tag>
          
@@ -1010,13 +1047,13 @@
         <title>pgNodeGraph -- a postgreSQL node tree print tool</title>
         <pubTime>2016-11-03T21:43:06.000Z</pubTime>
         
-        <tag>c</tag>
-         
         <tag>数据库</tag>
          
-        <tag>技术分享</tag>
+        <tag>c</tag>
          
         <tag>PostgreSQL</tag>
+         
+        <tag>技术分享</tag>
          
         <tag>开源社区</tag>
          
@@ -1040,9 +1077,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>语言层</tag>
          
@@ -1068,9 +1105,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>语言层</tag>
          
@@ -1597,9 +1634,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>架构</tag>
          
@@ -1625,9 +1662,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>架构</tag>
          
@@ -1653,9 +1690,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>架构</tag>
          
@@ -1681,9 +1718,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>架构</tag>
          
@@ -1803,9 +1840,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>备份还原</tag>
          
@@ -1829,9 +1866,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
          
            
@@ -1853,9 +1890,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>本地化</tag>
          
@@ -1981,9 +2018,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
          
            
@@ -2029,9 +2066,9 @@
         
         <tag>数据库</tag>
          
-        <tag>PostgreSQL内核</tag>
-         
         <tag>PostgreSQL</tag>
+         
+        <tag>PostgreSQL内核</tag>
          
         <tag>架构</tag>
          
