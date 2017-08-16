@@ -11,7 +11,7 @@
 </blockquote>
 <p>对于加了<code>with oids</code>属性的普通用户表，比较消耗oid，因为每行都要生成一个oid。一旦超过42亿，那么会重新从FirstNormalObjectId=16384开始。这就有可能发生表中的两行有重复的现象发生。（表A中两行oid一样，表A和表B两行oid一样。）</p>
 <p>对于系统表，都是有<code>with oids</code>属性的。那么会不会在一个表中发生重复呢？答案是不会。默认数据库为系统表建了一个OID索引来保证其唯一性的。比如<code>pg_class_oid_index</code>。那么插入系统表的一行时，会先用<code>GetNewObjectId()</code>新生成一个OID，再往索引里面找，如果找到了那么继续往下找，直到这个新生成的OID在索引里面没有找到，那么就保证了这个OID在该表中是唯一的。但是这种机制只能保证该OID在一个系统表内部是不重复的，不能保证该OID没有在别的系统表或者用户表中用过。</p>
-<p>冲突矩阵：<br>| 会不会冲突     | 全局 | 用户表中行的oid | 系统表A中行的oid |系统表B中行的oid |<br>| ————– |:—-:|:—————:|:—————:|:—:|<br>| 全局           | 会   | 会              | 会              |会<br>| 用户表中行的oid| 会   | 会              | 会              |会<br>| 系统表A中行的oid| 会   | 会              | 不会          |会<br>| 系统表B中行的oid| 会   | 会              | 会              |不会|</p>
+<p>冲突矩阵：<br>| 会不会冲突     | 全局 | 用户表中行的oid | 系统表A中行的oid |系统表B中行的oid |<br>| ————– |:—-:|:—————:|:—————:|:—:|<br>| 全局           | 会   | 会              | 会              |会|<br>| 用户表中行的oid| 会   | 会              | 会              |会|<br>| 系统表A中行的oid| 会   | 会              | 不会          |会|<br>| 系统表B中行的oid| 会   | 会              | 会              |不会|</p>
 <p>所以假设OID是唯一是不明智的。</p>
 <h2 id="内部原理"><a href="#内部原理" class="headerlink" title="内部原理"></a>内部原理</h2><p><img src="http://static.zybuluo.com/shenyuflying/2jto93ju1ntvvowq13hypg4o/image_1bnl2ggcv158q10s52hbh581eb99.png" alt="image_1bnl2ggcv158q10s52hbh581eb99.png-122kB"></p>
 <p>所有的oid都是由<code>GetNewObjectId()</code>来生成的，其内部是维护一个全局的counter。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function">Oid</span></div><div class="line"><span class="title">GetNewObjectId</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">	LWLockAcquire(OidGenLock, LW_EXCLUSIVE);</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (ShmemVariableCache-&gt;nextOid &lt; ((Oid) FirstNormalObjectId))</div><div class="line">	&#123;</div><div class="line">			<span class="comment">/* wraparound in normal environment */</span></div><div class="line">			ShmemVariableCache-&gt;nextOid = FirstNormalObjectId;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	result = ShmemVariableCache-&gt;nextOid;</div><div class="line"></div><div class="line">	(ShmemVariableCache-&gt;nextOid)++;</div><div class="line"></div><div class="line">	LWLockRelease(OidGenLock);</div><div class="line"></div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -620,6 +620,13 @@
     </entry>
     
     <entry>
+      <title><![CDATA[How to setup postgresql ODBC]]></title>
+      <url>http://shenyu.wiki/2017/02/06/how-to-setup-postgresql-odbc/</url>
+      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/how-to-setup-postgresql-odbc.html" width="800" height="600"> </iframe><br></center>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[An introduction to ODBC]]></title>
       <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
       <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe><br></center>
@@ -632,13 +639,6 @@
       <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" scrolling="no" frameborder="0" width="800" height="600"> </iframe><br></center>
 
 
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[How to setup postgresql ODBC]]></title>
-      <url>http://shenyu.wiki/2017/02/06/how-to-setup-postgresql-odbc/</url>
-      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/how-to-setup-postgresql-odbc.html" width="800" height="600"> </iframe><br></center>
 ]]></content>
     </entry>
     
