@@ -4,11 +4,9 @@
   
     
     <entry>
-      <title></title>
+      <title><![CDATA[编程题--租房管理系统]]></title>
       <url>http://shenyu.wiki/2017/08/30/%E7%A7%9F%E6%88%BF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</url>
-      <content type="html"><![CDATA[<hr>
-<p>title: 编程题–租房管理系统<br>comments: true<br>date: 2017-08-30 17:23:22<br>tags:[技术分享, 编程, c]</p>
-<h2 id="categories-技术分享"><a href="#categories-技术分享" class="headerlink" title="categories: 技术分享"></a>categories: 技术分享</h2><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。</p>
+      <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。</p>
 <h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>小王的需求如下：</p>
 <ol>
 <li>支持录入房子和录入租客。</li>
@@ -27,7 +25,7 @@
 <li><p>新录入的房子都是空闲状态可以用来出租。</p>
 </li>
 <li><p>房子的属性</p>
-<p>| 类型   | 取值          | 说明                       |<br>| —- | ———– | ———————— |<br>| 面积   | [1,100]     | 平方                       |<br>| 户型   | [1,4]       | 1.一室一厅 2.二室一厅 3.三室一厅 4三室 |<br>| 朝向   | [1,4]       | 1.东 2.南 3.西 4.北          |<br>| 电梯   | [0,1]       | 0.没有电梯 1.有               |<br>| 租金   | [100,20000] | 租金，单位元                   |</p>
+<p>| 类型   | 取值          | 说明                       |<br>|—-|———–|————————|<br>| 面积   | [1,100]     | 平方                       |<br>| 户型   | [1,4]       | 1.一室一厅 2.二室一厅 3.三室一厅 4三室 |<br>| 朝向   | [1,4]       | 1.东 2.南 3.西 4.北          |<br>| 电梯   | [0,1]       | 0.没有电梯 1.有               |<br>| 租金   | [100,20000] | 租金，单位元                   |</p>
 </li>
 <li><p>布尔类型参考如下定义：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> bool  int</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> true  1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> false 0</span></div></pre></td></tr></table></figure>
@@ -49,7 +47,7 @@
 <li><p>如果录入人时候没有符合条件的房子，则本次录入失败。</p>
 </li>
 <li><p>租客的属性：</p>
-<p>| 类型   | 取值           | 说明                      |<br>| —- | ———— | ———————– |<br>| 名字   | 字符串，长度[1,20] | 要求全英文，区分大小写，不会重名        |<br>| 户型需求 | [1,3]        | 1.一室及以上 2.二室及以上 3.三室及以上 |<br>| 朝向需求 | [0,1]        | 0.不限 1.朝南               |<br>| 面积需求 | [1,100]      | 至少需要的房子面积               |<br>| 电梯   | [0,1]        | 0.不限 2.有电梯              |<br>| 租房月数 | [1,12]       | 只租整月                    |<br>​</p>
+<p>| 类型   | 取值           | 说明                      |<br>|—-|————|———————–|<br>| 名字   | 字符串，长度[1,20] | 要求全英文，区分大小写，不会重名        |<br>| 户型需求 | [1,3]        | 1.一室及以上 2.二室及以上 3.三室及以上 |<br>| 朝向需求 | [0,1]        | 0.不限 1.朝南               |<br>| 面积需求 | [1,100]      | 至少需要的房子面积               |<br>| 电梯   | [0,1]        | 0.不限 2.有电梯              |<br>| 租房月数 | [1,12]       | 只租整月                    |<br>​</p>
 </li>
 </ol>
 <h3 id="退房"><a href="#退房" class="headerlink" title="退房"></a>退房</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Refund</span><span class="params">(<span class="keyword">char</span> *name)</span></span>;</div></pre></td></tr></table></figure>
