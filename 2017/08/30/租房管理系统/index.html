@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="title: 编程题–租房管理系统comments: truedate: 2017-08-30 17:23:22tags:[技术分享, 编程, c]
+categories: 技术分享题目你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。
+需求分析小王的需求如下：
+
+支持录入房子和录入租客。
+系统自动匹配符合条件的房子和租客。
+可以生成报表来分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小宇的博客">
+<meta property="og:url" content="http://shenyu.wiki/2017/08/30/租房管理系统/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="title: 编程题–租房管理系统comments: truedate: 2017-08-30 17:23:22tags:[技术分享, 编程, c]
+categories: 技术分享题目你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。
+需求分析小王的需求如下：
+
+支持录入房子和录入租客。
+系统自动匹配符合条件的房子和租客。
+可以生成报表来分">
+<meta property="og:updated_time" content="2017-08-30T13:07:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小宇的博客">
+<meta name="twitter:description" content="title: 编程题–租房管理系统comments: truedate: 2017-08-30 17:23:22tags:[技术分享, 编程, c]
+categories: 技术分享题目你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。
+需求分析小王的需求如下：
+
+支持录入房子和录入租客。
+系统自动匹配符合条件的房子和租客。
+可以生成报表来分">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+<!-- for mermaid -->
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/uploads/siteicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+	
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">文章：110字数：541163</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-home icon-2x">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/map/">导航</a></li>
+                        
+                            <li><a href="/message/">留言</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="http://1572339ac8.iok.la:34421" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/DTCC/">DTCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECPG/">ECPG</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Greenplum/">Greenplum</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OCI/">OCI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/">Oracle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL接口/">PostgreSQL接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cctree/">cctree</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cflow/">cflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debug/">debug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dnsmasq/">dnsmasq</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/egypt/">egypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gprof/">gprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nas/">nas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextcloud/">nextcloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pgxc/">pgxc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/programming/">programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wget/">wget</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备份还原/">备份还原</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源社区/">开源社区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/接口/">接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，PostgreSQL/">数据库，PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构与算法/">数据结构与算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文章/">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地化/">本地化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查询优化/">查询优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/汇编调试方法/">汇编调试方法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爱好/">爱好</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网站/">网站</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言层/">语言层</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调优/">调优</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于基础软件研发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">文章：110字数：541163</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/map/">导航</a></li>
+                
+                    <li><a href="/message/">留言</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="http://1572339ac8.iok.la:34421" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-租房管理系统" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/30/租房管理系统/" class="article-date">
+      <time datetime="2017-08-30T13:07:55.702Z" itemprop="datePublished">2017-08-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <hr>
+<p>title: 编程题–租房管理系统<br>comments: true<br>date: 2017-08-30 17:23:22<br>tags:[技术分享, 编程, c]</p>
+<h2 id="categories-技术分享"><a href="#categories-技术分享" class="headerlink" title="categories: 技术分享"></a>categories: 技术分享</h2><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。</p>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>小王的需求如下：</p>
+<ol>
+<li>支持录入房子和录入租客。</li>
+<li>系统自动匹配符合条件的房子和租客。</li>
+<li>可以生成报表来分析收入情况和哪种房子比较好租。</li>
+</ol>
+<h2 id="总体设计"><a href="#总体设计" class="headerlink" title="总体设计"></a>总体设计</h2><p>经过一天的思考，你觉得这个程序很简单，只需要实现下面的6个API就可以了：</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li>使系统进入初始状态，清空所有数据。</li>
+</ol>
+<h3 id="录入房子信息"><a href="#录入房子信息" class="headerlink" title="录入房子信息"></a>录入房子信息</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">InputHouse</span><span class="params">(<span class="keyword">int</span> size, <span class="keyword">int</span> type, <span class="keyword">int</span> face, <span class="keyword">bool</span> elevator, <span class="keyword">int</span> cost)</span></span>;</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li><p>新录入的房子都是空闲状态可以用来出租。</p>
+</li>
+<li><p>房子的属性</p>
+<p>| 类型   | 取值          | 说明                       |<br>| —- | ———– | ———————— |<br>| 面积   | [1,100]     | 平方                       |<br>| 户型   | [1,4]       | 1.一室一厅 2.二室一厅 3.三室一厅 4三室 |<br>| 朝向   | [1,4]       | 1.东 2.南 3.西 4.北          |<br>| 电梯   | [0,1]       | 0.没有电梯 1.有               |<br>| 租金   | [100,20000] | 租金，单位元                   |</p>
+</li>
+<li><p>布尔类型参考如下定义：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> bool  int</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> true  1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> false 0</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="寻找租客"><a href="#寻找租客" class="headerlink" title="寻找租客"></a>寻找租客</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">InputPerson</span><span class="params">(<span class="keyword">char</span> *name, <span class="keyword">int</span> type, <span class="keyword">int</span> face, <span class="keyword">int</span> size,  <span class="keyword">bool</span> elevator, <span class="keyword">int</span> month)</span></span>;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>租客一次结清所有钱款。</p>
+</li>
+<li><p>每录入一个租客，即刻在系统内查找满足要求的房子：</p>
+<p>户型要求必须满足</p>
+<p>朝向要求必须满足</p>
+<p>电梯要求必须满足</p>
+<p>面积要求必须满足</p>
+<p>面积相等时选户型最大的</p>
+<p>户型相同时选更便宜的</p>
+<p>租金相同时按房子录入顺序从前到后</p>
+</li>
+<li><p>如果录入人时候没有符合条件的房子，则本次录入失败。</p>
+</li>
+<li><p>租客的属性：</p>
+<p>| 类型   | 取值           | 说明                      |<br>| —- | ———— | ———————– |<br>| 名字   | 字符串，长度[1,20] | 要求全英文，区分大小写，不会重名        |<br>| 户型需求 | [1,3]        | 1.一室及以上 2.二室及以上 3.三室及以上 |<br>| 朝向需求 | [0,1]        | 0.不限 1.朝南               |<br>| 面积需求 | [1,100]      | 至少需要的房子面积               |<br>| 电梯   | [0,1]        | 0.不限 2.有电梯              |<br>| 租房月数 | [1,12]       | 只租整月                    |<br>​</p>
+</li>
+</ol>
+<h3 id="退房"><a href="#退房" class="headerlink" title="退房"></a>退房</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Refund</span><span class="params">(<span class="keyword">char</span> *name)</span></span>;</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li>租房和退房同一天完成。</li>
+<li>租房后可当天退房，但是要付一个月的房租，罚的租金算到该房子的总收入里面。</li>
+<li>退房后可以通过重新录入租客的方式继续租房。</li>
+</ol>
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Query</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li><p>只统计产生了收入房子的信息。如果所有的房子未产生收入就报错。</p>
+</li>
+<li><p>根据户型，朝向，电梯三个维度综合汇总：即这三个字段值相同的所有房子归为一组，合并为一行输出，同一组的总租金需要叠加。</p>
+</li>
+<li><p>汇总表中，按照如下顺序从前到后排列：</p>
+<ol>
+<li>总租金</li>
+<li>朝向（南、东、西、北）</li>
+<li>电梯</li>
+<li>户型（从小到大）</li>
+</ol>
+</li>
+<li><p>查询成功，输出最新的户型表信息，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">T F E Money</div><div class="line"><span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">3000</span></div><div class="line"><span class="number">3</span> <span class="number">1</span> <span class="number">1</span> <span class="number">3000</span></div><div class="line"><span class="number">3</span> <span class="number">2</span> <span class="number">1</span> <span class="number">3000</span></div><div class="line"><span class="number">3</span> <span class="number">4</span> <span class="number">1</span> <span class="number">3000</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Quit</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li>退出系统。</li>
+</ol>
+<h2 id="界面设计"><a href="#界面设计" class="headerlink" title="界面设计"></a>界面设计</h2><p>我们需要给小王设计一个界面来方便他的使用。为了更快的开发，我们先做一个简陋的console界面：</p>
+<h3 id="交互式终端界面"><a href="#交互式终端界面" class="headerlink" title="交互式终端界面"></a>交互式终端界面</h3><ol>
+<li><p>初始化完毕之后进入系统，系统显示<code>Enter&gt;</code>提示用户输入命令：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Enter&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>支持的命令有</p>
+<ol>
+<li>help 显示帮助</li>
+<li>ih 录入房子，后接参数。</li>
+<li>it 录入租客，后接参数。</li>
+<li>refund 退款，后接参数。</li>
+<li>qr 生成报表</li>
+<li>quit 退出系统</li>
+</ol>
+</li>
+<li><p>参数顺序和要求见总体设计。</p>
+</li>
+<li><p>命令执行成功或失败后需要给用户显示信息：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Enter&gt;help</div><div class="line">input house : ih size type face elevator cost</div><div class="line">input person: it name type face size elevator month</div><div class="line">refund      : refund name</div><div class="line">query infos : qr</div><div class="line">quit        : quit</div><div class="line">help        : help</div><div class="line">Enter&gt;ih <span class="number">100</span> <span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">1000</span></div><div class="line">INFO: <span class="keyword">new</span> house:<span class="number">0</span> : size <span class="number">100</span> type <span class="number">3</span> face <span class="number">3</span> ele <span class="number">1</span> cost <span class="number">1000</span></div><div class="line">Enter&gt;it yshen <span class="number">3</span> <span class="number">0</span> <span class="number">100</span> <span class="number">0</span> <span class="number">12</span></div><div class="line">INFO: yshen rent house <span class="number">0</span> <span class="keyword">for</span> <span class="number">12</span> months should cost <span class="number">12000</span> money</div><div class="line">Enter&gt;qr</div><div class="line">INFO: grandTotal <span class="number">12000</span>$</div><div class="line">T F E Money</div><div class="line"><span class="number">3</span> <span class="number">3</span> <span class="number">1</span> <span class="number">12000</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+<li><p>界面需要健壮，不能因为输入特殊字符崩溃。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Enter&gt;asdfasdf</div><div class="line">ERROR: unknown command asdfasdf</div><div class="line">Enter&gt;~!@#$%</div><div class="line">ERROR: unknown command ~!@#$%</div><div class="line">Enter&gt;</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ol>
+<h2 id="其他要求"><a href="#其他要求" class="headerlink" title="其他要求"></a>其他要求</h2><ol>
+<li>在linux下采用C语言完成本题目。</li>
+<li>API声明和结构体定义写到rent.h文件中。</li>
+<li>API的实现写到rent.c文件中。</li>
+<li>界面写到main.c文件中。</li>
+<li>要求写一个Makefile。</li>
+</ol>
+<h2 id="评分标准"><a href="#评分标准" class="headerlink" title="评分标准"></a>评分标准</h2><ol>
+<li>一共有10个测试用例直接调用API，通过一个得10分。</li>
+<li>一共有10个测试用例通过界面来模拟人工输入，通过一个得10分。</li>
+<li>满分200分。</li>
+</ol>
+<a id="more"></a>
+<h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div><div class="line">393</div><div class="line">394</div><div class="line">395</div><div class="line">396</div><div class="line">397</div><div class="line">398</div><div class="line">399</div><div class="line">400</div><div class="line">401</div><div class="line">402</div><div class="line">403</div><div class="line">404</div><div class="line">405</div><div class="line">406</div><div class="line">407</div><div class="line">408</div><div class="line">409</div><div class="line">410</div><div class="line">411</div><div class="line">412</div><div class="line">413</div><div class="line">414</div><div class="line">415</div><div class="line">416</div><div class="line">417</div><div class="line">418</div><div class="line">419</div><div class="line">420</div><div class="line">421</div><div class="line">422</div><div class="line">423</div><div class="line">424</div><div class="line">425</div><div class="line">426</div><div class="line">427</div><div class="line">428</div><div class="line">429</div><div class="line">430</div><div class="line">431</div><div class="line">432</div><div class="line">433</div><div class="line">434</div><div class="line">435</div><div class="line">436</div><div class="line">437</div><div class="line">438</div><div class="line">439</div><div class="line">440</div><div class="line">441</div><div class="line">442</div><div class="line">443</div><div class="line">444</div><div class="line">445</div><div class="line">446</div><div class="line">447</div><div class="line">448</div><div class="line">449</div><div class="line">450</div><div class="line">451</div><div class="line">452</div><div class="line">453</div><div class="line">454</div><div class="line">455</div><div class="line">456</div><div class="line">457</div><div class="line">458</div><div class="line">459</div><div class="line">460</div><div class="line">461</div><div class="line">462</div><div class="line">463</div><div class="line">464</div><div class="line">465</div><div class="line">466</div><div class="line">467</div><div class="line">468</div><div class="line">469</div><div class="line">470</div><div class="line">471</div><div class="line">472</div><div class="line">473</div><div class="line">474</div><div class="line">475</div><div class="line">476</div><div class="line">477</div><div class="line">478</div><div class="line">479</div><div class="line">480</div><div class="line">481</div><div class="line">482</div><div class="line">483</div><div class="line">484</div><div class="line">485</div><div class="line">486</div><div class="line">487</div><div class="line">488</div><div class="line">489</div><div class="line">490</div><div class="line">491</div><div class="line">492</div><div class="line">493</div><div class="line">494</div><div class="line">495</div><div class="line">496</div><div class="line">497</div><div class="line">498</div><div class="line">499</div><div class="line">500</div><div class="line">501</div><div class="line">502</div><div class="line">503</div><div class="line">504</div><div class="line">505</div><div class="line">506</div><div class="line">507</div><div class="line">508</div><div class="line">509</div><div class="line">510</div><div class="line">511</div><div class="line">512</div><div class="line">513</div><div class="line">514</div><div class="line">515</div><div class="line">516</div><div class="line">517</div><div class="line">518</div><div class="line">519</div><div class="line">520</div><div class="line">521</div><div class="line">522</div><div class="line">523</div><div class="line">524</div><div class="line">525</div><div class="line">526</div><div class="line">527</div><div class="line">528</div><div class="line">529</div><div class="line">530</div><div class="line">531</div><div class="line">532</div><div class="line">533</div><div class="line">534</div><div class="line">535</div><div class="line">536</div><div class="line">537</div><div class="line">538</div><div class="line">539</div><div class="line">540</div><div class="line">541</div><div class="line">542</div><div class="line">543</div><div class="line">544</div><div class="line">545</div><div class="line">546</div><div class="line">547</div><div class="line">548</div><div class="line">549</div><div class="line">550</div><div class="line">551</div><div class="line">552</div><div class="line">553</div><div class="line">554</div><div class="line">555</div><div class="line">556</div><div class="line">557</div><div class="line">558</div><div class="line">559</div><div class="line">560</div><div class="line">561</div><div class="line">562</div><div class="line">563</div><div class="line">564</div><div class="line">565</div><div class="line">566</div><div class="line">567</div><div class="line">568</div><div class="line">569</div><div class="line">570</div><div class="line">571</div><div class="line">572</div><div class="line">573</div><div class="line">574</div><div class="line">575</div><div class="line">576</div><div class="line">577</div><div class="line">578</div><div class="line">579</div><div class="line">580</div><div class="line">581</div><div class="line">582</div><div class="line">583</div><div class="line">584</div><div class="line">585</div><div class="line">586</div><div class="line">587</div><div class="line">588</div><div class="line">589</div><div class="line">590</div><div class="line">591</div><div class="line">592</div><div class="line">593</div><div class="line">594</div><div class="line">595</div><div class="line">596</div><div class="line">597</div><div class="line">598</div><div class="line">599</div><div class="line">600</div><div class="line">601</div><div class="line">602</div><div class="line">603</div><div class="line">604</div><div class="line">605</div><div class="line">606</div><div class="line">607</div><div class="line">608</div><div class="line">609</div><div class="line">610</div><div class="line">611</div><div class="line">612</div><div class="line">613</div><div class="line">614</div><div class="line">615</div><div class="line">616</div><div class="line">617</div><div class="line">618</div><div class="line">619</div><div class="line">620</div><div class="line">621</div><div class="line">622</div><div class="line">623</div><div class="line">624</div><div class="line">625</div><div class="line">626</div><div class="line">627</div><div class="line">628</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdarg.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctype.h&gt;</span></span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//#define DEBUG 0</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> DEBUG 1</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> bool  int</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> true  1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> false 0</span></div><div class="line"></div><div class="line"><span class="comment">/*****************************</span></div><div class="line"> * structs</div><div class="line"> ****************************/</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> INVALID_FACE 0</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> EAST 1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> WEST 2</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SOUTH 3</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NORTH 4</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> INVALID_TYPE 0</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> NAME_LEN 20</span></div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> house</div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> size;              <span class="comment">/* how big the house is ? within range [1,100] */</span></div><div class="line">	<span class="keyword">int</span> type;        <span class="comment">/* the type of house, see enum houseType */</span></div><div class="line">	<span class="keyword">int</span> face;      <span class="comment">/* the facing of the house, see enum houseFacing */</span></div><div class="line">	<span class="keyword">bool</span> elevator;         <span class="comment">/* true = have elevator,  false = does not have elevator */</span></div><div class="line">	<span class="keyword">int</span> cost;              <span class="comment">/* the cose of the house, within range [100,20000] */</span></div><div class="line">	<span class="keyword">char</span> *name;            <span class="comment">/* point to the person who have rent the house, if NULL not rented */</span></div><div class="line">	<span class="keyword">int</span> months;            <span class="comment">/* 这套房子总共租了多少个月？ 用来算租金。 */</span></div><div class="line">	<span class="keyword">int</span> refund_months;     <span class="comment">/* 如果退租，那么需要减去多少个月的租金？ */</span></div><div class="line">	<span class="keyword">int</span> total;             <span class="comment">/* used only for Query to calc the group total */</span></div><div class="line">&#125; House;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/*****************************</span></div><div class="line"> * API</div><div class="line"> ****************************/</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">InputHouse</span><span class="params">(<span class="keyword">int</span> size, <span class="keyword">int</span> type, <span class="keyword">int</span> face, <span class="keyword">bool</span> elevator, <span class="keyword">int</span> cost)</span></span>;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">InputPerson</span><span class="params">(<span class="keyword">char</span> *name, <span class="keyword">int</span> type, <span class="keyword">int</span> face, <span class="keyword">int</span> size,  <span class="keyword">bool</span> elevator, <span class="keyword">int</span> month)</span></span>;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Refund</span><span class="params">(<span class="keyword">char</span> *name)</span></span>;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Query</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Quit</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/*****************************</span></div><div class="line"> * global data</div><div class="line"> ****************************/</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX 500</span></div><div class="line">House houses[MAX];    <span class="comment">/* all the houses */</span></div><div class="line"></div><div class="line"><span class="comment">/*****************************</span></div><div class="line"> * internal funcs</div><div class="line"> ****************************/</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">initHouses</span><span class="params">(<span class="keyword">void</span>)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">logging</span><span class="params">(<span class="keyword">char</span> *fmt, ...)</span></span>;</div><div class="line"><span class="comment">/*****************************</span></div><div class="line"> * main entry point</div><div class="line"> ****************************/</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	logging(<span class="string">"===========测试============"</span>);</div><div class="line">	Init();</div><div class="line">	logging(<span class="string">"--测试InputHouse"</span>);</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputHouse(<span class="number">500</span>,<span class="number">-1</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputHouse(<span class="number">50</span>,<span class="number">-1</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">-1</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">-1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">30000</span>));</div><div class="line"></div><div class="line">	logging(<span class="string">"--测试InputPerson"</span>);</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwang"</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">50</span>, <span class="number">1</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputPerson(<span class="string">"1234"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">false</span> == InputPerson(<span class="string">"aaaaaaaaaaaaaaaaaaaaa"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line"></div><div class="line">	logging(<span class="string">"--选面积选小的"</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"xiaoming"</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">50</span>, <span class="number">1</span>, <span class="number">1</span>));</div><div class="line"></div><div class="line">	logging(<span class="string">"--选户型大的"</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"xiaoming"</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">50</span>, <span class="number">1</span>, <span class="number">1</span>));</div><div class="line"></div><div class="line">	logging(<span class="string">"--选户便宜的"</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">1000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"xiaoming"</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">50</span>, <span class="number">1</span>, <span class="number">1</span>));</div><div class="line"></div><div class="line">	logging(<span class="string">"--选第一个"</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">100</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"xiaoming"</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">50</span>, <span class="number">1</span>, <span class="number">1</span>));</div><div class="line"></div><div class="line">	logging(<span class="string">"--测试查询：总租金高的应该排前面"</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwang"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshenagain"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	Query();</div><div class="line"></div><div class="line">	logging(<span class="string">"--测试查询：朝向3&gt;1&gt;2&gt;4的应该排前面"</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwanga"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwangb"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwangc"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	Query();</div><div class="line"></div><div class="line">	logging(<span class="string">"--测试查询：有电梯的排前面 "</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwang"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	Query();</div><div class="line">	logging(<span class="string">"--测试查询：房子类型4&gt;3&gt;2&gt;1 "</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">1</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"lmwang"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"asdf"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"dddd"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	Query();</div><div class="line"></div><div class="line"></div><div class="line">	logging(<span class="string">"--测试Refund： 应该有6000的收入 "</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">false</span> == Refund(<span class="string">"yshen"</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	assert(<span class="literal">true</span> == Refund(<span class="string">"yshen"</span>));</div><div class="line">	assert(<span class="literal">false</span> == Refund(<span class="string">"yshen"</span>));</div><div class="line">	assert(<span class="literal">false</span> == Refund(<span class="string">"lmwang"</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">1</span>));</div><div class="line">	Query();</div><div class="line"></div><div class="line">	logging(<span class="string">"--测试Refund： 应该有3000的收入 "</span>);</div><div class="line">	Init();</div><div class="line">	assert(<span class="literal">true</span> == InputHouse(<span class="number">50</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3000</span>));</div><div class="line">	assert(<span class="literal">true</span> == InputPerson(<span class="string">"yshen"</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>, <span class="number">12</span>));</div><div class="line">	assert(<span class="literal">true</span> == Refund(<span class="string">"yshen"</span>));</div><div class="line">	Query();</div><div class="line"></div><div class="line">	logging(<span class="string">"===========进入交互模式(帮助：help)============"</span>);</div><div class="line"></div><div class="line">	<span class="comment">/* now go into interactive command */</span></div><div class="line">	Init();</div><div class="line">	<span class="keyword">while</span>(<span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">char</span> buffer[<span class="number">256</span>]=&#123;<span class="number">0</span>&#125;;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"Enter&gt;"</span>);</div><div class="line">		fgets(buffer, <span class="number">256</span>, <span class="built_in">stdin</span>);</div><div class="line"></div><div class="line">		<span class="comment">/* remove leading and tailing blanks including tailing \n */</span></div><div class="line">		&#123;</div><div class="line">			<span class="keyword">int</span> start=<span class="number">0</span>;</div><div class="line">			<span class="keyword">int</span> end=<span class="built_in">strlen</span>(buffer) <span class="number">-1</span> ;</div><div class="line">			<span class="keyword">int</span> i,j;</div><div class="line">			<span class="comment">/* find the first non-blank char */</span></div><div class="line">			<span class="keyword">while</span>(buffer[start]==<span class="string">' '</span>)start++;</div><div class="line">			<span class="keyword">while</span>(buffer[end]==<span class="string">' '</span>|| buffer[end]==<span class="string">'\n'</span>)end--;</div><div class="line">			end++;</div><div class="line">			<span class="comment">/* copy the rest */</span></div><div class="line">			<span class="keyword">for</span>(i=<span class="number">0</span>; start!=end; i++,start++)</div><div class="line">			&#123;</div><div class="line">				buffer[i]=buffer[start];</div><div class="line">			&#125;</div><div class="line">			buffer[i]=<span class="string">'\0'</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line"></div><div class="line">		<span class="keyword">if</span>(<span class="built_in">strlen</span>(buffer)==<span class="number">1</span> &amp;&amp; <span class="built_in">strncmp</span>(buffer,<span class="string">"r"</span>,<span class="number">1</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			Init();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strncmp</span>(buffer, <span class="string">"ih"</span>, <span class="number">2</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">int</span> size, type, face, elevator, cost;</div><div class="line">			<span class="keyword">if</span>(<span class="number">5</span>!=<span class="built_in">sscanf</span>(buffer, <span class="string">"ih %d %d %d %d %d"</span>, &amp;size, &amp;type, &amp;face, &amp;elevator, &amp;cost))</div><div class="line">			&#123;</div><div class="line">				logging(<span class="string">"ERROR: input format incorrect"</span>);</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">			InputHouse(size, type, face, elevator, cost);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strncmp</span>(buffer, <span class="string">"it"</span>, <span class="number">2</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">char</span> name[<span class="number">256</span>];</div><div class="line">			<span class="keyword">int</span> type, face, size, elevator, month;</div><div class="line">			<span class="keyword">if</span>(<span class="number">6</span>!=<span class="built_in">sscanf</span>(buffer,<span class="string">"it %s %d %d %d %d %d"</span>, name, &amp;type, &amp;face, &amp;size, &amp;elevator, &amp;month))</div><div class="line">			&#123;</div><div class="line">				logging(<span class="string">"ERROR: input format incorrect"</span>);</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">			InputPerson(name, type, face, size, elevator, month);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strncmp</span>(buffer, <span class="string">"refund"</span>, <span class="number">6</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">char</span> name[<span class="number">256</span>];</div><div class="line">			<span class="keyword">if</span>(<span class="number">1</span>!=<span class="built_in">sscanf</span>(buffer,<span class="string">"refund %s"</span>, name))</div><div class="line">			&#123;</div><div class="line">				logging(<span class="string">"ERROR: input format incorrect"</span>);</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">			Refund(name);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strncmp</span>(buffer, <span class="string">"qr"</span>, <span class="number">2</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			Query();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strncmp</span>(buffer, <span class="string">"quit"</span>, <span class="number">4</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strncmp</span>(buffer, <span class="string">"help"</span>, <span class="number">4</span>)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			logging(<span class="string">"input house : ih size type face elevator cost"</span>);</div><div class="line">			logging(<span class="string">"input person: it name type face size elevator month"</span>);</div><div class="line">			logging(<span class="string">"refund      : refund name"</span>);</div><div class="line">			logging(<span class="string">"query infos : qr"</span>);</div><div class="line">			logging(<span class="string">"quit        : quit"</span>);</div><div class="line">			logging(<span class="string">"help        : help"</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">else</span></div><div class="line">		&#123;</div><div class="line">			logging(<span class="string">"ERROR: unknown command %s"</span>, buffer);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">/*****************************</span></div><div class="line"> * implementation</div><div class="line"> ****************************/</div><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">logging</span><span class="params">(<span class="keyword">char</span> *fmt, ...)</span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">if</span>(!DEBUG)</div><div class="line">		<span class="keyword">return</span>;</div><div class="line"></div><div class="line">	va_list		ap;</div><div class="line">	va_start(ap, fmt);</div><div class="line">	<span class="built_in">vfprintf</span>(<span class="built_in">stderr</span>, fmt, ap);</div><div class="line">	va_end(ap);</div><div class="line">	<span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"\n"</span>);</div><div class="line">	fflush(<span class="built_in">stderr</span>);</div><div class="line">&#125;</div><div class="line"><span class="comment">/*</span></div><div class="line"> * 函数：初始化</div><div class="line"> * 入参： 无</div><div class="line"> * 返回值：无</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		houses[i].size=<span class="number">0</span>;</div><div class="line">		houses[i].type=INVALID_TYPE;</div><div class="line">		houses[i].face=INVALID_FACE;</div><div class="line">		houses[i].elevator = <span class="literal">false</span>;</div><div class="line">		houses[i].cost = <span class="number">0</span>;</div><div class="line">		houses[i].name = <span class="literal">NULL</span>;</div><div class="line">		houses[i].months = <span class="number">0</span>;</div><div class="line">		houses[i].refund_months = <span class="number">0</span>;</div><div class="line">		houses[i].total = <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	logging(<span class="string">"init ok!"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 函数：InputHouse 录入一个房子</div><div class="line"> * 入参： size  面积 [1,100]</div><div class="line"> *        type  户型 [1,4] 1:一室一厅 2:两室一厅 3:三室一厅 4三室两厅 大小4&gt;3&gt;2&gt;1</div><div class="line"> *        face  朝向 [1,4] 1:东 2:西 3:南 4:北</div><div class="line"> *        elevator 是否有电梯 [0,1] 0无 1有</div><div class="line"> *        cost  租金 [100,20000]</div><div class="line"> * 返回值：成功返回true 失败返回false</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">InputHouse</span><span class="params">(<span class="keyword">int</span> size, <span class="keyword">int</span> type, <span class="keyword">int</span> face, <span class="keyword">bool</span> elevator, <span class="keyword">int</span> cost)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	<span class="comment">/* check input */</span></div><div class="line">	<span class="keyword">if</span> (size&lt;<span class="number">1</span> || size&gt;<span class="number">100</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: size %d is not within [1,100]"</span>, size);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (type&lt;<span class="number">1</span> || type&gt;<span class="number">4</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: type %d is not within [1,4]"</span>, type);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;	</div><div class="line">	<span class="keyword">if</span> (face&lt;<span class="number">1</span> || face&gt;<span class="number">4</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: face %d is not within [1,4]"</span>, face);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (elevator&lt;<span class="number">0</span> || elevator&gt;<span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: elevator %d is not within [0,1]"</span>, elevator);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (cost&lt;<span class="number">100</span> || cost&gt;<span class="number">20000</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: cost %d is not within [100,20000]"</span>, cost);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">/* input seems ok, now find a empty house to go in */</span></div><div class="line">	<span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(houses[i].size==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* ok find one */</span></div><div class="line">			houses[i].size=size;</div><div class="line">			houses[i].type=type;</div><div class="line">			houses[i].face=face;</div><div class="line">			houses[i].elevator=elevator;</div><div class="line">			houses[i].cost=cost;</div><div class="line"></div><div class="line">			logging(<span class="string">"INFO: new house:%d : size %d type %d face %d ele %d cost %d"</span>, i, size, type, face, elevator, cost);</div><div class="line">			<span class="comment">/* ok, we are done, return now */</span></div><div class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> (i&gt;=MAX)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: cannot input more than %d houses."</span>, MAX);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	logging(<span class="string">"FATAL: program should not reach here!"</span>);</div><div class="line">	<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 函数：InputPerson 录入一个租客，并匹配房子。</div><div class="line"> * 入参： name 姓名 长度[1,20] 要求全是英文，区分大小写</div><div class="line"> *        face 朝向 [0,1] 0不限朝向 1朝南</div><div class="line"> *        size 面积 要求房子面积&gt;=size</div><div class="line"> *        elevator 是否要求电梯 [0,1] 0不要求 1要求有电梯</div><div class="line"> *        month 租房月数 [1,12]</div><div class="line"> * 返回值：成功匹配到房子返回true 否则返回false</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">InputPerson</span><span class="params">(<span class="keyword">char</span> *name, <span class="keyword">int</span> type, <span class="keyword">int</span> face, <span class="keyword">int</span> size, <span class="keyword">bool</span> elevator, <span class="keyword">int</span> month)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i,j;</div><div class="line">	<span class="keyword">int</span> cnt = <span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> arr[MAX]= &#123;<span class="number">0</span>&#125;;</div><div class="line"></div><div class="line">	<span class="comment">/* check input */</span></div><div class="line">	<span class="keyword">if</span>(name==<span class="literal">NULL</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: name cannot be NULL"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(<span class="built_in">strlen</span>(name)&lt;<span class="number">1</span> || <span class="built_in">strlen</span>(name) &gt; NAME_LEN)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: length of %s is %d should within [1,20]"</span>, name, <span class="built_in">strlen</span>(name));</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="built_in">strlen</span>(name);i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(!<span class="built_in">isalpha</span>(name[i]))</div><div class="line">		&#123;</div><div class="line">			logging(<span class="string">"ERROR: name %s should all be alpha"</span>, name);</div><div class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (type&lt;<span class="number">1</span> || type&gt;<span class="number">3</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: type %d is not within [1,3]"</span>, type);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;	</div><div class="line">	<span class="keyword">if</span>(size&lt;<span class="number">1</span> || size&gt;<span class="number">100</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: size %d is not within [1,100]"</span>, size);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(face&lt;<span class="number">0</span> || face&gt;<span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: face %d is not within [0,1]"</span>, face);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (elevator&lt;<span class="number">0</span> || elevator&gt;<span class="number">1</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: elevator %d is not within [0,1]"</span>, elevator);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (month&lt;<span class="number">1</span> || month&gt;<span class="number">12</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: month %d is not within [1,12]"</span>, month);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="comment">/* check repeat */</span></div><div class="line">	<span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(houses[i].name!=<span class="literal">NULL</span> &amp;&amp;  <span class="built_in">strcmp</span>( houses[i].name, name) == <span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			logging(<span class="string">"ERROR: person with name %s already rent house %d"</span>, name, i);</div><div class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	<span class="comment">/* search house */</span></div><div class="line">	<span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(houses[i].name == <span class="literal">NULL</span> &amp;&amp; <span class="comment">/* 该房还没有租出去 */</span></div><div class="line">			houses[i].type &gt;= type &amp;&amp;  <span class="comment">/* 户型大于等于要求的户型 */</span></div><div class="line">		   (face==<span class="literal">false</span> || houses[i].face == SOUTH) &amp;&amp; <span class="comment">/* 朝向不限 或者 朝南*/</span></div><div class="line">		   houses[i].size &gt;= size &amp;&amp; <span class="comment">/* 大于等于要求的面积 */</span></div><div class="line">		   (elevator==<span class="literal">false</span> || houses[i].elevator == <span class="literal">true</span>)) <span class="comment">/* 电梯不限 或者 有电梯 */</span></div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* ok found a house */</span></div><div class="line">			arr[cnt++]=i;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">/* found non */</span></div><div class="line">	<span class="keyword">if</span> (cnt==<span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"WARNING: cannot find a house for %s"</span>, name);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	<span class="comment">/* 找到多个，那么把更合适的排到前面 */</span></div><div class="line">	<span class="keyword">for</span> (i=<span class="number">0</span>;i&lt;cnt;i++)</div><div class="line">	<span class="keyword">for</span> (j=i;j&lt;cnt;j++)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* 1. 选面积最小的 */</span></div><div class="line">		<span class="comment">/* 2. 面积相同时选户型更大的 */</span></div><div class="line">		<span class="comment">/* 3. 户型相同时选便宜的 */</span></div><div class="line">		<span class="keyword">if</span>(houses[arr[i]].size &gt; houses[arr[j]].size ||</div><div class="line">		  (houses[arr[i]].size == houses[arr[j]].size &amp;&amp; houses[arr[i]].type &lt; houses[arr[j]].type) ||</div><div class="line">		  (houses[arr[i]].type == houses[arr[j]].type &amp;&amp; houses[arr[i]].cost &gt; houses[arr[j]].cost))</div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* buble sort */</span></div><div class="line">			<span class="keyword">int</span> tmp = arr[i];</div><div class="line">			arr[i] = arr[j];</div><div class="line">			arr[j] = tmp;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">/* 第一个合适 */</span></div><div class="line">	houses[arr[<span class="number">0</span>]].name   = strdup(name);</div><div class="line">	houses[arr[<span class="number">0</span>]].months += month;</div><div class="line">	houses[arr[<span class="number">0</span>]].refund_months = month - <span class="number">1</span>;</div><div class="line">	logging(<span class="string">"INFO: %s rent house %d( size %d type %d face %d ele %d cost %d) for %d months should cost %d money"</span>, </div><div class="line">			name, arr[<span class="number">0</span>], houses[arr[<span class="number">0</span>]].size, houses[arr[<span class="number">0</span>]].type, houses[arr[<span class="number">0</span>]].face, houses[arr[<span class="number">0</span>]].elevator, houses[arr[<span class="number">0</span>]].cost, month, month* houses[arr[<span class="number">0</span>]].cost);</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 函数：Refund 退款</div><div class="line"> * 入参：name   姓名</div><div class="line"> * 返回：true 退款成功 false 退款失败</div><div class="line"> * </div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Refund</span><span class="params">(<span class="keyword">char</span> *name)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	<span class="keyword">if</span> (name==<span class="literal">NULL</span>)</div><div class="line">	&#123;</div><div class="line">		logging(<span class="string">"ERROR: name cannot be null"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* 遍历houses数组，按照姓名找到该人租的房子*/</span></div><div class="line">		<span class="keyword">if</span>(houses[i].name!=<span class="literal">NULL</span> &amp;&amp; <span class="built_in">strcmp</span>(houses[i].name, name)==<span class="number">0</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="comment">/* ok, found one */</span></div><div class="line">			<span class="built_in">free</span>(houses[i].name); <span class="comment">/* name is copied using strdup so free */</span></div><div class="line">			houses[i].name=<span class="literal">NULL</span>;</div><div class="line">			houses[i].months -= houses[i].refund_months;</div><div class="line"></div><div class="line">			logging(<span class="string">"INFO: %s has refund for house %d and get %d refund money"</span>, name, i, houses[i].refund_months*houses[i].cost);</div><div class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	logging(<span class="string">"ERROR: cannot refund for %s "</span>, name);</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 函数： Query 查询统计信息</div><div class="line"> * 入参：无</div><div class="line"> * 返回值： 有收益返回true 否者返回false</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Query</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">	<span class="comment">/* 一共有32组，然后根据 face, elevator, type 来把房子映射到组里面</span></div><div class="line">	 * 例如：face=4, elevator=1, type=4 那么映射的下标为： 414</div><div class="line">	 *       第一组0 -----通过idx来映射----&gt; idx[0] = 414  ---groups[414]-----&gt; 映射到真实的数据。</div><div class="line">	 */</div><div class="line"></div><div class="line">	House groups[MAX]; <span class="comment">/* 分配了MAX个，但是只用到了32个 */</span></div><div class="line">	<span class="keyword">int</span>   idx[<span class="number">32</span>]=&#123; </div><div class="line">					<span class="number">414</span>,<span class="number">413</span>,<span class="number">412</span>,<span class="number">411</span>,</div><div class="line">					<span class="number">404</span>,<span class="number">403</span>,<span class="number">402</span>,<span class="number">401</span>,</div><div class="line"></div><div class="line">					<span class="number">314</span>,<span class="number">313</span>,<span class="number">312</span>,<span class="number">311</span>,</div><div class="line">					<span class="number">304</span>,<span class="number">303</span>,<span class="number">302</span>,<span class="number">301</span>,</div><div class="line"></div><div class="line">					<span class="number">214</span>,<span class="number">213</span>,<span class="number">212</span>,<span class="number">211</span>,</div><div class="line">					<span class="number">204</span>,<span class="number">203</span>,<span class="number">202</span>,<span class="number">201</span>,</div><div class="line"></div><div class="line">					<span class="number">114</span>,<span class="number">113</span>,<span class="number">112</span>,<span class="number">111</span>,</div><div class="line">					<span class="number">104</span>,<span class="number">103</span>,<span class="number">102</span>,<span class="number">101</span>,</div><div class="line">	               &#125;;</div><div class="line"></div><div class="line">	<span class="keyword">int</span> i, j;</div><div class="line">	<span class="keyword">int</span> grandTotal = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		groups[i].size=<span class="number">0</span>;</div><div class="line">		groups[i].type=INVALID_TYPE;</div><div class="line">		groups[i].face=INVALID_FACE;</div><div class="line">		groups[i].elevator=<span class="literal">false</span>;</div><div class="line">		groups[i].cost=<span class="number">0</span>;</div><div class="line">		groups[i].name=<span class="literal">NULL</span>;</div><div class="line">		groups[i].months=<span class="number">0</span>;</div><div class="line">		groups[i].total=<span class="number">0</span>;</div><div class="line">	&#125;	</div><div class="line"></div><div class="line">	<span class="comment">/* 计算一下该类房子的收益 */</span></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;MAX;i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">int</span> groupN=<span class="number">0</span>;</div><div class="line"></div><div class="line">		<span class="comment">/* 算出该类型房子的组别 */</span></div><div class="line">		groupN += <span class="number">100</span>*houses[i].face;</div><div class="line">		groupN += <span class="number">10</span>*houses[i].elevator;</div><div class="line">		groupN += <span class="number">1</span>*houses[i].type;</div><div class="line"></div><div class="line">		groups[groupN].elevator=houses[i].elevator;</div><div class="line">		groups[groupN].type=houses[i].type;</div><div class="line">		groups[groupN].face=houses[i].face;</div><div class="line">		<span class="comment">/* 加到总收益中 */</span></div><div class="line">		groups[groupN].total += houses[i].cost * houses[i].months;</div><div class="line">		grandTotal += groups[groupN].total;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span>(grandTotal==<span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		<span class="comment">/* 一分钱都没赚到 */</span></div><div class="line">		logging(<span class="string">"ERROR: no money"</span>);</div><div class="line"></div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	logging(<span class="string">"INFO: grandTotal %d$"</span>, grandTotal);</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> G(i) groups[idx[(i)]]</span></div><div class="line"></div><div class="line">	<span class="comment">/* 来个冒泡排序 */</span></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">32</span>;i++)</div><div class="line">	<span class="keyword">for</span>(j=i; j&lt;<span class="number">32</span>;j++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(G(i).total == <span class="number">0</span> || G(j).total == <span class="number">0</span>)</div><div class="line">			<span class="keyword">continue</span>;</div><div class="line"></div><div class="line">		<span class="keyword">if</span>((G(i).total &lt; G(j).total)||       <span class="comment">/* 租金大的排前面 */</span></div><div class="line">			(G(i).total == G(j).total &amp;&amp; G(i).face==NORTH &amp;&amp; G(j).face!=NORTH) ||      <span class="comment">/* 租金相同按 南3&gt;东1&gt;西2&gt;北4 排, Gi朝北， Gj不朝北，Gj应该排前面 */</span></div><div class="line">			(G(i).total == G(j).total &amp;&amp; G(i).face==WEST &amp;&amp;( G(j).face==SOUTH || G(j).face==EAST)) ||   <span class="comment">/* Gi朝向西， Gj朝向南或者东 Gj应该排前面 */</span></div><div class="line">			(G(i).total == G(j).total &amp;&amp; G(i).face==EAST &amp;&amp;( G(j).face==SOUTH )) ||   <span class="comment">/* Gi朝向东， Gj朝向南 Gj应该排前面 */</span></div><div class="line">		    (G(i).total == G(j).total &amp;&amp; G(i).face==G(j).face &amp;&amp; G(i).elevator ==<span class="literal">false</span> &amp;&amp; G(j).elevator ==<span class="literal">true</span> ) ||   <span class="comment">/*钱和朝向都相同，有电梯的排前面 */</span></div><div class="line">			(G(i).total == G(j).total &amp;&amp; G(i).face==G(j).face &amp;&amp; G(i).elevator == G(j).elevator &amp;&amp; G(i).type &gt; G(j).type))   <span class="comment">/*全部都相同，户型1234从小到大，小的排前面 */</span></div><div class="line">		&#123;</div><div class="line"></div><div class="line">			<span class="comment">/* swap */</span></div><div class="line">			House tmp = G(i);</div><div class="line">			G(i) = G(j);</div><div class="line">			G(j) = tmp;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	<span class="built_in">printf</span>(<span class="string">"T F E Money\n"</span>);</div><div class="line"></div><div class="line">	<span class="comment">/* output */</span></div><div class="line">	<span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">32</span>;i++)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(G(i).total!=<span class="number">0</span>)</div><div class="line">			<span class="built_in">printf</span>(<span class="string">"%d %d %d %d\n"</span>, G(i).type, G(i).face, G(i).elevator, G(i).total);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/08/30/租房管理系统/"></a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
+        <p><span>发布时间:</span>2017-08-30, 21:07:55</p>
+        <p><span>最后更新:</span>2017-08-30, 21:07:37</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/30/租房管理系统/" title="">http://shenyu.wiki/2017/08/30/租房管理系统/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/08/30/租房管理系统/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/16/OID超过40亿会发生什么？/">
+                    OID超过40亿会发生什么？
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#categories-技术分享"><span class="toc-number">1.</span> <span class="toc-text">categories: 技术分享</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#题目"><span class="toc-number"></span> <span class="toc-text">题目</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#需求分析"><span class="toc-number">1.</span> <span class="toc-text">需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总体设计"><span class="toc-number">2.</span> <span class="toc-text">总体设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化"><span class="toc-number">2.1.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#录入房子信息"><span class="toc-number">2.2.</span> <span class="toc-text">录入房子信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#寻找租客"><span class="toc-number">2.3.</span> <span class="toc-text">寻找租客</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#退房"><span class="toc-number">2.4.</span> <span class="toc-text">退房</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询"><span class="toc-number">2.5.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#退出"><span class="toc-number">2.6.</span> <span class="toc-text">退出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#界面设计"><span class="toc-number">3.</span> <span class="toc-text">界面设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#交互式终端界面"><span class="toc-number">3.1.</span> <span class="toc-text">交互式终端界面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他要求"><span class="toc-number">4.</span> <span class="toc-text">其他要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#评分标准"><span class="toc-number">5.</span> <span class="toc-text">评分标准</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#源码"><span class="toc-number"></span> <span class="toc-text">源码</span></a>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/08/30/租房管理系统/" data-title="" data-url="http://shenyu.wiki/2017/08/30/租房管理系统/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/16/OID超过40亿会发生什么？/" title="下一篇: OID超过40亿会发生什么？">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/租房管理系统/">租房管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/OID超过40亿会发生什么？/">OID超过40亿会发生什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/国家电子政务外网国产数据库适配/">国家电子政务外网国产数据库适配</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/a-very-handy-logging-function/">a very handy logging function</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/postgres-keepalive/">postgres keepalive</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/27/where-does-bug-come-from/">where does bug come from</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/24/hanoi/">hanoi</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/">Efficient Locking for Concurrent Operations on B-Trees</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/18/postgres-xc-concept-implementation-and-achievements/">postgres-xc concept implementation and achievements</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/12/with-hold-cursor/">with hold cursor</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/25/数据库使用bytea类型存取二进制文件/">数据库使用bytea类型存取二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/25/DTCC2017/">DTCC2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/10/postgres-identifier-and-keyworkd/">postgres identifier and keyword</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/获取字段分组个数/">获取字段分组个数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/">裤子把人搞死？一个库引发的悲剧</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/12/a-nice-progressbar-with-time-estimation/">a nice progressbar with time estimation</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/09/vim-build-from-source/">vim build from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/bit-map-sets-sorting/">bitmap sets sorting</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/26/awesome-awesome-lots-of-good-stuff/">awesome awesome lots of good stuff</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/25/traversing-tree-in-preorder-inorder-postorder-and-level-order/">traversing tree in preorder inorder postorder and level order</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/12/source-insight-color-theme/">Source insight color theme</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/11/Readings-of-query-optimizer/">Readings of query optimizer</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/For-developers-how-to-build-run-Greenplum-for-debugging-purposes/">For developers: how to build & run Greenplum for debugging purposes</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/nextcloud——搭建自己的云盘/">nextcloud——搭建自己的云盘</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/科学上网——搭建自己的DNS服务器/">科学上网——搭建自己的DNS服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/how-to-change-your-linux-timezone/">how to set your linux's timezone</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/09/soname/">soname</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/an-introduction-to-odbc/">An introduction to ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/odbc-programming/">ODBC programming</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/how-to-setup-postgresql-odbc/">How to setup postgresql ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/">过年在家写了一个蛮有趣的小程序：codeRunner</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/The-best-career-advice-I’ve-received/">The best career advice I’ve received</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160526/">汇编调试方法-20160526</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160506/">汇编调试方法-20160506</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/修改hosts来访问谷歌/">修改hosts来访问谷歌</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/">如果你要给学生一些学习建议，你会说些什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/16/hexo博客增加菜单栏目/">hexo博客增加菜单栏目</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/13/PostgreSQL中的PL-SQL实现/">PostgreSQL中的PL/SQL实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/PostgreSQL逻辑备份还原/">PostgreSQL逻辑备份还原</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/08/【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）/">【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/git统计代码贡献/">git统计代码贡献</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/02/pg-logical-backup-restore/">PostgreSQL logical backup & restore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/01/【小宇带你学PostgreSQL内核】第四课：parser语法分析/">【小宇带你学PostgreSQL内核】第四课：parser语法分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/29/GDB图形界面大PK/">GDB图形界面大PK</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/">【小宇带你学PostgreSQL内核】第三课：内核架构(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/">【小宇带你学PostgreSQL内核】第三课：内核架构(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/PostgreSQL-internal-roadmap/">PostgresSQL-internal-roadmap</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/14/yshen-s-vim-settings/">yshen's vim settings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/">【小宇带你学PostgreSQL内核】第二课：开发环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">【小宇带你学PostgreSQL内核】第一课：课程简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">好书推荐：《Debug hacks——深入调试的技术和工具》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/26/缓冲区溢出的那些事儿/">缓冲区溢出的那些事儿</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解静态链接库和动态链接库/">深入理解静态链接库和动态链接库</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/12/linux中进程共享内存的2种方法/">linux中进程共享内存的2种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux进程改名/">linux进程改名</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC driver internal</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/20/markdown-test/">markdown test</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2017 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
