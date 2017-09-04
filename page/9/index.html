@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：110字数：541141</p>
+        <p class="header-subtitle">文章：111字数：541708</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：110字数：541141</p>
+            <p class="header-subtitle">文章：111字数：541708</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,77 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-linux中的硬链接和软链接" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/10/linux中的硬链接和软链接/" class="article-date">
+      <time datetime="2016-10-09T22:03:07.000Z" itemprop="datePublished">2016-10-10</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="建立硬链接和软链接"><a href="#建立硬链接和软链接" class="headerlink" title="建立硬链接和软链接"></a>建立硬链接和软链接</h2><p>在linux中我们通过ln命令来建立硬链接和软链接，默认是建立硬链接，加上-s参数那么建立的就是软链接。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;Hello world&quot; &gt; a</div><div class="line">$ ln a a_hard_link</div><div class="line">$ ln -s a a_soft_link</div></pre></td></tr></table></figure></p>
+<p>建立好之后，用ls命令看一下，记得加上-i这样我们就可以看到inode号了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ls -ali</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a</div><div class="line">19796575 -rw-rw-r--  2 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p><strong>inode</strong><br>科普一下：inode全称是index node即索引节点。可见inode中并没有存放文件的实际内容，而是存放了索引。这个索引指向的是磁盘中存放文件内容的物理位置。<br><strong>目录</strong><br>在linux中目录也有一个inode，inode指向记录目录实际内容的磁盘物理位置。</p>
+<h2 id="什么是硬链接和软链接"><a href="#什么是硬链接和软链接" class="headerlink" title="什么是硬链接和软链接"></a>什么是硬链接和软链接</h2><p>再回到我们的例子里，ls的结果第一列是该文件的inode号，可以看到硬链接的inode号和文件原来的inode号是一样的。说明指向的物理位置是一样的。<br>我们看软链接的inode号不同，说明是一个新的文件，该文件指向的是另外的一个物理位置。该物理位置里面存放着链接目标的路径。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>让我们删除连接目标文件a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ rm a</div><div class="line">$ ls -ali</div><div class="line">总用量 12</div><div class="line">19796573 drwxrwxr-x  2 yshen yshen 4096 10月 10 11:35 .</div><div class="line">58720267 drwxrwxr-x 43 yshen yshen 4096 10月 10 11:33 ..</div><div class="line">19796575 -rw-rw-r--  1 yshen yshen   12 10月 10 11:33 a_hard_link</div><div class="line">19796574 lrwxrwxrwx  1 yshen yshen    1 10月 10 11:34 a_soft_link -&gt; a</div></pre></td></tr></table></figure></p>
+<p>硬链接和软链接现在还能访问么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cat a_hard_link </div><div class="line">Hello world</div><div class="line">$ cat a_soft_link </div><div class="line">cat: a_soft_link: 没有那个文件或目录</div></pre></td></tr></table></figure></p>
+<p>硬链接还能访问，软链接现在已经失效了！根据定义我们不难找出原因：<br>(1)硬链接指向的是物理位置和连接对象指向的物理位置一样，该物理位置有一个引用计数（ls的第三列），删除链接对象后，引用计数从原来的2变为1，所以物理上文件并没有删除，如果为0的话采用unlink删除。所以硬链接依然可以访问。<br>(2)软链接其实是一个文件，文件指向的路径已经失效了，所以会显示没有那个文件或目录。</p>
+<p>我们总结一下区别：<br>(1) 链接目标失效之后，硬链接依然可以访问。软链接不能访问。<br>(2) 硬链接只能指向和链接目标同一个分区，软链接没有限制，甚至可以指向网络地址。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-linux中的僵尸进程" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -938,95 +1009,9 @@
 
 
   
-    <article id="post-wget下载网站供离线浏览" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/02/wget下载网站供离线浏览/" class="article-date">
-      <time datetime="2016-10-02T08:44:45.000Z" itemprop="datePublished">2016-10-02</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <blockquote>
-<p>我们经常使用wget命令来下载文件，那么能不能使用wget来下载整个网站呢？</p>
-</blockquote>
-<p>看wget的man说明，可以发现wget有几个特点：</p>
-<ol>
-<li>非交互式，可以工作在后台。</li>
-<li>可以追踪html中的链接，在下载过程中把连接自动转换为本地路径，从而创建本地网站镜像。</li>
-<li>健壮性高，在失败之后会不断尝试，支持断线重连。</li>
-</ol>
-<p>发现wget果然强大，有网站下载这个功能，而且还可以控制网站下载的方式，下面就是wget进行网站下载的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ wget \</div><div class="line">     --recursive \</div><div class="line">     --no-clobber \</div><div class="line">     --page-requisites \</div><div class="line">     --html-extension \</div><div class="line">     --convert-links \</div><div class="line">     --restrict-file-names=windows \</div><div class="line">     --domains shenyu.wiki \</div><div class="line">     --no-parent \</div><div class="line">         shenyu.wiki</div></pre></td></tr></table></figure>
-<p>上面的命令会下载 <a href="http://www.shenyu.wiki" target="_blank" rel="external">http://www.shenyu.wiki</a> 下面所有的页面。</p>
-<p>上面用到的wget网站下载选择解释：</p>
-<pre><code>--recursive: 下载整个网站
---domains shenyu.wiki: 不要下载指定域名之外的网页。
---no-parent: 仅仅下载当前目录结构下的文件。
---page-requisites: 现在网页包括的所有内容(images, CSS and so on).
---html-extension: 将网页保存为html文件。
---convert-links: 将连接转换为本地连接
---restrict-file-names=unix: 文件名保存为unix格式,如果是要保存windows格式的，这里写成windows
---no-clobber: 不要覆盖已有文件，在下载中断后继续下载。
-</code></pre><p>下载完成之后，生成了<code>shenyu.wiki</code>文件夹，进去可以看到该网站的内容都下载好了。可以打开index.html文件来离线浏览网站。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ ll</div><div class="line">total 220</div><div class="line">drwxr-xr-x 6 yshen yshen   4096 10月  2 16:41 ./</div><div class="line">drwxr-xr-x 3 yshen yshen   4096 10月  2 16:41 ../</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 2016/</div><div class="line">-rw-r--r-- 1 yshen yshen  21632 10月  2 13:08 about.html</div><div class="line">-rw-r--r-- 1 yshen yshen  27364 10月  2 13:08 archives.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 css/</div><div class="line">-rw-r--r-- 1 yshen yshen 101642 10月  2 13:08 index.html</div><div class="line">-rw-r--r-- 1 yshen yshen  19836 10月  2 13:08 message.html</div><div class="line">-rw-r--r-- 1 yshen yshen  20598 10月  2 13:08 tags.html</div><div class="line">drwxr-xr-x 2 yshen yshen   4096 10月  2 16:41 uploads/</div><div class="line">drwxr-xr-x 4 yshen yshen   4096 10月  2 16:41 vendors/</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wget/">wget</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
     </nav>
   
 </div>

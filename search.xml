@@ -4,6 +4,18 @@
   
     
     <entry>
+      <title><![CDATA[where does bug come from]]></title>
+      <url>http://shenyu.wiki/2017/09/04/where-does-bug-come-from-1/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>This presentation is given on September 1st, 2017. Share with you the experience of fixing bugs in the last 2 years.</p>
+</blockquote>
+<embed src="http://player.youku.com/player.php/sid/XMzAwNDc0ODQxNg==/v.swf" allowfullscreen="true" quality="high" width="480" height="400" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash">
+
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[编程题--租房管理系统]]></title>
       <url>http://shenyu.wiki/2017/08/30/%E7%A7%9F%E6%88%BF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/</url>
       <content type="html"><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>你的好朋友小王最近开了一家房产中介公司，听闻你是程序员，所以找你帮忙写一个租房管理软件。你愉快的答应了。</p>
