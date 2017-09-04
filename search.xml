@@ -9,7 +9,7 @@
       <content type="html"><![CDATA[<blockquote>
 <p>This presentation is given on September 1st, 2017. Share with you the experience of fixing bugs in the last 2 years.</p>
 </blockquote>
-<embed src="http://player.youku.com/player.php/sid/XMzAwNDc0ODQxNg==/v.swf" allowfullscreen="true" quality="high" width="480" height="400" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash">
+<center><embed src="http://player.youku.com/player.php/sid/XMzAwNDc0ODQxNg==/v.swf" allowfullscreen="true" quality="high" width="480" height="400" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash"></center>
 
 <p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
 ]]></content>
@@ -795,18 +795,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[An introduction to ODBC]]></title>
-      <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
-      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe><br></center>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[ODBC programming]]></title>
       <url>http://shenyu.wiki/2017/02/06/odbc-programming/</url>
       <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/odbc-programming.html" scrolling="no" frameborder="0" width="800" height="600"> </iframe><br></center>
 
 
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[An introduction to ODBC]]></title>
+      <url>http://shenyu.wiki/2017/02/06/an-introduction-to-odbc/</url>
+      <content type="html"><![CDATA[<center><br><iframe src=" http://shenyu.wiki/uploads/an-introduction-to-odbc.html" width="800" height="600"> </iframe><br></center>
 ]]></content>
     </entry>
     
