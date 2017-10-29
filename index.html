@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：111字数：541725</p>
+        <p class="header-subtitle">文章：112字数：545336</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：111字数：541725</p>
+            <p class="header-subtitle">文章：112字数：545336</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,87 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Writing-coredump-free-codes-by-handling-of-SIGSEGV" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/29/Writing-coredump-free-codes-by-handling-of-SIGSEGV/" class="article-date">
+      <time datetime="2017-10-29T01:15:57.000Z" itemprop="datePublished">2017-10-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/29/Writing-coredump-free-codes-by-handling-of-SIGSEGV/">Writing coredump free codes by handling of SIGSEGV</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>Invalied memory access is always a headache for C programmers. The default way for the OS to handle Invalied memory access is send a SIGSEGV to the program and later shutdown the program and generate a coredump file. But very often we want to see if a memory address is safe to write and read. Or simply sometime we just want to avoid SIGSEGV to happen. The trick is to catch SIGSEGV and handle it by ourself.</p>
+</blockquote>
+<p>The below C code is trying to access an invalied memory address <code>0x00</code>, the OS will send SIGSEGV to the program and generate a coredump file, finally the program is shut down. This is the default behavior for the OS to handle invalied memory access.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> *a = <span class="number">0</span>;</div><div class="line">*a = <span class="number">1</span>;</div></pre></td></tr></table></figure></p>
+<p>But suppose we put the above code inside a try…catch? If the try failed, we will catch it and print an error message?<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> *a = <span class="number">0</span>;</div><div class="line">    *a = <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">catch</span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"catched SIGSEGV\n"</span>);</div><div class="line">&#125;</div><div class="line">endtry;</div></pre></td></tr></table></figure></p>
+<p>The <code>try...catch</code> here set up two things: </p>
+<ol>
+<li>a signal handler to catch <code>SIGSEGV</code>.</li>
+<li>a long jump to catch when <code>SIGSEGV</code> is raised.</li>
+</ol>
+<p>Here is a full source code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;setjmp.h&gt;</div><div class="line">#include &lt;signal.h&gt;</div><div class="line"></div><div class="line">typedef void (*SignalHandlerPtr)(int);</div><div class="line">SignalHandlerPtr savedSIGSEGV = (SignalHandlerPtr)(0);</div><div class="line">sigjmp_buf SEGSEGVjmp;</div><div class="line">static void SEGSEGVhandler(int sig);</div><div class="line"></div><div class="line">#define try  \</div><div class="line">	do &#123; \</div><div class="line">	    savedSIGSEGV = signal(SIGSEGV, SEGSEGVhandler); \</div><div class="line">		if (sigsetjmp(SEGSEGVjmp, 1) == 0) \</div><div class="line">		&#123; </div><div class="line"></div><div class="line">#define catch	\</div><div class="line">		&#125; \</div><div class="line">		else \</div><div class="line">		&#123;</div><div class="line">		 </div><div class="line"></div><div class="line">#define endtry  \</div><div class="line">        signal(SIGSEGV, savedSIGSEGV); \</div><div class="line">		&#125; \</div><div class="line">	&#125; while (0)</div><div class="line"></div><div class="line">static void SEGSEGVhandler(int sig)</div><div class="line">&#123;</div><div class="line">    sig=sig;</div><div class="line">    siglongjmp(SEGSEGVjmp, 1);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    try</div><div class="line">    &#123;</div><div class="line">        int *a = 0;</div><div class="line">        *a = 1;</div><div class="line">    &#125;</div><div class="line">    catch</div><div class="line">    &#123;</div><div class="line">        printf(&quot;catched SIGSEGV\n&quot;);</div><div class="line">    &#125;</div><div class="line">    endtry;</div><div class="line"></div><div class="line">    </div><div class="line">	printf(&quot;exited normally\n&quot;);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>This program will not cause a coredump, instead will catch SIGSEGV and exit normally.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">catched SIGSEGV</div><div class="line">exited normally</div></pre></td></tr></table></figure></p>
+<p>If we know how to try…catch a SIGSEGV, we may as well know how to write a function to test whether an address is safe or not. Now we write a function called <code>bool IsByteSafe( void *add )</code> for that.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsByteSafe</span><span class="params">( <span class="keyword">void</span> *add )</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> c;</div><div class="line"></div><div class="line">	<span class="comment">/* is safe to read/write ? */</span></div><div class="line">    <span class="keyword">try</span></div><div class="line">    &#123;</div><div class="line">		c = *(<span class="keyword">unsigned</span> <span class="keyword">char</span> *)add;</div><div class="line">		*(<span class="keyword">unsigned</span> <span class="keyword">char</span> *)add = c;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span></div><div class="line">    &#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">    endtry;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>More, we can also test a memory region by using <code>bool IsByteSafe( void *add )</code>. So we come up with a function <code>bool IsSafeAddress(void *begin, size_t len)</code>.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsSafeAddress</span><span class="params">(<span class="keyword">void</span> *begin, <span class="keyword">size_t</span> len)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">while</span>(--len)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span>(!IsByteSafe(begin+len))</div><div class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Now, let’s put all above into test.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int c;</div><div class="line">	int *a = &amp;c;</div><div class="line">	int *b = 0x00;</div><div class="line">#define SIZE (100*sizeof(int))</div><div class="line">	int *d = (int *)malloc(SIZE);</div><div class="line"></div><div class="line">	if(IsSafeAddress(a, sizeof(int)))</div><div class="line">	&#123;</div><div class="line">		printf(&quot;%p is safe\n&quot;, a);</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line">		printf(&quot;%p is not safe\n&quot;, a);</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	if(IsSafeAddress(b, sizeof(int)))</div><div class="line">	&#123;</div><div class="line">		printf(&quot;%p is safe\n&quot;, b);</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line">		printf(&quot;%p is not safe\n&quot;, b);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	if(IsSafeAddress(d, SIZE))</div><div class="line">	&#123;</div><div class="line">		printf(&quot;%p---%p is safe\n&quot;, d, d+100);</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line">		printf(&quot;%p---%p is not safe\n&quot;, d, d+100);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	printf(&quot;exited normally\n&quot;);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ./main </div><div class="line">0x7ffd2001e1b4 is safe</div><div class="line">(nil) is not safe</div><div class="line">0x7a6e8fd010---0x7a6e8fd1a0 is safe</div><div class="line">exited normally</div></pre></td></tr></table></figure>
+<p>Okay, all is well.</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-where-does-bug-come-from-1" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1075,71 +1156,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构与算法/">数据结构与算法</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-postgres-xc-concept-implementation-and-achievements" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/06/18/postgres-xc-concept-implementation-and-achievements/" class="article-date">
-      <time datetime="2017-06-18T10:48:20.000Z" itemprop="datePublished">2017-06-18</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/18/postgres-xc-concept-implementation-and-achievements/">postgres-xc concept implementation and achievements</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>This paper covers the very idea of pg-xc, which is a good place to start for pg-xc developers.</p>
-<p><a href="/uploads/Postgres-XC-Concept-Implementation-and-Achievements.pdf">postgres-XC concept implementation and achievements</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/readings/">readings</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pgxc/">pgxc</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/架构/">架构</a></li></ul>
     </div>
 
       
