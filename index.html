@@ -109,7 +109,7 @@
         </hgroup>
 
         
-        <p class="header-subtitle">文章：112字数：545336</p>
+        <p class="header-subtitle">文章：113字数：558674</p>
         
 
         
@@ -247,7 +247,7 @@
               <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
             </hgroup>
             
-            <p class="header-subtitle">文章：112字数：545336</p>
+            <p class="header-subtitle">文章：113字数：558674</p>
             
             <nav class="header-menu">
                 <ul>
@@ -283,6 +283,207 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-深入理解postgres嵌入式sql" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/11/18/深入理解postgres嵌入式sql/" class="article-date">
+      <time datetime="2017-11-18T13:08:46.000Z" itemprop="datePublished">2017-11-18</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/18/深入理解postgres嵌入式sql/">深入理解postgres嵌入式sql</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="What"><a href="#What" class="headerlink" title="What?"></a>What?</h2><p>ESQL（Embedded SQL），嵌入式SQL：是一种将<a href="https://baike.baidu.com/item/SQL%E8%AF%AD%E5%8F%A5/5714895" target="_blank" rel="external">SQL语句</a>直接写入宿主语言的方法。宿主语言可以是C语言等等语言。</p>
+<table>
+<thead>
+<tr>
+<th>数据库</th>
+<th>嵌入式SQL名称</th>
+<th>文档</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oracle</td>
+<td>Pro*C</td>
+<td><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm" target="_blank" rel="external">https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm</a></td>
+</tr>
+<tr>
+<td>Kingbase</td>
+<td>ESQL</td>
+<td>联机帮助手册</td>
+</tr>
+<tr>
+<td>Postgres</td>
+<td>ECPG</td>
+<td><a href="https://www.postgresql.org/docs/10/static/ecpg-concept.html" target="_blank" rel="external">https://www.postgresql.org/docs/10/static/ecpg-concept.html</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Why"><a href="#Why" class="headerlink" title="Why?"></a>Why?</h2><p>这样就可以在C语言里面直接书写SQL语句，比如我们对比如下两段代码：</p>
+<p><strong>C语言调用libpq</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    PGconn     *conn;</div><div class="line">	PGresult   *res;</div><div class="line">    <span class="keyword">int</span> v1;</div><div class="line">    ...</div><div class="line">    res = PQexec(conn, <span class="string">"select a from test limit 1;"</span>);</div><div class="line">	v1 = atoi(PQgetvalue(res, <span class="number">0</span>, <span class="number">0</span>));</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>嵌入式SQL</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">	EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">	int v1;</div><div class="line">	EXEC SQL END DECLARE SECTION;</div><div class="line">	...	</div><div class="line">	EXEC SQL SELECT a INTO :v1 FROM test LIMIT 1;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>优点：</strong></p>
+<p>给应用研发人员带来了很大方便。这样使得研发人员可以不关注底层实现（比如上例子中的变量输出），较初级的程序员也可以有较高产出。</p>
+<ul>
+<li>用法简单</li>
+<li>检查语法</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>受限制于ESQL本身的语法，不够灵活。适用于比较简单的应用。</li>
+<li>ESQL底层基于libpq，所以ESQL功能只是libpq的一个子集。</li>
+<li>性能一般。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th style="text-align:center">兼容性</th>
+<th style="text-align:center">性能</th>
+<th style="text-align:center">易用性</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESQL</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center">少</td>
+</tr>
+<tr>
+<td>libpq</td>
+<td style="text-align:center">低</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">多</td>
+</tr>
+<tr>
+<td>ODBC</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">低</td>
+<td style="text-align:center">中</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Who"><a href="#Who" class="headerlink" title="Who?"></a>Who?</h2><ul>
+<li>应用研发人员</li>
+<li>数据库研发人员</li>
+</ul>
+<h2 id="Where"><a href="#Where" class="headerlink" title="Where?"></a>Where?</h2><ul>
+<li>新开发应用</li>
+<li>迁移的应用</li>
+</ul>
+<h2 id="When"><a href="#When" class="headerlink" title="When?"></a>When?</h2><ul>
+<li>规模相对较小的应用</li>
+<li>程序原型验证</li>
+<li>初级研发人员</li>
+</ul>
+<h2 id="How"><a href="#How" class="headerlink" title="How?"></a>How?</h2><p>本文希望通过以下内容来让读者具备基本的ESQL研发能力</p>
+<ul>
+<li>架构</li>
+<li>客户端编程</li>
+<li>代码概貌</li>
+<li>近期主要工作</li>
+</ul>
+<h1 id="客户端编程"><a href="#客户端编程" class="headerlink" title="客户端编程"></a>客户端编程</h1><p><img src="/uploads/step.png" alt=""></p>
+<h2 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h2><h3 id="预编译"><a href="#预编译" class="headerlink" title="预编译"></a>预编译</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char msg[256] = &#123;0&#125;;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    EXEC SQL WHENEVER SQLERROR sqlprint;</div><div class="line">    EXEC SQL CONNECT TO postgres@localhost;</div><div class="line"></div><div class="line">    EXEC SQL select * into :msg from helloworld;</div><div class="line"></div><div class="line">    printf("%s\n", msg);</div><div class="line"></div><div class="line">	EXEC SQL DISCONNECT;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(ECPG)  helloworld.pgc -I $(ECPG_INCLUDE) -o helloworld.c</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Processed by ecpg (11devel) */</span></div><div class="line"><span class="comment">/* These include files are added by the preprocessor */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ecpglib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ecpgerrno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlca.h&gt;</span></span></div><div class="line"><span class="comment">/* End of automatic include section */</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 1 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">/* exec sql begin declare section */</span></div><div class="line">           </div><div class="line">    </div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 7 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"> <span class="keyword">char</span> msg [ <span class="number">256</span> ] = &#123; <span class="number">0</span> &#125; ;</div><div class="line"><span class="comment">/* exec sql end declare section */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 8 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* exec sql whenever sqlerror  sqlprint ; */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 10 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    &#123; ECPGconnect(<span class="number">__L</span>INE__, <span class="number">0</span>, <span class="string">"postgres@localhost"</span> , <span class="literal">NULL</span>, <span class="literal">NULL</span> , <span class="literal">NULL</span>, <span class="number">0</span>); </div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 12 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (sqlca.sqlcode &lt; <span class="number">0</span>) sqlprint();&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 12 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    &#123; ECPGdo(<span class="number">__L</span>INE__, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>, <span class="number">0</span>, ECPGst_normal, <span class="string">"select * from helloworld"</span>, ECPGt_EOIT, </div><div class="line">	ECPGt_char,(msg),(<span class="keyword">long</span>)<span class="number">256</span>,(<span class="keyword">long</span>)<span class="number">1</span>,(<span class="number">256</span>)*<span class="keyword">sizeof</span>(<span class="keyword">char</span>), </div><div class="line">	ECPGt_NO_INDICATOR, <span class="literal">NULL</span> , <span class="number">0L</span>, <span class="number">0L</span>, <span class="number">0L</span>, ECPGt_EORT);</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 14 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (sqlca.sqlcode &lt; <span class="number">0</span>) sqlprint();&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 14 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, msg);</div><div class="line"></div><div class="line">    &#123; ECPGdisconnect(<span class="number">__L</span>INE__, <span class="string">"CURRENT"</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 18 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (sqlca.sqlcode &lt; <span class="number">0</span>) sqlprint();&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 18 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -g -O0  -I $(ECPG_INCLUDE) -L $(LIB)  -o helloworld helloworld.c -lecpg</div></pre></td></tr></table></figure>
+<h3 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ./helloworld </div><div class="line">hello world</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ldd ./helloworld</div><div class="line">	linux-vdso.so.1 (0x00007ffe29bcd000)</div><div class="line">	libecpg.so.6 =&gt; /home/yshen/coding/postgresql/release/lib/libecpg.so.6 </div><div class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fe4cfd6b000)</div><div class="line">	libpgtypes.so.3 =&gt; /home/yshen/coding/postgresql/release/lib/libpgtypes.so.3 </div><div class="line">	libpq.so.5 =&gt; /home/yshen/coding/postgresql/release/lib/libpq.so.5 </div><div class="line">	libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 </div><div class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007fe4d0624000)</div><div class="line">	libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007fe4cf3ea000)</div></pre></td></tr></table></figure>
+<h3 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">POSTGRES=&quot;/home/yshen/coding/postgresql/release&quot;</div><div class="line">ECPG=$(POSTGRES)&quot;/bin/ecpg&quot;</div><div class="line">ECPG_INCLUDE=$(POSTGRES)&quot;/include&quot;</div><div class="line">LIB=$(POSTGRES)&quot;/lib&quot;</div><div class="line"></div><div class="line">execs=$(patsubst %.pgc,%,$(wildcard *.pgc))</div><div class="line"></div><div class="line">all: $(execs)</div><div class="line"></div><div class="line">%: %.c</div><div class="line">	gcc -g -O0  -I $(ECPG_INCLUDE) -L $(LIB)  -o $@ $&lt; -lecpg</div><div class="line"></div><div class="line">%.c: %.pgc</div><div class="line">	$(ECPG)  $&lt; -I $(ECPG_INCLUDE) -o $@</div><div class="line"></div><div class="line">clean:</div><div class="line">	-rm  $(execs)</div></pre></td></tr></table></figure>
+<p>make</p>
+<p>make clean</p>
+<p>make helloworld.c</p>
+<h2 id="综合例子：备份工具"><a href="#综合例子：备份工具" class="headerlink" title="综合例子：备份工具"></a>综合例子：备份工具</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * dump utility written by ESQL</div><div class="line"> *              yshen@2017</div><div class="line"> */</div><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line"></div><div class="line">/* public interfaces */</div><div class="line">void Connect(char *dbname);</div><div class="line">void Disconnect();</div><div class="line">void Dump();</div><div class="line"></div><div class="line">/* internal functions */</div><div class="line">void dump_one_table(char *tbname);</div><div class="line">char * get_type_string(int type);</div><div class="line"></div><div class="line">/* execution start from here */</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    Connect("postgres");</div><div class="line">    Dump();</div><div class="line">    Disconnect();</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* connect to db */</div><div class="line">void Connect(char *dbname)</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char connstr[256];</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    sprintf(connstr, "%s", dbname);</div><div class="line">    EXEC SQL WHENEVER SQLERROR sqlprint;</div><div class="line">    EXEC SQL CONNECT TO :connstr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* disconnect from db */</div><div class="line">void Disconnect()</div><div class="line">&#123;</div><div class="line">    EXEC SQL DISCONNECT;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* dump start here */</div><div class="line">void Dump()</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">    char schemaname[256] = &#123;0&#125;;</div><div class="line">    char tablename[256]  = &#123;0&#125;;</div><div class="line">    char fullname[256] = &#123;0&#125;;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    /*</div><div class="line">     * query all tables from pg_tables view</div><div class="line">     * FIXME: currently only support postgres</div><div class="line">     */</div><div class="line">    EXEC SQL DECLARE cur2 CURSOR  FOR</div><div class="line">        select schemaname, tablename </div><div class="line">        from pg_tables</div><div class="line">        where schemaname!='pg_catalog'</div><div class="line">        and schemaname!='information_schema';</div><div class="line"></div><div class="line">    EXEC SQL OPEN cur2;</div><div class="line"></div><div class="line">    while (1)</div><div class="line">    &#123;</div><div class="line">        EXEC SQL FETCH cur2 INTO :schemaname, :tablename;</div><div class="line">        if (sqlca.sqlcode == ECPG_NOT_FOUND) break;</div><div class="line">        sprintf(fullname,"%s.%s", schemaname, tablename);</div><div class="line">        /* do the acutal dump for this table */</div><div class="line">        dump_one_table(fullname);</div><div class="line">    &#125;</div><div class="line">    EXEC SQL CLOSE cur2;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* dump one table's defination and data */</div><div class="line">void dump_one_table(char *tbname)</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char sql[256] = &#123;0&#125;;</div><div class="line">        int rows;</div><div class="line">        int cols;</div><div class="line">        char data[256] = &#123;0&#125;;</div><div class="line">        char name[256] = &#123;0&#125;;</div><div class="line">        int type;</div><div class="line">        int firstrow=1;</div><div class="line">        int i;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    sprintf(sql, "select * from %s;", tbname);</div><div class="line"></div><div class="line">    EXEC SQL ALLOCATE DESCRIPTOR desc1;</div><div class="line">    EXEC SQL PREPARE stmt1 FROM :sql;</div><div class="line">    EXEC SQL DECLARE cur1 CURSOR FOR stmt1;</div><div class="line">    EXEC SQL OPEN cur1;</div><div class="line">    EXEC SQL DESCRIBE stmt1 INTO SQL DESCRIPTOR desc1;</div><div class="line">    EXEC SQL GET DESCRIPTOR desc1 :cols = COUNT;</div><div class="line"></div><div class="line">    printf("create table %s (", tbname);</div><div class="line"></div><div class="line">    /* dump table's defination into create stmt</div><div class="line">     *      create table xxx (col1 type1, col2, type2...);</div><div class="line">     */</div><div class="line">    for (i=0; i&lt;cols; i++)</div><div class="line">    &#123;</div><div class="line">        i++;</div><div class="line">        EXEC SQL GET DESCRIPTOR desc1 VALUE :i :name = NAME;</div><div class="line">        EXEC SQL GET DESCRIPTOR desc1 VALUE :i :type = TYPE;</div><div class="line">        i--;</div><div class="line">        if(i==0)</div><div class="line">            printf("%s %s", name, get_type_string(type));</div><div class="line">        else</div><div class="line">            printf(", %s %s", name, get_type_string(type));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    printf(");\n");</div><div class="line"></div><div class="line">    /* dump table's data into a insert stmt</div><div class="line">     *      insert into tbname (col1 type ...) values (row1),(row2)..(rown);</div><div class="line">     */</div><div class="line">    printf("insert into %s (", tbname);</div><div class="line">    for (i=0; i&lt;cols; i++)</div><div class="line">    &#123;</div><div class="line">        i++;</div><div class="line">        EXEC SQL GET DESCRIPTOR desc1 VALUE :i :name = NAME;</div><div class="line">        i--;</div><div class="line">        if(i==0)</div><div class="line">            printf("%s", name);</div><div class="line">        else</div><div class="line">            printf(", %s", name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    printf(") values ");</div><div class="line"></div><div class="line"></div><div class="line">    /* print values */</div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        EXEC SQL FETCH cur1 INTO SQL DESCRIPTOR desc1; </div><div class="line">        if (sqlca.sqlcode == ECPG_NOT_FOUND) break;</div><div class="line"></div><div class="line">        if(firstrow)</div><div class="line">            printf("(");</div><div class="line">        else</div><div class="line">            printf(",(");</div><div class="line">        for (i=0; i&lt;cols; i++)</div><div class="line">        &#123;</div><div class="line">            i++;</div><div class="line">            EXEC SQL GET DESCRIPTOR desc1 VALUE :i :data = DATA;</div><div class="line">            i--;</div><div class="line"></div><div class="line">            if(i==0)</div><div class="line">                printf("\'%s\'", data);</div><div class="line">            else</div><div class="line">                printf(", \'%s\'", data);</div><div class="line">        </div><div class="line">        &#125;</div><div class="line">        printf(") ");</div><div class="line">        firstrow=0;</div><div class="line">    &#125;</div><div class="line">    printf(";\n");</div><div class="line"></div><div class="line">    EXEC SQL CLOSE cur1;</div><div class="line">    EXEC SQL DEALLOCATE DESCRIPTOR desc1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">char * get_type_string(int type)</div><div class="line">&#123;</div><div class="line"></div><div class="line">    switch(type)</div><div class="line">    &#123;</div><div class="line">        case 1:</div><div class="line">            return "text";</div><div class="line">            break;</div><div class="line">        case 4:</div><div class="line">            return "int";</div><div class="line">            break;</div><div class="line">        default:</div><div class="line">         return "text";</div><div class="line">            </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ./dump </div><div class="line">create table public.helloworld (a text);</div><div class="line">insert into public.helloworld (a) values (&apos;hello world&apos;) ;</div><div class="line">create table public.tb1 (a int);</div><div class="line">insert into public.tb1 (a) values (&apos;1&apos;) ,(&apos;1&apos;) ,(&apos;2&apos;) ,(&apos;3&apos;);</div><div class="line">create table public.tb2 (a int, b text);</div><div class="line">insert into public.tb2 (a, b) values (&apos;1&apos;, &apos;yshen&apos;) ,(&apos;2&apos;, &apos;hxwang&apos;) ;</div></pre></td></tr></table></figure>
+<h1 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h1><h2 id="逻辑架构"><a href="#逻辑架构" class="headerlink" title="逻辑架构"></a>逻辑架构</h2><p><img src="/uploads/prep.png" alt=""></p>
+<p><img src="/uploads/exec.png" alt=""></p>
+<h2 id="开发架构"><a href="#开发架构" class="headerlink" title="开发架构"></a>开发架构</h2><h3 id="代码目录"><a href="#代码目录" class="headerlink" title="代码目录"></a>代码目录</h3><p>源码位于src/interface/ecpg目录下：</p>
+<ul>
+<li>preproc      –预处理</li>
+<li>ecpglib        –运行时</li>
+<li>pgtypeslib  –类型输入输出</li>
+<li>compatlib   –兼容性</li>
+<li>include        –头文件</li>
+<li>test  –测试</li>
+</ul>
+<h3 id="主要流程"><a href="#主要流程" class="headerlink" title="主要流程"></a>主要流程</h3><p>（回到开头的hello world）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ECPGdo(<span class="number">__L</span>INE__, <span class="comment">/* 行号 */</span></div><div class="line">    <span class="number">0</span>,           <span class="comment">/* compatible level， 比如兼容infomix */</span></div><div class="line">    <span class="number">1</span>,           <span class="comment">/* 强制输出isnull，如果没有提供indicator变量就会报错。 */</span></div><div class="line">    <span class="literal">NULL</span>,        <span class="comment">/* 用于执行语句的数据库连接 */</span></div><div class="line">    <span class="number">0</span>,           <span class="comment">/* 是用?来标志入参么，还是用$1 $2 ...*/</span></div><div class="line">    ECPGst_normal,  <span class="comment">/* 语句类型 */</span></div><div class="line">    <span class="string">"select * from helloworld"</span>, </div><div class="line">    ECPGt_EOIT,  <span class="comment">/* 输入结束标志 */</span></div><div class="line">	ECPGt_char,  <span class="comment">/* 数据类型 */</span></div><div class="line">    (msg),       <span class="comment">/* 指向变量的指针 */</span></div><div class="line">    (<span class="keyword">long</span>)<span class="number">256</span>,   <span class="comment">/* char或varchar数组的大小 */</span></div><div class="line">    (<span class="keyword">long</span>)<span class="number">1</span>,     <span class="comment">/* 数组中元素的个数（用于取多条记录） */</span></div><div class="line">	(<span class="number">256</span>)*<span class="keyword">sizeof</span>(<span class="keyword">char</span>),  <span class="comment">/* 数组下一维度的起始位置（用于取多条记录） */</span> </div><div class="line">	ECPGt_NO_INDICATOR,  <span class="comment">/* 有没有indicator来输出isnull */</span></div><div class="line">     <span class="literal">NULL</span> ,   <span class="comment">/* 指向indicator的指针 */</span></div><div class="line">     <span class="number">0L</span>,      <span class="comment">/* */</span></div><div class="line">     <span class="number">0L</span>,      <span class="comment">/* indicator的个数（用于取多条记录） */</span></div><div class="line">	 <span class="number">0L</span>,      <span class="comment">/* indicator下一维度的其实位置（用于取多条记录） */</span></div><div class="line">     ECPGt_EORT <span class="comment">/* 输出结束标志 */</span></div><div class="line">      );</div></pre></td></tr></table></figure>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h2 id="语法解析"><a href="#语法解析" class="headerlink" title="语法解析"></a>语法解析</h2><p>parser如果用的是esql自己的parser，这样的问题是：1. 服务器的语法esql可能不支持。所以postgres后来改用服务器的parser经过处理之后生成自己的parser。</p>
+<h2 id="自动提交"><a href="#自动提交" class="headerlink" title="自动提交"></a>自动提交</h2><p>默认是手动提交的，也就是需要加上COMMIT语句：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function">EXEC SQL CREATE TABLE <span class="title">TB1</span><span class="params">(A INT)</span></span>;</div><div class="line">EXEC SQL COMMIT;</div></pre></td></tr></table></figure>
+<p>如果需要自动提交：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXEC SQL <span class="keyword">SET</span> AUTOCOMMIT = <span class="keyword">ON</span>;</div></pre></td></tr></table></figure>
+<h2 id="在esql中用结构体问题"><a href="#在esql中用结构体问题" class="headerlink" title="在esql中用结构体问题"></a>在esql中用结构体问题</h2><p>esql中如果用结构体，那么需要把结构体定义放到declare section中。客户的结构体都是定义在头文件中。但是declare section不认头文件中的#ifndef … define … endif 这些预处理指令。<br>解决方案是把结构体定义单独放在一个头文件中，比如struct.h里面。原来的头文件变为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _HEADER_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _HEADER_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"struct.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>esql程序中可以把struct.h加在declare section 中了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">EXEC SQL INCLUDE struct.h</div><div class="line">EXEC SQL END DECLARE SECTION;</div></pre></td></tr></table></figure>
+<p>这样就可以在esql中正常使用结构体了。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    ECPGdebug(1,stdout);</div><div class="line"></div><div class="line">	EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char msg[256] = &#123;0&#125;;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    EXEC SQL CONNECT TO postgres@localhost;</div><div class="line">...</div><div class="line">    EXEC SQL DISCONNECT;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ./debug </div><div class="line">[<span class="number">11785</span>]: ECPGdebug: <span class="built_in">set</span> to <span class="number">1</span></div><div class="line">[<span class="number">11785</span>]: ECPGconnect: opening database postgres on localhost port &lt;DEFAULT&gt;  </div><div class="line">[<span class="number">11785</span>]: ecpg_execute on line <span class="number">15</span>: query: select * from helloworld; with <span class="number">0</span> parameter(s) on connection postgres</div><div class="line">[<span class="number">11785</span>]: ecpg_execute on line <span class="number">15</span>: <span class="keyword">using</span> PQexec</div><div class="line">[<span class="number">11785</span>]: ecpg_process_output on line <span class="number">15</span>: correctly got <span class="number">1</span> tuples with <span class="number">1</span> fields</div><div class="line">[<span class="number">11785</span>]: ecpg_get_data on line <span class="number">15</span>: RESULT: hello world offset: <span class="number">256</span>; <span class="built_in">array</span>: no</div><div class="line">hello world</div><div class="line">[<span class="number">11785</span>]: ecpg_finish: connection postgres closed</div></pre></td></tr></table></figure>
+<h2 id="终极方案"><a href="#终极方案" class="headerlink" title="终极方案"></a>终极方案</h2><p>如果遇到ESQL不支持的情况，可以直接调用<code>ECPGget_PGconn</code>来返回一个libpq连接，接下来可以用libpq来处理。比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">EXEC SQL CONNECT TO testdb AS con1;</div><div class="line"></div><div class="line">conn = ECPGget_PGconn(<span class="string">"con1"</span>);</div><div class="line"></div><div class="line"><span class="comment">/* create */</span></div><div class="line">loid = lo_create(conn, <span class="number">0</span>);</div><div class="line"><span class="keyword">if</span> (loid &amp;lt; <span class="number">0</span>)</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"lo_create() failed: %s"</span>, PQerrorMessage(conn));</div></pre></td></tr></table></figure>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-Writing-coredump-free-codes-by-handling-of-SIGSEGV" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1093,71 +1294,6 @@
         <p class="article-more-link">
           <a href="/2017/06/24/hanoi/#more">阅读全文 >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Efficient-Locking-for-Concurrent-Operations-on-B-Trees" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/" class="article-date">
-      <time datetime="2017-06-22T02:41:34.000Z" itemprop="datePublished">2017-06-22</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/">Efficient Locking for Concurrent Operations on B-Trees</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p><a href="/uploads/Efficient-Locking-for-Concurrent-Operations-on-B-Trees.pdf">Efficient Locking for Concurrent Operations on B-Trees</a></p>
-<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/readings/">readings</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据结构与算法/">数据结构与算法</a></li></ul>
-    </div>
-
       
       <div class="clearfix"></div>
     </div>

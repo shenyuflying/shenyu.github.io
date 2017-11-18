@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="小宇" />
+
+
+
+<meta name="description" content="简介What?ESQL（Embedded SQL），嵌入式SQL：是一种将SQL语句直接写入宿主语言的方法。宿主语言可以是C语言等等语言。
+
+
+
+数据库
+嵌入式SQL名称
+文档
+
+
+
+
+Oracle
+Pro*C
+https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm
+
+
+Kingbase
+ESQL
+联机帮助手册
+
+
+Postgr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解postgres嵌入式sql">
+<meta property="og:url" content="http://shenyu.wiki/2017/11/18/深入理解postgres嵌入式sql/index.html">
+<meta property="og:site_name" content="小宇的博客">
+<meta property="og:description" content="简介What?ESQL（Embedded SQL），嵌入式SQL：是一种将SQL语句直接写入宿主语言的方法。宿主语言可以是C语言等等语言。
+
+
+
+数据库
+嵌入式SQL名称
+文档
+
+
+
+
+Oracle
+Pro*C
+https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm
+
+
+Kingbase
+ESQL
+联机帮助手册
+
+
+Postgr">
+<meta property="og:image" content="http://shenyu.wiki/uploads/step.png">
+<meta property="og:image" content="http://shenyu.wiki/uploads/prep.png">
+<meta property="og:image" content="http://shenyu.wiki/uploads/exec.png">
+<meta property="og:updated_time" content="2017-11-18T13:25:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解postgres嵌入式sql">
+<meta name="twitter:description" content="简介What?ESQL（Embedded SQL），嵌入式SQL：是一种将SQL语句直接写入宿主语言的方法。宿主语言可以是C语言等等语言。
+
+
+
+数据库
+嵌入式SQL名称
+文档
+
+
+
+
+Oracle
+Pro*C
+https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm
+
+
+Kingbase
+ESQL
+联机帮助手册
+
+
+Postgr">
+<meta name="twitter:image" content="http://shenyu.wiki/uploads/step.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+<!-- for mermaid -->
+
+
+    <link rel="alternate" href="/atom.xml" title="小宇的博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/uploads/siteicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>深入理解postgres嵌入式sql | 小宇的博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+	
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/uploads/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">小宇</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">文章：113字数：558674</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="true" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-home icon-2x">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                            <li><a href="/tags/">标签</a></li>
+                        
+                            <li><a href="/map/">导航</a></li>
+                        
+                            <li><a href="/message/">留言</a></li>
+                        
+                            <li><a href="/about/">关于</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="http://1572339ac8.iok.la:34421" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/DTCC/">DTCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ECPG/">ECPG</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Greenplum/">Greenplum</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux使用/">Linux使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux编程/">Linux编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OCI/">OCI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ODBC/">ODBC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/">Oracle</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PLSQL/">PLSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL/">PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL使用/">PostgreSQL使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL内核/">PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PostgreSQL接口/">PostgreSQL接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/assembly/">assembly</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cctree/">cctree</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cflow/">cflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/codeviz/">codeviz</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/debug/">debug</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dns/">dns</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dnsmasq/">dnsmasq</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/doxygen/">doxygen</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/egypt/">egypt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/events/">events</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gdb/">gdb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gprof/">gprof</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kcachegrind/">kcachegrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mathjax/">mathjax</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nas/">nas</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nextcloud/">nextcloud</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pgxc/">pgxc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/programming/">programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sed/">sed</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/valgrind/">valgrind</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wget/">wget</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/基础知识/">基础知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/备份还原/">备份还原</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/小宇带你学PostgreSQL内核/">小宇带你学PostgreSQL内核</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源社区/">开源社区</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/接口/">接口</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/操作系统/">操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库，PostgreSQL/">数据库，PostgreSQL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构与算法/">数据结构与算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文章/">文章</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/旅行/">旅行</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/本地化/">本地化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/查询优化/">查询优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/汇编调试方法/">汇编调试方法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/爱好/">爱好</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程/">编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网站/">网站</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言层/">语言层</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/读书/">读书</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/调优/">调优</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于基础软件研发</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">小宇</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/uploads/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">小宇</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">文章：113字数：558674</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                    <li><a href="/tags/">标签</a></li>
+                
+                    <li><a href="/map/">导航</a></li>
+                
+                    <li><a href="/message/">留言</a></li>
+                
+                    <li><a href="/about/">关于</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:shenyufly@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="http://github.com/shenyuflying" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="http://1572339ac8.iok.la:34421" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-深入理解postgres嵌入式sql" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/11/18/深入理解postgres嵌入式sql/" class="article-date">
+      <time datetime="2017-11-18T13:08:46.000Z" itemprop="datePublished">2017-11-18</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入理解postgres嵌入式sql
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术分享/">技术分享</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术分享/">技术分享</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="What"><a href="#What" class="headerlink" title="What?"></a>What?</h2><p>ESQL（Embedded SQL），嵌入式SQL：是一种将<a href="https://baike.baidu.com/item/SQL%E8%AF%AD%E5%8F%A5/5714895" target="_blank" rel="external">SQL语句</a>直接写入宿主语言的方法。宿主语言可以是C语言等等语言。</p>
+<table>
+<thead>
+<tr>
+<th>数据库</th>
+<th>嵌入式SQL名称</th>
+<th>文档</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oracle</td>
+<td>Pro*C</td>
+<td><a href="https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm" target="_blank" rel="external">https://docs.oracle.com/cd/E11882_01/appdev.112/e10825/toc.htm</a></td>
+</tr>
+<tr>
+<td>Kingbase</td>
+<td>ESQL</td>
+<td>联机帮助手册</td>
+</tr>
+<tr>
+<td>Postgres</td>
+<td>ECPG</td>
+<td><a href="https://www.postgresql.org/docs/10/static/ecpg-concept.html" target="_blank" rel="external">https://www.postgresql.org/docs/10/static/ecpg-concept.html</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Why"><a href="#Why" class="headerlink" title="Why?"></a>Why?</h2><p>这样就可以在C语言里面直接书写SQL语句，比如我们对比如下两段代码：</p>
+<p><strong>C语言调用libpq</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    PGconn     *conn;</div><div class="line">	PGresult   *res;</div><div class="line">    <span class="keyword">int</span> v1;</div><div class="line">    ...</div><div class="line">    res = PQexec(conn, <span class="string">"select a from test limit 1;"</span>);</div><div class="line">	v1 = atoi(PQgetvalue(res, <span class="number">0</span>, <span class="number">0</span>));</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>嵌入式SQL</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">	EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">	int v1;</div><div class="line">	EXEC SQL END DECLARE SECTION;</div><div class="line">	...	</div><div class="line">	EXEC SQL SELECT a INTO :v1 FROM test LIMIT 1;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>优点：</strong></p>
+<p>给应用研发人员带来了很大方便。这样使得研发人员可以不关注底层实现（比如上例子中的变量输出），较初级的程序员也可以有较高产出。</p>
+<ul>
+<li>用法简单</li>
+<li>检查语法</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>受限制于ESQL本身的语法，不够灵活。适用于比较简单的应用。</li>
+<li>ESQL底层基于libpq，所以ESQL功能只是libpq的一个子集。</li>
+<li>性能一般。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th style="text-align:center">兼容性</th>
+<th style="text-align:center">性能</th>
+<th style="text-align:center">易用性</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESQL</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center">少</td>
+</tr>
+<tr>
+<td>libpq</td>
+<td style="text-align:center">低</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">多</td>
+</tr>
+<tr>
+<td>ODBC</td>
+<td style="text-align:center">高</td>
+<td style="text-align:center">中</td>
+<td style="text-align:center">低</td>
+<td style="text-align:center">中</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Who"><a href="#Who" class="headerlink" title="Who?"></a>Who?</h2><ul>
+<li>应用研发人员</li>
+<li>数据库研发人员</li>
+</ul>
+<h2 id="Where"><a href="#Where" class="headerlink" title="Where?"></a>Where?</h2><ul>
+<li>新开发应用</li>
+<li>迁移的应用</li>
+</ul>
+<h2 id="When"><a href="#When" class="headerlink" title="When?"></a>When?</h2><ul>
+<li>规模相对较小的应用</li>
+<li>程序原型验证</li>
+<li>初级研发人员</li>
+</ul>
+<h2 id="How"><a href="#How" class="headerlink" title="How?"></a>How?</h2><p>本文希望通过以下内容来让读者具备基本的ESQL研发能力</p>
+<ul>
+<li>架构</li>
+<li>客户端编程</li>
+<li>代码概貌</li>
+<li>近期主要工作</li>
+</ul>
+<h1 id="客户端编程"><a href="#客户端编程" class="headerlink" title="客户端编程"></a>客户端编程</h1><p><img src="/uploads/step.png" alt=""></p>
+<h2 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h2><h3 id="预编译"><a href="#预编译" class="headerlink" title="预编译"></a>预编译</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char msg[256] = &#123;0&#125;;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    EXEC SQL WHENEVER SQLERROR sqlprint;</div><div class="line">    EXEC SQL CONNECT TO postgres@localhost;</div><div class="line"></div><div class="line">    EXEC SQL select * into :msg from helloworld;</div><div class="line"></div><div class="line">    printf("%s\n", msg);</div><div class="line"></div><div class="line">	EXEC SQL DISCONNECT;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(ECPG)  helloworld.pgc -I $(ECPG_INCLUDE) -o helloworld.c</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Processed by ecpg (11devel) */</span></div><div class="line"><span class="comment">/* These include files are added by the preprocessor */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ecpglib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ecpgerrno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlca.h&gt;</span></span></div><div class="line"><span class="comment">/* End of automatic include section */</span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 1 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">/* exec sql begin declare section */</span></div><div class="line">           </div><div class="line">    </div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 7 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"> <span class="keyword">char</span> msg [ <span class="number">256</span> ] = &#123; <span class="number">0</span> &#125; ;</div><div class="line"><span class="comment">/* exec sql end declare section */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 8 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* exec sql whenever sqlerror  sqlprint ; */</span></div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 10 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    &#123; ECPGconnect(<span class="number">__L</span>INE__, <span class="number">0</span>, <span class="string">"postgres@localhost"</span> , <span class="literal">NULL</span>, <span class="literal">NULL</span> , <span class="literal">NULL</span>, <span class="number">0</span>); </div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 12 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (sqlca.sqlcode &lt; <span class="number">0</span>) sqlprint();&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 12 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    &#123; ECPGdo(<span class="number">__L</span>INE__, <span class="number">0</span>, <span class="number">1</span>, <span class="literal">NULL</span>, <span class="number">0</span>, ECPGst_normal, <span class="string">"select * from helloworld"</span>, ECPGt_EOIT, </div><div class="line">	ECPGt_char,(msg),(<span class="keyword">long</span>)<span class="number">256</span>,(<span class="keyword">long</span>)<span class="number">1</span>,(<span class="number">256</span>)*<span class="keyword">sizeof</span>(<span class="keyword">char</span>), </div><div class="line">	ECPGt_NO_INDICATOR, <span class="literal">NULL</span> , <span class="number">0L</span>, <span class="number">0L</span>, <span class="number">0L</span>, ECPGt_EORT);</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 14 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (sqlca.sqlcode &lt; <span class="number">0</span>) sqlprint();&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 14 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%s\n"</span>, msg);</div><div class="line"></div><div class="line">    &#123; ECPGdisconnect(<span class="number">__L</span>INE__, <span class="string">"CURRENT"</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 18 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"><span class="keyword">if</span> (sqlca.sqlcode &lt; <span class="number">0</span>) sqlprint();&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">line</span> 18 <span class="meta-string">"helloworld.pgc"</span></span></div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -g -O0  -I $(ECPG_INCLUDE) -L $(LIB)  -o helloworld helloworld.c -lecpg</div></pre></td></tr></table></figure>
+<h3 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ./helloworld </div><div class="line">hello world</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ldd ./helloworld</div><div class="line">	linux-vdso.so.1 (0x00007ffe29bcd000)</div><div class="line">	libecpg.so.6 =&gt; /home/yshen/coding/postgresql/release/lib/libecpg.so.6 </div><div class="line">	libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007fe4cfd6b000)</div><div class="line">	libpgtypes.so.3 =&gt; /home/yshen/coding/postgresql/release/lib/libpgtypes.so.3 </div><div class="line">	libpq.so.5 =&gt; /home/yshen/coding/postgresql/release/lib/libpq.so.5 </div><div class="line">	libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 </div><div class="line">	/lib64/ld-linux-x86-64.so.2 (0x00007fe4d0624000)</div><div class="line">	libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007fe4cf3ea000)</div></pre></td></tr></table></figure>
+<h3 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">POSTGRES=&quot;/home/yshen/coding/postgresql/release&quot;</div><div class="line">ECPG=$(POSTGRES)&quot;/bin/ecpg&quot;</div><div class="line">ECPG_INCLUDE=$(POSTGRES)&quot;/include&quot;</div><div class="line">LIB=$(POSTGRES)&quot;/lib&quot;</div><div class="line"></div><div class="line">execs=$(patsubst %.pgc,%,$(wildcard *.pgc))</div><div class="line"></div><div class="line">all: $(execs)</div><div class="line"></div><div class="line">%: %.c</div><div class="line">	gcc -g -O0  -I $(ECPG_INCLUDE) -L $(LIB)  -o $@ $&lt; -lecpg</div><div class="line"></div><div class="line">%.c: %.pgc</div><div class="line">	$(ECPG)  $&lt; -I $(ECPG_INCLUDE) -o $@</div><div class="line"></div><div class="line">clean:</div><div class="line">	-rm  $(execs)</div></pre></td></tr></table></figure>
+<p>make</p>
+<p>make clean</p>
+<p>make helloworld.c</p>
+<h2 id="综合例子：备份工具"><a href="#综合例子：备份工具" class="headerlink" title="综合例子：备份工具"></a>综合例子：备份工具</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * dump utility written by ESQL</div><div class="line"> *              yshen@2017</div><div class="line"> */</div><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line"></div><div class="line">/* public interfaces */</div><div class="line">void Connect(char *dbname);</div><div class="line">void Disconnect();</div><div class="line">void Dump();</div><div class="line"></div><div class="line">/* internal functions */</div><div class="line">void dump_one_table(char *tbname);</div><div class="line">char * get_type_string(int type);</div><div class="line"></div><div class="line">/* execution start from here */</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    Connect("postgres");</div><div class="line">    Dump();</div><div class="line">    Disconnect();</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* connect to db */</div><div class="line">void Connect(char *dbname)</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char connstr[256];</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    sprintf(connstr, "%s", dbname);</div><div class="line">    EXEC SQL WHENEVER SQLERROR sqlprint;</div><div class="line">    EXEC SQL CONNECT TO :connstr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* disconnect from db */</div><div class="line">void Disconnect()</div><div class="line">&#123;</div><div class="line">    EXEC SQL DISCONNECT;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* dump start here */</div><div class="line">void Dump()</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">    char schemaname[256] = &#123;0&#125;;</div><div class="line">    char tablename[256]  = &#123;0&#125;;</div><div class="line">    char fullname[256] = &#123;0&#125;;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    /*</div><div class="line">     * query all tables from pg_tables view</div><div class="line">     * FIXME: currently only support postgres</div><div class="line">     */</div><div class="line">    EXEC SQL DECLARE cur2 CURSOR  FOR</div><div class="line">        select schemaname, tablename </div><div class="line">        from pg_tables</div><div class="line">        where schemaname!='pg_catalog'</div><div class="line">        and schemaname!='information_schema';</div><div class="line"></div><div class="line">    EXEC SQL OPEN cur2;</div><div class="line"></div><div class="line">    while (1)</div><div class="line">    &#123;</div><div class="line">        EXEC SQL FETCH cur2 INTO :schemaname, :tablename;</div><div class="line">        if (sqlca.sqlcode == ECPG_NOT_FOUND) break;</div><div class="line">        sprintf(fullname,"%s.%s", schemaname, tablename);</div><div class="line">        /* do the acutal dump for this table */</div><div class="line">        dump_one_table(fullname);</div><div class="line">    &#125;</div><div class="line">    EXEC SQL CLOSE cur2;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* dump one table's defination and data */</div><div class="line">void dump_one_table(char *tbname)</div><div class="line">&#123;</div><div class="line">    EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char sql[256] = &#123;0&#125;;</div><div class="line">        int rows;</div><div class="line">        int cols;</div><div class="line">        char data[256] = &#123;0&#125;;</div><div class="line">        char name[256] = &#123;0&#125;;</div><div class="line">        int type;</div><div class="line">        int firstrow=1;</div><div class="line">        int i;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    sprintf(sql, "select * from %s;", tbname);</div><div class="line"></div><div class="line">    EXEC SQL ALLOCATE DESCRIPTOR desc1;</div><div class="line">    EXEC SQL PREPARE stmt1 FROM :sql;</div><div class="line">    EXEC SQL DECLARE cur1 CURSOR FOR stmt1;</div><div class="line">    EXEC SQL OPEN cur1;</div><div class="line">    EXEC SQL DESCRIBE stmt1 INTO SQL DESCRIPTOR desc1;</div><div class="line">    EXEC SQL GET DESCRIPTOR desc1 :cols = COUNT;</div><div class="line"></div><div class="line">    printf("create table %s (", tbname);</div><div class="line"></div><div class="line">    /* dump table's defination into create stmt</div><div class="line">     *      create table xxx (col1 type1, col2, type2...);</div><div class="line">     */</div><div class="line">    for (i=0; i&lt;cols; i++)</div><div class="line">    &#123;</div><div class="line">        i++;</div><div class="line">        EXEC SQL GET DESCRIPTOR desc1 VALUE :i :name = NAME;</div><div class="line">        EXEC SQL GET DESCRIPTOR desc1 VALUE :i :type = TYPE;</div><div class="line">        i--;</div><div class="line">        if(i==0)</div><div class="line">            printf("%s %s", name, get_type_string(type));</div><div class="line">        else</div><div class="line">            printf(", %s %s", name, get_type_string(type));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    printf(");\n");</div><div class="line"></div><div class="line">    /* dump table's data into a insert stmt</div><div class="line">     *      insert into tbname (col1 type ...) values (row1),(row2)..(rown);</div><div class="line">     */</div><div class="line">    printf("insert into %s (", tbname);</div><div class="line">    for (i=0; i&lt;cols; i++)</div><div class="line">    &#123;</div><div class="line">        i++;</div><div class="line">        EXEC SQL GET DESCRIPTOR desc1 VALUE :i :name = NAME;</div><div class="line">        i--;</div><div class="line">        if(i==0)</div><div class="line">            printf("%s", name);</div><div class="line">        else</div><div class="line">            printf(", %s", name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    printf(") values ");</div><div class="line"></div><div class="line"></div><div class="line">    /* print values */</div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        EXEC SQL FETCH cur1 INTO SQL DESCRIPTOR desc1; </div><div class="line">        if (sqlca.sqlcode == ECPG_NOT_FOUND) break;</div><div class="line"></div><div class="line">        if(firstrow)</div><div class="line">            printf("(");</div><div class="line">        else</div><div class="line">            printf(",(");</div><div class="line">        for (i=0; i&lt;cols; i++)</div><div class="line">        &#123;</div><div class="line">            i++;</div><div class="line">            EXEC SQL GET DESCRIPTOR desc1 VALUE :i :data = DATA;</div><div class="line">            i--;</div><div class="line"></div><div class="line">            if(i==0)</div><div class="line">                printf("\'%s\'", data);</div><div class="line">            else</div><div class="line">                printf(", \'%s\'", data);</div><div class="line">        </div><div class="line">        &#125;</div><div class="line">        printf(") ");</div><div class="line">        firstrow=0;</div><div class="line">    &#125;</div><div class="line">    printf(";\n");</div><div class="line"></div><div class="line">    EXEC SQL CLOSE cur1;</div><div class="line">    EXEC SQL DEALLOCATE DESCRIPTOR desc1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">char * get_type_string(int type)</div><div class="line">&#123;</div><div class="line"></div><div class="line">    switch(type)</div><div class="line">    &#123;</div><div class="line">        case 1:</div><div class="line">            return "text";</div><div class="line">            break;</div><div class="line">        case 4:</div><div class="line">            return "int";</div><div class="line">            break;</div><div class="line">        default:</div><div class="line">         return "text";</div><div class="line">            </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ./dump </div><div class="line">create table public.helloworld (a text);</div><div class="line">insert into public.helloworld (a) values (&apos;hello world&apos;) ;</div><div class="line">create table public.tb1 (a int);</div><div class="line">insert into public.tb1 (a) values (&apos;1&apos;) ,(&apos;1&apos;) ,(&apos;2&apos;) ,(&apos;3&apos;);</div><div class="line">create table public.tb2 (a int, b text);</div><div class="line">insert into public.tb2 (a, b) values (&apos;1&apos;, &apos;yshen&apos;) ,(&apos;2&apos;, &apos;hxwang&apos;) ;</div></pre></td></tr></table></figure>
+<h1 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h1><h2 id="逻辑架构"><a href="#逻辑架构" class="headerlink" title="逻辑架构"></a>逻辑架构</h2><p><img src="/uploads/prep.png" alt=""></p>
+<p><img src="/uploads/exec.png" alt=""></p>
+<h2 id="开发架构"><a href="#开发架构" class="headerlink" title="开发架构"></a>开发架构</h2><h3 id="代码目录"><a href="#代码目录" class="headerlink" title="代码目录"></a>代码目录</h3><p>源码位于src/interface/ecpg目录下：</p>
+<ul>
+<li>preproc      –预处理</li>
+<li>ecpglib        –运行时</li>
+<li>pgtypeslib  –类型输入输出</li>
+<li>compatlib   –兼容性</li>
+<li>include        –头文件</li>
+<li>test  –测试</li>
+</ul>
+<h3 id="主要流程"><a href="#主要流程" class="headerlink" title="主要流程"></a>主要流程</h3><p>（回到开头的hello world）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">ECPGdo(<span class="number">__L</span>INE__, <span class="comment">/* 行号 */</span></div><div class="line">    <span class="number">0</span>,           <span class="comment">/* compatible level， 比如兼容infomix */</span></div><div class="line">    <span class="number">1</span>,           <span class="comment">/* 强制输出isnull，如果没有提供indicator变量就会报错。 */</span></div><div class="line">    <span class="literal">NULL</span>,        <span class="comment">/* 用于执行语句的数据库连接 */</span></div><div class="line">    <span class="number">0</span>,           <span class="comment">/* 是用?来标志入参么，还是用$1 $2 ...*/</span></div><div class="line">    ECPGst_normal,  <span class="comment">/* 语句类型 */</span></div><div class="line">    <span class="string">"select * from helloworld"</span>, </div><div class="line">    ECPGt_EOIT,  <span class="comment">/* 输入结束标志 */</span></div><div class="line">	ECPGt_char,  <span class="comment">/* 数据类型 */</span></div><div class="line">    (msg),       <span class="comment">/* 指向变量的指针 */</span></div><div class="line">    (<span class="keyword">long</span>)<span class="number">256</span>,   <span class="comment">/* char或varchar数组的大小 */</span></div><div class="line">    (<span class="keyword">long</span>)<span class="number">1</span>,     <span class="comment">/* 数组中元素的个数（用于取多条记录） */</span></div><div class="line">	(<span class="number">256</span>)*<span class="keyword">sizeof</span>(<span class="keyword">char</span>),  <span class="comment">/* 数组下一维度的起始位置（用于取多条记录） */</span> </div><div class="line">	ECPGt_NO_INDICATOR,  <span class="comment">/* 有没有indicator来输出isnull */</span></div><div class="line">     <span class="literal">NULL</span> ,   <span class="comment">/* 指向indicator的指针 */</span></div><div class="line">     <span class="number">0L</span>,      <span class="comment">/* */</span></div><div class="line">     <span class="number">0L</span>,      <span class="comment">/* indicator的个数（用于取多条记录） */</span></div><div class="line">	 <span class="number">0L</span>,      <span class="comment">/* indicator下一维度的其实位置（用于取多条记录） */</span></div><div class="line">     ECPGt_EORT <span class="comment">/* 输出结束标志 */</span></div><div class="line">      );</div></pre></td></tr></table></figure>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h2 id="语法解析"><a href="#语法解析" class="headerlink" title="语法解析"></a>语法解析</h2><p>parser如果用的是esql自己的parser，这样的问题是：1. 服务器的语法esql可能不支持。所以postgres后来改用服务器的parser经过处理之后生成自己的parser。</p>
+<h2 id="自动提交"><a href="#自动提交" class="headerlink" title="自动提交"></a>自动提交</h2><p>默认是手动提交的，也就是需要加上COMMIT语句：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function">EXEC SQL CREATE TABLE <span class="title">TB1</span><span class="params">(A INT)</span></span>;</div><div class="line">EXEC SQL COMMIT;</div></pre></td></tr></table></figure>
+<p>如果需要自动提交：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXEC SQL <span class="keyword">SET</span> AUTOCOMMIT = <span class="keyword">ON</span>;</div></pre></td></tr></table></figure>
+<h2 id="在esql中用结构体问题"><a href="#在esql中用结构体问题" class="headerlink" title="在esql中用结构体问题"></a>在esql中用结构体问题</h2><p>esql中如果用结构体，那么需要把结构体定义放到declare section中。客户的结构体都是定义在头文件中。但是declare section不认头文件中的#ifndef … define … endif 这些预处理指令。<br>解决方案是把结构体定义单独放在一个头文件中，比如struct.h里面。原来的头文件变为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _HEADER_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> _HEADER_H_</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"struct.h"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>esql程序中可以把struct.h加在declare section 中了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">EXEC SQL INCLUDE struct.h</div><div class="line">EXEC SQL END DECLARE SECTION;</div></pre></td></tr></table></figure>
+<p>这样就可以在esql中正常使用结构体了。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    ECPGdebug(1,stdout);</div><div class="line"></div><div class="line">	EXEC SQL BEGIN DECLARE SECTION;</div><div class="line">        char msg[256] = &#123;0&#125;;</div><div class="line">    EXEC SQL END   DECLARE SECTION;</div><div class="line"></div><div class="line">    EXEC SQL CONNECT TO postgres@localhost;</div><div class="line">...</div><div class="line">    EXEC SQL DISCONNECT;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">yshen@yshen-PC:~/coding/esql$ ./debug </div><div class="line">[<span class="number">11785</span>]: ECPGdebug: <span class="built_in">set</span> to <span class="number">1</span></div><div class="line">[<span class="number">11785</span>]: ECPGconnect: opening database postgres on localhost port &lt;DEFAULT&gt;  </div><div class="line">[<span class="number">11785</span>]: ecpg_execute on line <span class="number">15</span>: query: select * from helloworld; with <span class="number">0</span> parameter(s) on connection postgres</div><div class="line">[<span class="number">11785</span>]: ecpg_execute on line <span class="number">15</span>: <span class="keyword">using</span> PQexec</div><div class="line">[<span class="number">11785</span>]: ecpg_process_output on line <span class="number">15</span>: correctly got <span class="number">1</span> tuples with <span class="number">1</span> fields</div><div class="line">[<span class="number">11785</span>]: ecpg_get_data on line <span class="number">15</span>: RESULT: hello world offset: <span class="number">256</span>; <span class="built_in">array</span>: no</div><div class="line">hello world</div><div class="line">[<span class="number">11785</span>]: ecpg_finish: connection postgres closed</div></pre></td></tr></table></figure>
+<h2 id="终极方案"><a href="#终极方案" class="headerlink" title="终极方案"></a>终极方案</h2><p>如果遇到ESQL不支持的情况，可以直接调用<code>ECPGget_PGconn</code>来返回一个libpq连接，接下来可以用libpq来处理。比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">EXEC SQL CONNECT TO testdb AS con1;</div><div class="line"></div><div class="line">conn = ECPGget_PGconn(<span class="string">"con1"</span>);</div><div class="line"></div><div class="line"><span class="comment">/* create */</span></div><div class="line">loid = lo_create(conn, <span class="number">0</span>);</div><div class="line"><span class="keyword">if</span> (loid &amp;lt; <span class="number">0</span>)</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"lo_create() failed: %s"</span>, PQerrorMessage(conn));</div></pre></td></tr></table></figure>
+<p>如果还想看到更多此类文章，请移步到<a href="http://shenyu.wiki">小宇的博客</a>。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/11/18/深入理解postgres嵌入式sql/">深入理解postgres嵌入式sql</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">小宇</a></p>
+        <p><span>发布时间:</span>2017-11-18, 21:08:46</p>
+        <p><span>最后更新:</span>2017-11-18, 21:25:05</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/18/深入理解postgres嵌入式sql/" title="深入理解postgres嵌入式sql">http://shenyu.wiki/2017/11/18/深入理解postgres嵌入式sql/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://shenyu.wiki/2017/11/18/深入理解postgres嵌入式sql/　　作者: 小宇" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/10/29/Writing-coredump-free-codes-by-handling-of-SIGSEGV/">
+                    Writing coredump free codes by handling of SIGSEGV
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What"><span class="toc-number">1.1.</span> <span class="toc-text">What?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Why"><span class="toc-number">1.2.</span> <span class="toc-text">Why?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Who"><span class="toc-number">1.3.</span> <span class="toc-text">Who?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Where"><span class="toc-number">1.4.</span> <span class="toc-text">Where?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#When"><span class="toc-number">1.5.</span> <span class="toc-text">When?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How"><span class="toc-number">1.6.</span> <span class="toc-text">How?</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户端编程"><span class="toc-number">2.</span> <span class="toc-text">客户端编程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hello-world"><span class="toc-number">2.1.</span> <span class="toc-text">hello world</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#预编译"><span class="toc-number">2.1.1.</span> <span class="toc-text">预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译"><span class="toc-number">2.1.2.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行"><span class="toc-number">2.1.3.</span> <span class="toc-text">执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Makefile"><span class="toc-number">2.1.4.</span> <span class="toc-text">Makefile</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#综合例子：备份工具"><span class="toc-number">2.2.</span> <span class="toc-text">综合例子：备份工具</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#软件架构"><span class="toc-number">3.</span> <span class="toc-text">软件架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑架构"><span class="toc-number">3.1.</span> <span class="toc-text">逻辑架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发架构"><span class="toc-number">3.2.</span> <span class="toc-text">开发架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码目录"><span class="toc-number">3.2.1.</span> <span class="toc-text">代码目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主要流程"><span class="toc-number">3.2.2.</span> <span class="toc-text">主要流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常见问题"><span class="toc-number">4.</span> <span class="toc-text">常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#语法解析"><span class="toc-number">4.1.</span> <span class="toc-text">语法解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动提交"><span class="toc-number">4.2.</span> <span class="toc-text">自动提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在esql中用结构体问题"><span class="toc-number">4.3.</span> <span class="toc-text">在esql中用结构体问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调试"><span class="toc-number">4.4.</span> <span class="toc-text">调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#终极方案"><span class="toc-number">4.5.</span> <span class="toc-text">终极方案</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"深入理解postgres嵌入式sql　| 小宇的博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/11/18/深入理解postgres嵌入式sql/" data-title="深入理解postgres嵌入式sql" data-url="http://shenyu.wiki/2017/11/18/深入理解postgres嵌入式sql/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"shenyuflying"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/10/29/Writing-coredump-free-codes-by-handling-of-SIGSEGV/" title="下一篇: Writing coredump free codes by handling of SIGSEGV">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/11/18/深入理解postgres嵌入式sql/">深入理解postgres嵌入式sql</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/29/Writing-coredump-free-codes-by-handling-of-SIGSEGV/">Writing coredump free codes by handling of SIGSEGV</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/where-does-bug-come-from-1/">where does bug come from</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/30/租房管理系统/">编程题--租房管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/16/OID超过40亿会发生什么？/">OID超过40亿会发生什么？</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/国家电子政务外网国产数据库适配/">国家电子政务外网国产数据库适配</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/a-very-handy-logging-function/">a very handy logging function</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/15/postgres-keepalive/">postgres keepalive</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/27/where-does-bug-come-from/">where does bug come from</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/24/hanoi/">hanoi</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/22/Efficient-Locking-for-Concurrent-Operations-on-B-Trees/">Efficient Locking for Concurrent Operations on B-Trees</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/18/postgres-xc-concept-implementation-and-achievements/">postgres-xc concept implementation and achievements</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/12/with-hold-cursor/">with hold cursor</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/25/数据库使用bytea类型存取二进制文件/">数据库使用bytea类型存取二进制文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/25/DTCC2017/">DTCC2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/10/postgres-identifier-and-keyworkd/">postgres identifier and keyword</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/06/获取字段分组个数/">获取字段分组个数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/22/裤子把人搞死？一个库引发的悲剧/">裤子把人搞死？一个库引发的悲剧</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/12/a-nice-progressbar-with-time-estimation/">a nice progressbar with time estimation</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/09/vim-build-from-source/">vim build from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/bit-map-sets-sorting/">bitmap sets sorting</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/26/awesome-awesome-lots-of-good-stuff/">awesome awesome lots of good stuff</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/25/traversing-tree-in-preorder-inorder-postorder-and-level-order/">traversing tree in preorder inorder postorder and level order</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/12/source-insight-color-theme/">Source insight color theme</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/11/Readings-of-query-optimizer/">Readings of query optimizer</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/For-developers-how-to-build-run-Greenplum-for-debugging-purposes/">For developers: how to build & run Greenplum for debugging purposes</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/nextcloud——搭建自己的云盘/">nextcloud——搭建自己的云盘</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/how-to-change-your-linux-timezone/">how to set your linux's timezone</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/16/科学上网——搭建自己的DNS服务器/">科学上网——搭建自己的DNS服务器</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/14/如何阅读程序源码之——call-graph/">如何阅读程序源码之——call graph</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/09/soname/">soname</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/odbc-programming/">ODBC programming</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/an-introduction-to-odbc/">An introduction to ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/06/how-to-setup-postgresql-odbc/">How to setup postgresql ODBC</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/31/过年在家写了一个蛮有趣的小程序：codeRunner/">过年在家写了一个蛮有趣的小程序：codeRunner</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/22/The-best-career-advice-I’ve-received/">The best career advice I’ve received</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160526/">汇编调试方法-20160526</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/19/汇编调试方法-20160506/">汇编调试方法-20160506</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/修改hosts来访问谷歌/">修改hosts来访问谷歌</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/如果你要给学生一些学习建议，你会说些什么/">如果你要给学生一些学习建议，你会说些什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/16/hexo博客增加菜单栏目/">hexo博客增加菜单栏目</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/13/PostgreSQL中的PL-SQL实现/">PostgreSQL中的PL/SQL实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/12/PostgreSQL逻辑备份还原/">PostgreSQL逻辑备份还原</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/08/【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）/">【小宇带你学PostgreSQL内核】第五课：rewriter分析和重写（上）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/git统计代码贡献/">git统计代码贡献</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/02/pg-logical-backup-restore/">PostgreSQL logical backup & restore</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/01/【小宇带你学PostgreSQL内核】第四课：parser语法分析/">【小宇带你学PostgreSQL内核】第四课：parser语法分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/29/GDB图形界面大PK/">GDB图形界面大PK</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构2/">【小宇带你学PostgreSQL内核】第三课：内核架构(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/【小宇带你学PostgreSQL内核】第三课：内核架构1/">【小宇带你学PostgreSQL内核】第三课：内核架构(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/PostgreSQL-internal-roadmap/">PostgresSQL-internal-roadmap</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/14/yshen-s-vim-settings/">yshen's vim settings</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第二课：开发环境/">【小宇带你学PostgreSQL内核】第二课：开发环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/11/【小宇带你学PostgreSQL内核】第一课：课程简介/">【小宇带你学PostgreSQL内核】第一课：课程简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/29/PostgreSQL内存盘性能测试/">PostgreSQL内存盘性能测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/27/好书推荐：《Debug-hacks——深入调试的技术和工具》/">好书推荐：《Debug hacks——深入调试的技术和工具》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/26/缓冲区溢出的那些事儿/">缓冲区溢出的那些事儿</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解静态链接库和动态链接库/">深入理解静态链接库和动态链接库</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/深入理解PostgreSQL查询优化引擎/">深入理解PostgreSQL查询优化引擎</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/20/linux把文件放置到剪贴板/">linux把文件放置到剪贴板</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/17/c语言程序输出调试信息/">c语言程序输出调试信息</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/14/c和汇编混合编程/">c和汇编混合编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/13/PostgreSQL中的spinlock实现的基本原理/">PostgreSQL中的spinlock实现的基本原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/12/linux中进程共享内存的2种方法/">linux中进程共享内存的2种方法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/10/linux进程改名/">linux进程改名</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL源码中的EXEC-BACKEND宏/">PostgreSQL源码中的EXEC_BACKEND宏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/PostgreSQL-ODBC-driver-internal/">PostgreSQL ODBC driver internal</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/pgNodeGraph-a-postgreSQL-node-tree-print-tool/">pgNodeGraph -- a postgreSQL node tree print tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/PostgreSQL本地化过程及维护/">PostgreSQL本地化过程及维护</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/C语言程序的国际化/">C语言程序的国际化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/x86-64汇编与调试/">x86_64汇编与调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/golang-web编程之——读取csdn最新文章/">golang web编程之——读取csdn最新文章</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/PostgreSQL中的字符编码/">PostgreSQL中的字符编码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/27/linux中的本地化/">linux中的本地化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/21/交互式代码格式化工具——indent/">交互式代码格式化工具——indent</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/20/利用sed生成规范的c代码/">利用sed生成规范的c代码</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/yap-yet-another-program-profiling-tool/">yap--yet another program profiling tool</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL性能分析/">PostgreSQL性能分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/13/PostgreSQL日志分析工具——pgBadger/">PostgreSQL日志分析工具——pgBadger</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/linux监控脚本-绘图/">linux性能曲线工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/11/数据库性能测试标准TPC/">数据库性能测试标准TPC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/好书推荐：《操作系统设计与实现》/">好书推荐：《操作系统设计与实现》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/10/linux中的硬链接和软链接/">linux中的硬链接和软链接</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/linux中的僵尸进程/">linux中的僵尸进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/字符串中特殊字符转义——php中urlencode-urldecode的c语言版本/">字符串中特殊字符转义——php中urlencode urldecode的c语言版本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/好文推荐：《Spanner-Google-s-Globally-Distributed-Database》/">好文推荐：《Spanner: Google's Globally-Distributed Database》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/linux下配置IP地址子网掩码和网关/">linux下配置IP地址子网掩码和网关</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/05/ssh免密码登陆linux主机/">ssh免密码登陆linux主机</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/linux查找文件内容/">linux查找文件内容</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/好书推荐：《软技能-代码之外的生存指南》/">好书推荐：《软技能-代码之外的生存指南》</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/颐和园/">颐和园 Summer Palace</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/04/hexo静态博客修改侧边栏/">hexo静态博客修改侧边栏</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/wget下载网站供离线浏览/">wget下载网站供离线浏览</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/二进制文件-十六进制文件-互转/">二进制文件 十六进制文件 互转</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/PostgreSQL-count-优化/">PostgreSQL count(*) 优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/02/Here-Document/">Here Document</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/贪吃蛇-基于SDL/">贪吃蛇-基于SDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/c语言转汇编语言shell脚本/">c语言转汇编语言shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell聊天室/">linux shell聊天室</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/linux-shell-切换程序/">在linux shell 下切换程序</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/奥运会成绩管理系统/">奥运会成绩管理系统</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/17/Mathjax公式/">Mathjax公式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/15/长城/">长城 Great Wall</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/09/北京奥林匹克公园/">北京奥林匹克公园 Beijing Olympic Park</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/01/天安门/">天安门 Tiananmen</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/08/兰州/">兰州 Lanzhou</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/20/markdown-test/">markdown test</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/02/17/mysql大数据处理/">mysql数据处理</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/31/动态增长的栈/">动态增长的栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/02/清华北大/">清华北大 Tsinghua and Peking University</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/10/01/西安/">西安 Xi'an</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/岳麓书院/">岳麓书院</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/02/04/凤凰古城/">凤凰古城 Phoenix Town</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2014-2017 小宇
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
